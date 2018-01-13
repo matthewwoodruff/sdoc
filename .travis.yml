@@ -1,5 +1,8 @@
 language: rust
 rust:
   - 1.22.1
-    
+matrix:
+  include:
+    - os: linux
+    - os: osx
 
