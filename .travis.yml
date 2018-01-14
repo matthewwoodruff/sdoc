@@ -3,10 +3,16 @@ cache: cargo
 
 rust:
 - 1.22.1
+os:
+  - linux
+  - osx
 matrix:
-  include:
-  - os: linux
-  - os: osx
+  fast_finish: true      
+
+after_success: ls -la
+
+script: cargo test --all && cargo build --release
+
 deploy:
   provider: releases
   api_key:
