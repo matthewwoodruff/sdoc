@@ -7,10 +7,10 @@ rust:
 matrix:
   fast_finish: true      
   include:
-    - os: osx
-      env: TARGET=x86_64-apple-darwin
-    - os: linux
-      env: TARGET=x86_64-unknown-linux-musl   
+  - os: osx
+    env: TARGET=x86_64-apple-darwin
+  - os: linux
+    env: TARGET=x86_64-unknown-linux-musl   
 
 branches:
   only:
