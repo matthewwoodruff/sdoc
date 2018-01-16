@@ -30,7 +30,3 @@ deploy:
     repo: matthewwoodruff/sdoc
     tags: true
 
-branches:
-  only:
-    - master
-    - /^\d+\.\d+\.\d+.*$/    
