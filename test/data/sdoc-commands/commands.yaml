@@ -15,10 +15,10 @@
   - command: deps
     description: I have dependency requirements
     command_type:
-      Shell: "echo The name is $NAME"
+      Shell: "echo The name is $A_NAME"
     dependencies:
       - description: A name that I need
-        value: $NAME
+        value: $A_NAME
   - command: script
     description: A simple script
     command_type:

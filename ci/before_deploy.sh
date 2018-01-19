@@ -2,7 +2,7 @@
 
 echo "Create tar file for $TRAVIS_OS_NAME"
 
-set +ex
+set -ex
 
 main() {
     local src=$(pwd) 

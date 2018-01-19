@@ -39,8 +39,8 @@ function should () {
   command=${2:?Command expected}
   expected_exit_code=${3:-0}
 
-  echo -n "$name ($2): "
-  actual=$(bash -c "$2")
+  echo -n "$name ($command): "
+  actual=$(bash -c "$command")
   actual_exit_code=$?
   filename="$test_dir/snapshots/$(tr ' ' '_' <<< $name).snap"
 
@@ -67,7 +67,7 @@ function should () {
 	test_output=$(echo -n "$actual" | diff -y $filename - )
 	if [[ $? > 0 ]];
 	then
-	  echo "${RED}fail$WHITE"
+	  echo "${RED}FAIL$WHITE"
 	  echo
 	  echo "$test_output"
 

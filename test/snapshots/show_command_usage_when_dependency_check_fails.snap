@@ -4,4 +4,4 @@ Usage: sdoc deps
 I have dependency requirements
 
 Dependencies:
-  $NAME       A name that I need
+  $A_NAME     A name that I need
