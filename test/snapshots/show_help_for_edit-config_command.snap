@@ -1,0 +1,7 @@
+
+Usage: sdoc edit-config 
+
+Edit the configuration file
+
+Dependencies:
+  $EDITOR     Set this environment variable to the editor of your choice

@@ -16,7 +16,7 @@ matrix:
 
 install: ./ci/install.sh      
 
-script: ./ci/script.sh
+script: ./build.sh
 
 before_deploy: ./ci/before_deploy.sh
 

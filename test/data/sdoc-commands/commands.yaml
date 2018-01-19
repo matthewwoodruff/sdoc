@@ -1,0 +1,25 @@
+---
+- heading: "Commands"
+  commands:
+  - command: print
+    alias: p
+    description: Prints hello world
+    command_type:
+      Shell: echo hello world
+  - command: min-args
+    description: I require arguments
+    min_args: 1
+    usage: "<an-arg>"
+    command_type:
+      Shell: "echo The args are: "
+  - command: deps
+    description: I have dependency requirements
+    command_type:
+      Shell: "echo The name is $NAME"
+    dependencies:
+      - description: A name that I need
+        value: $NAME
+  - command: script
+    description: A simple script
+    command_type:
+      Script: script.sh
