@@ -18,7 +18,16 @@
       Shell: "echo The name is $A_NAME"
     dependencies:
       - description: A name that I need
-        value: $A_NAME
+        value: 
+          Envar: A_NAME
+  - command: com-dep
+    description: I have command requirements
+    command_type:
+      Shell: "echo The command exists"
+    dependencies:
+      - description: A command that I need
+        value: 
+          Command: test-com
   - command: script
     description: A simple script
     command_type:

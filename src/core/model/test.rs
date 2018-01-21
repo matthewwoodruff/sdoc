@@ -1,10 +1,11 @@
-use core::config::{Context, SectionSource};
+use core::config::Context;
 use core::workflow::{Work, Instruction};
 use core::dto::Request;
 use std::path::PathBuf;
 use serde_yaml;
 use super::*;
-use core::test_helper::a_command;
+use core::test_helper::{a_command, a_context};
+use core::model::Executable::Shell;
 
 mod command {
     use super::*;
@@ -57,12 +58,13 @@ command_type:
     Script: update.sh
 usage: <name>
 dependencies:
-    - value: $NAME
+    - value:
+        Envar: NAME
       description: this is required
 alias: h
 "#;
         let d = Dependency {
-            value: s!("$NAME"),
+            value: DependencyType::Envar(s!("NAME")),
             description: s!("this is required")
         };
 
@@ -98,16 +100,40 @@ command_type:
 
     #[test]
     fn should_execute_command() {
-        let works = run(a_command());
+        let works = run(&a_command());
 
         assert_eq!(works, vec![Work::instruction(Instruction::SystemCommand(s!("dm stack "), true))])
     }
+
+    #[test]
+    fn should_check_dependencies_before_executing_command() {
+        let dependency = Dependency {
+            value: DependencyType::Envar(s!("EDITOR")),
+            description: s!("Your favourite editor")
+        };
+
+        let command = Command {
+            command_type: Shell(s!("echo hello world")),
+            dependencies: Some(vec![dependency]),
+            ..a_command()
+        };
+
+        let actual_work = run(&command);
+
+        let dependency_check = Work::instruction(SystemCommand(s!("test -n \"$EDITOR\""), false))
+            .on_error(Action::instruction(Display(command.build_command_usage(&s!("dm a b c")))));
+        let command_work = Work::instruction(SystemCommand(s!("echo hello world "), true));
+
+        assert_eq!(actual_work, vec![dependency_check, command_work])
+    }
 }
 
-fn run(command: Command) -> Vec<Work> {
+fn run(command: &Command) -> Vec<Work> {
     let directory = PathBuf::new();
-    let section_source = SectionSource::InMemory("");
-    let context = Context::init(&directory, &section_source);
+    let context = Context {
+        resolved_commands: vec![s!("dm"), s!("a"), s!("b"), s!("c")],
+        ..a_context(&directory)
+    };
     let args: Vec<String> = vec![];
     let request = Request::new(&args, None);
 

@@ -1,4 +1,4 @@
-use core::model::{Dependency, Command, Section};
+use core::model::{Dependency, Command, Section, DependencyType};
 use core::commands::help::build_help;
 use core::commands::help::auto_complete;
 use core::config::Context;
@@ -35,7 +35,7 @@ Built-in Commands:
 #[test]
 fn should_build_usage_for_command_with_dependencies() {
     let env_var_dependency = Dependency {
-        value: s!("$ENV_VAR"),
+        value: DependencyType::Envar(s!("ENV_VAR")),
         description: s!("Set this variable")
     };
 
@@ -68,7 +68,7 @@ Usage: dm a b c action -f FILENAME -a SOMETHING VALUE
 a-description
 
 Dependencies:
-  $ENV_VAR    Set this variable
+  ENV_VAR     Set this variable
 "#;
 
     assert_eq!(help_text, expected_help_text);

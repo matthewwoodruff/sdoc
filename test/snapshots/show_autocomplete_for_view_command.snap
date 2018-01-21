@@ -1,4 +1,5 @@
 print
 min-args
 deps
+com-dep
 script

@@ -4,7 +4,7 @@ mod test;
 use std::path::PathBuf;
 use std::fs::File;
 use serde_yaml;
-use core::model::{Command, Section, Executable, Dependency};
+use core::model::{Command, Section, Executable, Dependency, DependencyType};
 
 #[derive(Debug)]
 pub struct Context<'a> {
@@ -28,6 +28,10 @@ impl<'a> Context<'a> {
             .find(|c| {
                 if match_alias { c.matches(request_command) } else { c.matches_command(request_command) }
             })
+    }
+
+    pub fn build_command_chain(&self) -> String {
+        self.resolved_commands.join(" ")
     }
 
     pub fn exec_directory(&self, commands: &Vec<String>) -> PathBuf {
@@ -99,7 +103,7 @@ pub fn edit_command() -> Command {
         min_args: Some(1),
         dependencies: Some(vec![
             Dependency {
-                value: s!("$EDITOR"),
+                value: DependencyType::Envar(s!("EDITOR")),
                 description: s!("Set this environment variable to the editor of your choice")
             }])
     }
@@ -139,7 +143,7 @@ pub fn edit_config_command() -> Command {
         min_args: None,
         dependencies: Some(vec![
             Dependency {
-                value: s!("$EDITOR"),
+                value: DependencyType::Envar(s!("$EDITOR")),
                 description: s!("Set this environment variable to the editor of your choice")
             }])
     }

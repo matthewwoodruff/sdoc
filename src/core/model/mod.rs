@@ -1,3 +1,5 @@
+extern crate core;
+
 #[cfg(test)]
 mod test;
 
@@ -37,41 +39,54 @@ impl Command {
         self.matches_command(request_command) || self.matches_alias(request_command)
     }
 
-    fn dependency_checks(&self, context: &Context) -> Vec<Work> {
+    fn dependency_checks(&self, command_chain: &String) -> Vec<Work> {
         self.dependencies.as_ref()
             .unwrap_or(&vec![])
             .iter()
             .map(|d| {
-                Work::instruction(SystemCommand(s!(format!("type -t {}", d.value)), false))
-                    .on_error(self.build_command_usage_action(context))
+                let result = match d.value {
+                    DependencyType::Command(ref a) => format!("command -v \"{}\"", a),
+                    DependencyType::Envar(ref a) => format!("test -n \"${}\"", a)
+                };
+
+                Work::instruction(SystemCommand(result, false))
+                    .on_error(self.build_command_usage_action(command_chain))
             })
             .collect()
     }
 
-    fn build_command_usage_action(&self, context: &Context) -> Action {
-        Action::new().instruction(Display(self.build_command_usage(context)))
+    fn build_command_usage_action(&self, command_chain: &String) -> Action {
+        Action::instruction(Display(self.build_command_usage(command_chain)))
     }
 
-    pub fn build_command_usage(&self, context: &Context) -> String {
+    pub fn build_command_usage(&self, command_chain: &String) -> String {
         let dependencies = self.dependencies.as_ref()
             .map(|d|
                 format!("\nDependencies:{}\n",
-                        d.iter().fold(String::new(), |a, b| format!("{}\n  {:12}{}", a, &b.value, &b.description))))
-            .unwrap_or(String::new());
+                        d.iter().fold(s!(), |a, b| {
+                            let dep_value = match b.value {
+                                DependencyType::Envar(ref c) => c,
+                                DependencyType::Command(ref c) => c
+                            };
+
+                            format!("{}\n  {:12}{}", a, dep_value, &b.description)
+                        })))
+            .unwrap_or(s!());
 
         format!("\nUsage: {} {} {}\n\n{}\n{}",
-                &context.resolved_commands.join(" "),
+                command_chain,
                 &self.command,
-                self.usage.as_ref().unwrap_or(&String::new()),
+                self.usage.as_ref().unwrap_or(&s!()),
                 &self.description,
                 dependencies)
     }
 
     pub fn execute(&self, request: Request, context: &Context) -> Vec<Work> {
-        let mut work : Vec<Work> = self.dependency_checks(context);
+        let command_chain = &context.build_command_chain();
+        let mut work : Vec<Work> = self.dependency_checks(command_chain);
 
         if self.min_args.map(|v| v > request.next.len()).unwrap_or(false) {
-            work.push(Work::action(self.build_command_usage_action(context)))
+            work.push(Work::action(self.build_command_usage_action(command_chain)))
         } else {
             work.append(&mut self.command_type.execute(request, context))
         }
@@ -84,10 +99,15 @@ impl Command {
     }
 }
 
+#[derive(Deserialize, Debug, PartialEq)]
+pub enum DependencyType {
+    Command(String),
+    Envar(String)
+}
 
 #[derive(Deserialize, Debug, PartialEq)]
 pub struct Dependency {
-    pub value: String,
+    pub value: DependencyType,
     pub description: String
 }
 

@@ -21,8 +21,10 @@ should 'show autocomplete for help command' "AUTO_COMPLETE=2 $exe help"
 should 'show autocomplete for edit command' "AUTO_COMPLETE=2 $exe edit"
 should 'show command usage when args are insufficient' "$exe min-args"
 should 'execute a command with required args' "$exe min-args 'an argument'"
-should 'show command usage when dependency check fails' "$exe deps"
+should 'show command usage when dependency check fails for envar' "$exe deps"
+should 'execute command when dependencies are satisfied with envar' "A_NAME=Steve $exe deps"
+should 'show command usage when dependency check fails for command' "$exe com-dep"
+should 'execute command when dependendcies are staisfied with command' "PATH=\"$PATH:$test_dir/data/test-bin\" $exe com-dep"
 should 'execute a script command' "$exe script"
 should 'pass arguments to script correctly' "$exe script 'one two' 'three'"
-# dont fail when dependency check is met
 exit 0

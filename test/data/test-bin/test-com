@@ -1,0 +1,5 @@
+#! /bin/bash
+
+echo I am a test executable
+
+exit 0

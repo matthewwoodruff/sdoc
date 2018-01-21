@@ -4,4 +4,4 @@ Usage: sdoc edit <command>
 Edit the implementation of a command
 
 Dependencies:
-  $EDITOR     Set this environment variable to the editor of your choice
+  EDITOR      Set this environment variable to the editor of your choice

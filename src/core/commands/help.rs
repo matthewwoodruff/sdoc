@@ -29,7 +29,7 @@ fn auto_complete_build(request: Request, context: &Context) -> String {
 pub fn build_help(request: &Request, context: &Context) -> String {
     request.current
         .and_then(|rc| context.find(&rc, true))
-        .map(|c| c.build_command_usage(context))
+        .map(|c| c.build_command_usage(&context.build_command_chain()))
         .unwrap_or_else(|| build_full_help(context))
 }
 
