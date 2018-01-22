@@ -77,7 +77,7 @@ Dependencies:
 #[test]
 fn should_build_help_text_for_specific_command_with_no_dependencies() {
     let command = Command {
-        command: s!("action"),
+        name: s!("action"),
         description: s!("a-description"),
         usage: Some(s!("-f FILENAME -a SOMETHING VALUE")),
         dependencies: None,
@@ -113,12 +113,12 @@ a-description
 #[test]
 fn should_show_auto_completion_when_command_not_found() {
     let command_1 = Command {
-        command: s!("first-command"),
+        name: s!("first-command"),
         ..a_command()
     };
 
     let command_2 = Command {
-        command: s!("second-command"),
+        name: s!("second-command"),
         ..a_command()
     };
 
@@ -154,7 +154,7 @@ second-command
 #[test]
 fn should_show_auto_completion_when_command_found() {
     let command_1 = Command {
-        command: s!("first-command"),
+        name: s!("first-command"),
         ..a_command()
     };
 
@@ -184,7 +184,7 @@ fn should_show_auto_completion_when_command_found() {
 #[test]
 fn should_show_nothing_when_command_found_and_auto_completion_required_for_command() {
     let command_1 = Command {
-        command: s!("first-command"),
+        name: s!("first-command"),
         ..a_command()
     };
 

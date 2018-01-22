@@ -8,6 +8,6 @@ pub fn execute_auto_complete(context: &Context) -> Work {
 
 pub fn build_auto_complete(context: &Context) -> String {
     context.get_commands().iter()
-        .fold(s!(), |a, b| format!("{}{}\n", a, &b.command))
+        .fold(s!(), |a, b| format!("{}{}\n", a, &b.name))
 }
 

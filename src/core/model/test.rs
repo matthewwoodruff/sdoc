@@ -38,9 +38,9 @@ mod command {
     fn should_deserialize_node_command() {
         let yaml_string =
             r#"---
-command: stack
+name: stack
 description: a description
-command_type: Node
+type: Node
 "#;
         let actual_command: Command = serde_yaml::from_str(yaml_string).expect("Failed to parse yaml");
 
@@ -51,10 +51,10 @@ command_type: Node
     fn should_deserialize_full_command() {
         let yaml_string =
             r#"---
-command: update
+name: update
 description: a description
 min_args: 1
-command_type:
+type:
     Script: update.sh
 usage: <name>
 dependencies:
@@ -69,7 +69,7 @@ alias: h
         };
 
         let expected_command = Command {
-            command: s!("update"),
+            name: s!("update"),
             description: s!("a description"),
             command_type: Executable::Script(s!("update.sh")),
             usage: Some(s!("<name>")),
@@ -87,9 +87,9 @@ alias: h
     fn should_deserialize_shell_command() {
         let yaml_string =
             r#"---
-command: update
+name: update
 description: a description
-command_type:
+type:
     Shell: update.sh
 "#;
 

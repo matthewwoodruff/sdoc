@@ -53,7 +53,7 @@ fn format_section(section: &Section) -> String {
 
 fn format_command(command: &Command) -> String {
     format!("{:12}{:6}{}",
-            command.command,
+            command.name,
             command.alias.as_ref().unwrap_or(&String::new()),
             command.description)
 }

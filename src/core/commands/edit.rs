@@ -32,7 +32,7 @@ pub fn auto_complete(request: Request, context: &Context) -> Work {
                         }
                         false
                     })
-                    .fold(s!(), |a, b| format!("{}{}\n", a, &b.command)));
+                    .fold(s!(), |a, b| format!("{}{}\n", a, &b.name)));
 
                 Action::instruction(Display(s))
             }))

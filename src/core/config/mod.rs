@@ -42,7 +42,7 @@ impl<'a> Context<'a> {
 
     pub fn next(&self, request_command: &String) -> Context {
         let resolved_command = self.find(&request_command, true)
-            .map(|c| &c.command)
+            .map(|c| &c.name)
             .unwrap_or(&request_command)
             .to_owned();
 
@@ -99,7 +99,7 @@ pub fn edit_command() -> Command {
         description: s!("Edit the implementation of a command"),
         alias: Some(s!("e")),
         usage: Some(s!("<command>")),
-        command: s!("edit"),
+        name: s!("edit"),
         min_args: Some(1),
         dependencies: Some(vec![
             Dependency {
@@ -115,7 +115,7 @@ pub fn help_command() -> Command {
         description: s!("Show help for all commands or a specific command"),
         alias: Some(s!("h")),
         usage: Some(s!("[command]")),
-        command: s!("help"),
+        name: s!("help"),
         dependencies: None,
         min_args: None
     }
@@ -127,7 +127,7 @@ pub fn view_command() -> Command {
         description: s!("View the implementation of a command"),
         alias: Some(s!("v")),
         usage: None,
-        command: s!("view"),
+        name: s!("view"),
         min_args: None,
         dependencies: None
     }
@@ -139,7 +139,7 @@ pub fn edit_config_command() -> Command {
         description: s!("Edit the configuration file"),
         alias: Some(s!("ec")),
         usage: None,
-        command: s!("edit-config"),
+        name: s!("edit-config"),
         min_args: None,
         dependencies: Some(vec![
             Dependency {

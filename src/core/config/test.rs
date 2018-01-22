@@ -6,8 +6,8 @@ use core::test_helper::{a_context, a_section, a_command};
 
 #[test]
 fn should_return_commands_for_all_sections() {
-    let my_command_1 = Command { command: s!("first"), ..a_command() };
-    let my_command_2 = Command { command: s!("second"), ..a_command() };
+    let my_command_1 = Command { name: s!("first"), ..a_command() };
+    let my_command_2 = Command { name: s!("second"), ..a_command() };
     let section_1 = Section { commands: vec![my_command_1], ..a_section() };
     let section_2 = Section { commands: vec![my_command_2], ..a_section() };
 
@@ -20,8 +20,8 @@ fn should_return_commands_for_all_sections() {
 
     let actual_commands = context.get_commands();
     assert_eq!(actual_commands.len(), 2);
-    assert_eq!(actual_commands[0].command, s!("first"));
-    assert_eq!(actual_commands[1].command, s!("second"));
+    assert_eq!(actual_commands[0].name, s!("first"));
+    assert_eq!(actual_commands[1].name, s!("second"));
 }
 
 #[test]

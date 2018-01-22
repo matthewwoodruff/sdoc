@@ -17,8 +17,9 @@ pub struct Section {
 
 #[derive(Deserialize, Debug, PartialEq)]
 pub struct Command {
-    pub command: String,
+    pub name: String,
     pub description: String,
+    #[serde(rename = "type")]
     pub command_type: Executable,
     pub usage: Option<String>,
     pub alias: Option<String>,
@@ -32,7 +33,7 @@ impl Command {
     }
 
     pub fn matches_command(&self, request_command: &String) -> bool {
-        self.command.eq(request_command)
+        self.name.eq(request_command)
     }
 
     pub fn matches(&self, request_command: &String) -> bool {
@@ -75,7 +76,7 @@ impl Command {
 
         format!("\nUsage: {} {} {}\n\n{}\n{}",
                 command_chain,
-                &self.command,
+                &self.name,
                 self.usage.as_ref().unwrap_or(&s!()),
                 &self.description,
                 dependencies)

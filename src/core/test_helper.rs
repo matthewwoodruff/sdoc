@@ -23,7 +23,7 @@ pub fn a_section() -> Section {
 
 pub fn a_command() -> Command {
     Command {
-        command: s!("action"),
+        name: s!("action"),
         description: s!("a-description"),
         command_type: Executable::Shell(s!("dm stack")),
         usage: None,
