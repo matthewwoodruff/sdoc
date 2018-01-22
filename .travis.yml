@@ -3,16 +3,17 @@ cache: cargo
 
 rust:
 - stable
+- nightly
 
 matrix:
-  fast_finish: true      
+  fast_finish: true
+  allow_failures:
+  - rust: nightly
   include:
   - os: osx
-    env: TARGET=x86_64-apple-darwin        
+    env: TARGET=x86_64-apple-darwin
   - os: linux
-    env: TARGET=x86_64-unknown-linux-gnu
-  - os: linux
-    env: TARGET=x86_64-unknown-linux-musl   
+    env: TARGET=x86_64-unknown-linux-musl
 
 script: ./build.sh
 
@@ -27,4 +28,5 @@ deploy:
   on:
     repo: matthewwoodruff/sdoc
     tags: true
+    condition: $TRAVIS_RUST_VERSION = stable
 
