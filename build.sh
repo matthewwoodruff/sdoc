@@ -24,6 +24,7 @@ cargo build --release --target $target
 ./test/run.sh $exe
 
 mkdir -p dist
+declare build=${TRAVIS_TAG:-SNAPSHOT}
 tar czf dist/sdoc-$build-$target.tar.gz $exe
 
 exit 0
