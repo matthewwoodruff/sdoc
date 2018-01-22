@@ -2,7 +2,9 @@
 set -e
 
 declare target=$TARGET
-default_target=$(rustc +nightly -Z unstable-options --print target-spec-json | jq -r '."llvm-target"')
+default_target=$(head -n 1 <<<$(rustup show) | cut -d ' ' -f 3)
+
+echo "Default target is: $default_target"
 
 if [[ -z "$target" ]];
 then
