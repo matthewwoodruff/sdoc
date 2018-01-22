@@ -1,0 +1,8 @@
+---
+- heading: "Commands"
+  commands:
+  - command: print
+    alias: p
+    description: Prints hello world
+    command_type:
+      Shell: echo hello world from sub command

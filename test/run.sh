@@ -27,4 +27,5 @@ should 'show command usage when dependency check fails for command' "$exe com-de
 should 'execute command when dependencies are satisfied with command' "PATH=\"$PATH:$test_dir/data/test-bin\" $exe com-dep"
 should 'execute a script command' "$exe script"
 should 'pass arguments to script correctly' "$exe script 'one two' 'three'"
+should 'execute sub command' "$exe sub print"
 exit 0

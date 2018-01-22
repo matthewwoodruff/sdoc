@@ -1,4 +1,10 @@
 ---
+- heading: "Node Commands"
+  commands:
+  - command: sub
+    description: A sub command
+    command_type: Node
+
 - heading: "Commands"
   commands:
   - command: print

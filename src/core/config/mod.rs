@@ -36,7 +36,7 @@ impl<'a> Context<'a> {
 
     pub fn exec_directory(&self, commands: &Vec<String>) -> PathBuf {
         commands.iter()
-            .map(|c| format!("{}-commands", c))
+            .map(|c| format!("{}", c))
             .fold(self.directory.to_owned(), |a, b| a.join(b))
     }
 
