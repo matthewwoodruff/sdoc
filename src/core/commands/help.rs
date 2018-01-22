@@ -22,7 +22,7 @@ pub fn execute_help(context: &Context) -> Work {
 fn auto_complete_build(request: Request, context: &Context) -> String {
     request.current
         .and_then(|rc| context.find(&rc, false))
-        .map(|_| String::new())
+        .map(|_| s!())
         .unwrap_or_else(|| build_auto_complete(context))
 }
 

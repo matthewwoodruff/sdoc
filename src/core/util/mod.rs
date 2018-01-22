@@ -4,15 +4,15 @@ mod test;
 use std::process;
 use core::dto::Response;
 
-pub fn run_system_command(command: String) -> Response {
+pub fn run_system_command(command: &String) -> Response {
     run_system_command_with_output(command, process::Stdio::inherit())
 }
 
-pub fn run_system_command_ignoring_output(command: String) -> Response {
+pub fn run_system_command_ignoring_output(command: &String) -> Response {
     run_system_command_with_output(command, process::Stdio::null())
 }
 
-fn run_system_command_with_output(command: String, stdio: process::Stdio) -> Response {
+fn run_system_command_with_output(command: &String, stdio: process::Stdio) -> Response {
     process::Command::new("bash")
         .arg("-c")
         .arg(command)

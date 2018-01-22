@@ -27,11 +27,11 @@ echo $COMMANDS_DIRECTORY
 echo
 
 function add_snapshot() {
-	content=${1:?Content expected}
-	filename=${2:?Filename expected}
+	local content=${1:?Content expected}
+	local filename=${2:?Filename expected}
 	echo -n 'Approve? (y/n) '
 	read approve
-	[[ "$approve" == "y" ]] && echo -n "$actual" > $filename
+	[[ "$approve" == "y" ]] && echo -n "$content" > ${filename}
 }
 
 function should () {

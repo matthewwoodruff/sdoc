@@ -15,10 +15,10 @@ pub fn execute(request: Request, context: &Context) -> Work {
                         Action::instruction(SystemCommand(format!("cat {}/{}", context.exec_directory.display(), b), true)),
                     Executable::Shell(ref b) =>
                         Action::instruction(Display(format!("{}", b))),
-                    _ => Action::just_response(Response::Err(18))
+                    _ => Action::response(Response::Err(18))
                 }
             })
-            .unwrap_or_else(|| Action::just_response(Response::Err(18))))
+            .unwrap_or_else(|| Action::response(Response::Err(18))))
 }
 
 pub fn auto_complete(request: Request, context: &Context) -> Work {
@@ -26,7 +26,7 @@ pub fn auto_complete(request: Request, context: &Context) -> Work {
         request.next()
             .current
             .and_then(|rc| context.find(&rc, false))
-            .map(|_| Action::just_response(Response::Ok))
+            .map(|_| Action::response(Response::Ok))
             .unwrap_or_else(|| {
                 let s = format!("{}", context.get_commands().iter()
                     .filter(|c| {
@@ -36,8 +36,8 @@ pub fn auto_complete(request: Request, context: &Context) -> Work {
                             _ => false
                         }
                     })
-                    .fold(String::new(), |a, b| format!("{}{}\n", a, &b.command)));
+                    .fold(s!(), |a, b| format!("{}{}\n", a, &b.command)));
 
-                Action::instruction(Display(s)).response(Response::Ok)
+                Action::instruction(Display(s))
             }))
 }

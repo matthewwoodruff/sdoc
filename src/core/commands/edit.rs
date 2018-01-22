@@ -13,9 +13,9 @@ pub fn execute(request: Request, context: &Context) -> Work {
                 if let Executable::Script(ref b) = command.command_type {
                     return Action::instruction(SystemCommand(format!("$EDITOR {}/{}", context.exec_directory.display(), b), true));
                 }
-                Action::just_response(Response::Err(18))
+                Action::response(Response::Err(18))
             })
-            .unwrap_or_else(|| Action::just_response(Response::Err(18))))
+            .unwrap_or_else(|| Action::response(Response::Err(18))))
 }
 
 pub fn auto_complete(request: Request, context: &Context) -> Work {
@@ -23,7 +23,7 @@ pub fn auto_complete(request: Request, context: &Context) -> Work {
         request.next()
             .current
             .and_then(|rc| context.find(&rc, false))
-            .map(|_| Action::just_response(Response::Ok))
+            .map(|_| Action::response(Response::Ok))
             .unwrap_or_else(|| {
                 let s = format!("{}", context.get_commands().iter()
                     .filter(|c| {
@@ -32,8 +32,8 @@ pub fn auto_complete(request: Request, context: &Context) -> Work {
                         }
                         false
                     })
-                    .fold(String::new(), |a, b| format!("{}{}\n", a, &b.command)));
+                    .fold(s!(), |a, b| format!("{}{}\n", a, &b.command)));
 
-                Action::instruction(Display(s)).response(Response::Ok)
+                Action::instruction(Display(s))
             }))
 }
