@@ -16,15 +16,15 @@ fi
 
 echo Building for $target
 
-declare exe=target/$target/release/sdoc
+declare path=target/$target/release
 
 cargo clean 
 cargo test --all --target $target
 cargo build --release --target $target
-./test/run.sh $exe
+./test/run.sh $path/sdoc
 
 mkdir -p dist
 declare build=${TRAVIS_TAG:-SNAPSHOT}
-tar czf dist/sdoc-$build-$target.tar.gz $exe
+tar czf dist/sdoc-$build-$target.tar.gz -C $path sdoc
 
 exit 0
