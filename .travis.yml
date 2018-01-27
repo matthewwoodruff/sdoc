@@ -28,5 +28,5 @@ deploy:
   on:
     repo: matthewwoodruff/sdoc
     tags: true
-    condition: $TRAVIS_RUST_VERSION = stable
+    condition: "$TRAVIS_RUST_VERSION = stable && $TARGET != ''"
 
