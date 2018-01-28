@@ -37,9 +37,7 @@ pub fn build_full_help(context: &Context) -> String {
     let sections: Vec<String> = context.sections.iter()
         .map(|s| format_section(s))
         .collect();
-    format!("\n{}\n{}\n\n{}\n\n{}",
-            "Welcome to the Depot Management CLI",
-            "===================================",
+    format!("\n{}\n\n{}",
             format!("Usage: {} <command> [args]", context.resolved_commands.join(" ")),
             sections.join("\n"))
 }

@@ -31,7 +31,7 @@ build_arg=$(test -z "$quick_build" && echo '--release' || echo -n '')
 test -z "$quick_build" && cargo clean 
 cargo test --all $build_arg --target $target
 cargo build $build_arg --target $target
-./test/run.sh $build_path/sdoc
+./test/run.sh $(test -n "$quick_build" && echo '-d' || echo -n '') $build_path/sdoc
 
 if [[ -z "$quick_build" ]];
 then

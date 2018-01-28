@@ -17,9 +17,6 @@ fn should_build_help_text_when_command_not_found() {
 
     let expected_help_text =
         r#"
-Welcome to the Depot Management CLI
-===================================
-
 Usage: dm a b c <command> [args]
 
 Built-in Commands:
