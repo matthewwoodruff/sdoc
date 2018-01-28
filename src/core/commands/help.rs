@@ -15,8 +15,8 @@ pub fn auto_complete(request: Request, context: &Context) -> Work {
     Work::instruction(Display(auto_complete_build(request, context), Response::Ok))
 }
 
-pub fn execute_help(context: &Context, response: Response) -> Work {
-    Work::instruction(Display(build_full_help(context), response))
+pub fn execute_help(request: Request, context: &Context) -> Work {
+    build_help(&request, context)
 }
 
 fn auto_complete_build(request: Request, context: &Context) -> String {

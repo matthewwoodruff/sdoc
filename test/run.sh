@@ -4,7 +4,7 @@ test_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source "$test_dir/util.sh"
 
 echo "${BLUE}Node Command$WHITE"
-should 'show help message when no arguments are supplied' "$exe" 1
+should 'show help message when no arguments are supplied' "$exe"
 should 'show help message when unknown command is given' "$exe unknown-command" 1
 should 'show autocomplete for available commands' "AUTO_COMPLETE=1 $exe"
 should 'execute sub command' "$exe sub print"
@@ -32,8 +32,8 @@ echo
 
 echo "${BLUE}Edit Command$WHITE"
 should 'show autocomplete for edit command' "AUTO_COMPLETE=2 $exe edit"
-should 'return non-zero exit code when editing a non-existing command' "$exe edit unknown-command" 1
-should 'only allow editing of script commands' "$exe edit print" 1
+should 'return non-zero exit code when editing a non-existing command' "EDITOR=vim $exe edit unknown-command" 1
+should 'only allow editing of script commands' "EDITOR=vim $exe edit print" 1
 echo
 
 echo "${BLUE}Script Command$WHITE"
