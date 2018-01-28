@@ -48,7 +48,7 @@ impl <'a> Request<'a> {
     }
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum Response {
     Ok,
     Err(i32)

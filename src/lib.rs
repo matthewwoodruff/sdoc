@@ -32,7 +32,7 @@ pub fn run() {
     };
 
     std::process::exit(
-        match workflow::run_workflow(workflow) {
+        match workflow::run_workflow(workflow, &workflow::SystemRunner) {
             Response::Ok => 0,
             Response::Err(v) => v
         })

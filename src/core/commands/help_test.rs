@@ -2,7 +2,7 @@ use core::model::{Dependency, Command, Section, DependencyType};
 use core::commands::help::build_help;
 use core::commands::help::auto_complete;
 use core::config::Context;
-use core::dto::Request;
+use core::dto::{Request, Response};
 use std::path::PathBuf;
 use core::workflow::{Work, Instruction};
 use core::test_helper::{a_command, a_context, a_section};
@@ -148,7 +148,7 @@ fn should_show_auto_completion_when_command_not_found() {
 second-command
 "#;
 
-    assert_eq!(work, Work::instruction(Instruction::Display(String::from(expected_help_text))));
+    assert_eq!(work, Work::instruction(Instruction::Display(s!(expected_help_text), Response::Ok)));
 }
 
 #[test]
@@ -178,7 +178,7 @@ fn should_show_auto_completion_when_command_found() {
         r#"first-command
 "#;
 
-    assert_eq!(work, Work::instruction(Instruction::Display(String::from(expected_help_text))));
+    assert_eq!(work, Work::instruction(Instruction::Display(s!(expected_help_text), Response::Ok)));
 }
 
 #[test]
@@ -204,5 +204,5 @@ fn should_show_nothing_when_command_found_and_auto_completion_required_for_comma
 
     let work = auto_complete(request, &context);
 
-    assert_eq!(work, Work::instruction(Instruction::Display(s!())));
+    assert_eq!(work, Work::instruction(Instruction::Display(s!(), Response::Ok)));
 }

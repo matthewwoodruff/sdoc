@@ -8,6 +8,8 @@ use core::test_helper::{a_command, a_context};
 use core::model::Executable::Shell;
 
 mod command {
+    extern crate core;
+
     use super::*;
 
     #[test]
@@ -121,7 +123,7 @@ type:
         let actual_work = run(&command);
 
         let dependency_check = Work::instruction(SystemCommand(s!("test -n \"$EDITOR\""), false))
-            .on_error(Action::instruction(Display(command.build_command_usage(&s!("dm a b c")))));
+            .on_error(Display(command.build_command_usage(&s!("dm a b c")), Response::Err(1)));
         let command_work = Work::instruction(SystemCommand(s!("echo hello world "), true));
 
         assert_eq!(actual_work, vec![dependency_check, command_work])

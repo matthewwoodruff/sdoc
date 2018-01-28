@@ -1,29 +1,30 @@
-use core::workflow::{Work, Action};
-use core::workflow::Instruction::{Display, SystemCommand};
+use core::workflow::Work;
+use core::workflow::Instruction::{Display, SystemCommand, ExitCode};
 use core::model::Executable;
-use core::dto::{Request, Response};
+use core::dto::Request;
+use core::dto::Response::{Ok, Err};
 use core::config::Context;
 
 pub fn execute(request: Request, context: &Context) -> Work {
-    Work::action(
+    Work::instruction(
         request.next()
             .current
             .and_then(|rc| context.find(&rc, true))
             .map(|command| {
                 if let Executable::Script(ref b) = command.command_type {
-                    return Action::instruction(SystemCommand(format!("$EDITOR {}/{}", context.exec_directory.display(), b), true));
+                    return SystemCommand(format!("$EDITOR {}/{}", context.exec_directory.display(), b), true);
                 }
-                Action::response(Response::Err(18))
+                ExitCode(Err(18))
             })
-            .unwrap_or_else(|| Action::response(Response::Err(18))))
+            .unwrap_or_else(|| ExitCode(Err(18))))
 }
 
 pub fn auto_complete(request: Request, context: &Context) -> Work {
-    Work::action(
+    Work::instruction(
         request.next()
             .current
             .and_then(|rc| context.find(&rc, false))
-            .map(|_| Action::response(Response::Ok))
+            .map(|_| ExitCode(Ok))
             .unwrap_or_else(|| {
                 let s = format!("{}", context.get_commands().iter()
                     .filter(|c| {
@@ -34,6 +35,6 @@ pub fn auto_complete(request: Request, context: &Context) -> Work {
                     })
                     .fold(s!(), |a, b| format!("{}{}\n", a, &b.name)));
 
-                Action::instruction(Display(s))
+                Display(s, Ok)
             }))
 }

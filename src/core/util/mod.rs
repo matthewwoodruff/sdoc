@@ -1,19 +1,16 @@
 #[cfg(test)]
 mod test;
 
-use std::process;
+use std::process::{Stdio, Command};
 use core::dto::Response;
 
-pub fn run_system_command(command: &String) -> Response {
-    run_system_command_with_output(command, process::Stdio::inherit())
+pub fn run_system_command(command: &String, output: bool) -> Response {
+    let out = if output {Stdio::inherit()} else {Stdio::null()};
+    _run_system_command_with_output(command, out)
 }
 
-pub fn run_system_command_ignoring_output(command: &String) -> Response {
-    run_system_command_with_output(command, process::Stdio::null())
-}
-
-fn run_system_command_with_output(command: &String, stdio: process::Stdio) -> Response {
-    process::Command::new("bash")
+fn _run_system_command_with_output(command: &String, stdio: Stdio) -> Response {
+    Command::new("bash")
         .arg("-c")
         .arg(command)
         .stdout(stdio)

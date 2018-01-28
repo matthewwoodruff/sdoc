@@ -5,8 +5,9 @@ mod test;
 
 use core::config::Context;
 use core::dto::{Request, Response};
-use core::workflow::{Work, Action};
+use core::workflow::Work;
 use core::workflow::Instruction::{Display, SystemCommand};
+use core::workflow::Instruction;
 use core::commands::{node, shell, help, editconfig, edit, view};
 
 #[derive(Debug, Deserialize, PartialEq)]
@@ -51,13 +52,13 @@ impl Command {
                 };
 
                 Work::instruction(SystemCommand(result, false))
-                    .on_error(self.build_command_usage_action(command_chain))
+                    .on_error(self.build_command_usage_action(command_chain, Response::Err(1)))
             })
             .collect()
     }
 
-    fn build_command_usage_action(&self, command_chain: &String) -> Action {
-        Action::instruction(Display(self.build_command_usage(command_chain)))
+    fn build_command_usage_action(&self, command_chain: &String, response: Response) -> Instruction {
+        Display(self.build_command_usage(command_chain), response)
     }
 
     pub fn build_command_usage(&self, command_chain: &String) -> String {
@@ -87,7 +88,7 @@ impl Command {
         let mut work : Vec<Work> = self.dependency_checks(command_chain);
 
         if self.min_args.map(|v| v > request.next.len()).unwrap_or(false) {
-            work.push(Work::action(self.build_command_usage_action(command_chain)))
+            work.push(Work::instruction(self.build_command_usage_action(command_chain, Response::Err(1))))
         } else {
             work.append(&mut self.command_type.execute(request, context))
         }

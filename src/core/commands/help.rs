@@ -1,5 +1,5 @@
 use core::config::Context;
-use core::dto::Request;
+use core::dto::{Request, Response};
 use core::model::{Command, Section};
 use core::workflow::Work;
 use core::workflow::Instruction::Display;
@@ -7,16 +7,16 @@ use core::commands::util::build_auto_complete;
 
 pub fn execute(request: Request, context: &Context) -> Work {
     let request = request.next();
-    Work::instruction(Display(build_help(&request, context)))
+    Work::instruction(Display(build_help(&request, context), Response::Ok))
 }
 
 pub fn auto_complete(request: Request, context: &Context) -> Work {
     let request = request.next();
-    Work::instruction(Display(auto_complete_build(request, context)))
+    Work::instruction(Display(auto_complete_build(request, context), Response::Ok))
 }
 
 pub fn execute_help(context: &Context) -> Work {
-    Work::instruction(Display(build_full_help(context)))
+    Work::instruction(Display(build_full_help(context), Response::Ok))
 }
 
 fn auto_complete_build(request: Request, context: &Context) -> String {
