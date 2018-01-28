@@ -27,7 +27,7 @@ echo $COMMANDS_DIRECTORY
 echo
 
 function add_snapshot() {
-	local content=${1:?Content expected}
+	local content=$1
 	local filename=${2:?Filename expected}
 	echo -n 'Approve? (y/n) '
 	read approve

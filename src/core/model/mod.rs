@@ -52,7 +52,7 @@ impl Command {
                 };
 
                 Work::instruction(SystemCommand(result, false))
-                    .on_error(self.build_command_usage_action(command_chain, Response::Err(1)))
+                    .on_error(self.build_command_usage_action(command_chain, Response::Err(3)))
             })
             .collect()
     }
@@ -88,7 +88,7 @@ impl Command {
         let mut work : Vec<Work> = self.dependency_checks(command_chain);
 
         if self.min_args.map(|v| v > request.next.len()).unwrap_or(false) {
-            work.push(Work::instruction(self.build_command_usage_action(command_chain, Response::Err(1))))
+            work.push(Work::instruction(self.build_command_usage_action(command_chain, Response::Err(2))))
         } else {
             work.append(&mut self.command_type.execute(request, context))
         }

@@ -123,7 +123,7 @@ type:
         let actual_work = run(&command);
 
         let dependency_check = Work::instruction(SystemCommand(s!("test -n \"$EDITOR\""), false))
-            .on_error(Display(command.build_command_usage(&s!("dm a b c")), Response::Err(1)));
+            .on_error(Display(command.build_command_usage(&s!("dm a b c")), Response::Err(3)));
         let command_work = Work::instruction(SystemCommand(s!("echo hello world "), true));
 
         assert_eq!(actual_work, vec![dependency_check, command_work])
