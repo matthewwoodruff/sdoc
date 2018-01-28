@@ -1,13 +1,11 @@
 use core::workflow::Work;
-use core::dto::{Response, Request};
+use core::dto::Request;
 use core::commands::{help, util};
 use core::config::Context;
 
 pub fn execute(request: Request, context: &Context) -> Vec<Work> {
-    match request.current {
-        Some(t) => execute_next_command(request.next(), &context.next(t)),
-        None => vec![Work::response(Response::Err(18))]
-    }
+    let command = request.current.unwrap();
+    execute_next_command(request.next(), &context.next(command))
 }
 
 fn execute_next_command(request: Request, context: &Context) -> Vec<Work> {
@@ -18,10 +16,8 @@ fn execute_next_command(request: Request, context: &Context) -> Vec<Work> {
 }
 
 pub fn execute_auto_complete(request: Request, context: &Context) -> Vec<Work> {
-    match request.current {
-        Some(t) => execute_next_command_auto_complete(request.next(), &context.next(t)),
-        None => vec![Work::response(Response::Err(18))]
-    }
+    let command = request.current.unwrap();
+    execute_next_command_auto_complete(request.next(), &context.next(command))
 }
 
 fn execute_next_command_auto_complete(request: Request, context: &Context) -> Vec<Work> {

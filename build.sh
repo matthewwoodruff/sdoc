@@ -1,6 +1,13 @@
 #! /usr/bin/env bash 
 set -e
 
+while getopts ":q" opt; do
+  case "$opt" in
+    q) quick_build='true';
+  esac
+done
+shift $((OPTIND-1))
+
 declare target=$TARGET
 default_target=$(head -n 1 <<<$(rustup show) | cut -d ' ' -f 3)
 
@@ -14,17 +21,23 @@ then
   rustup target add $target
 fi
 
-echo Building for $target
+full_build_type=$(test -z "$quick_build" && echo 'release' || echo 'debug')
 
-declare path=target/$target/release
+echo Building $full_build_type for $target
 
-cargo clean 
-cargo test --all --target $target
-cargo build --release --target $target
-./test/run.sh $path/sdoc
+declare build_path=target/$target/$full_build_type
+build_arg=$(test -z "$quick_build" && echo '--release' || echo -n '') 
 
-mkdir -p dist
-declare build=${TRAVIS_TAG:-SNAPSHOT}
-tar czf dist/sdoc-$build-$target.tar.gz -C $path sdoc
+test -z "$quick_build" && cargo clean 
+cargo test --all $build_arg --target $target
+cargo build $build_arg --target $target
+./test/run.sh $build_path/sdoc
+
+if [[ -z "$quick_build" ]];
+then
+  mkdir -p dist
+  declare build=${TRAVIS_TAG:-SNAPSHOT}
+  tar czf dist/sdoc-$build-$target.tar.gz -C $build_path sdoc
+fi
 
 exit 0
