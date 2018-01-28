@@ -14,9 +14,9 @@ pub fn execute(request: Request, context: &Context) -> Work {
                 if let Executable::Script(ref b) = command.command_type {
                     return SystemCommand(format!("$EDITOR {}/{}", context.exec_directory.display(), b), true);
                 }
-                ExitCode(Err(18))
+                ExitCode(Err(1))
             })
-            .unwrap_or_else(|| ExitCode(Err(18))))
+            .unwrap_or_else(|| ExitCode(Err(1))))
 }
 
 pub fn auto_complete(request: Request, context: &Context) -> Work {

@@ -7,7 +7,7 @@ use core::commands::util::build_auto_complete;
 
 pub fn execute(request: Request, context: &Context) -> Work {
     let request = request.next();
-    Work::instruction(Display(build_help(&request, context), Response::Ok))
+    build_help(&request, context)
 }
 
 pub fn auto_complete(request: Request, context: &Context) -> Work {
@@ -26,11 +26,15 @@ fn auto_complete_build(request: Request, context: &Context) -> String {
         .unwrap_or_else(|| build_auto_complete(context))
 }
 
-pub fn build_help(request: &Request, context: &Context) -> String {
-    request.current
-        .and_then(|rc| context.find(&rc, true))
-        .map(|c| c.build_command_usage(&context.build_command_chain()))
-        .unwrap_or_else(|| build_full_help(context))
+pub fn build_help(request: &Request, context: &Context) -> Work {
+    Work::instruction(match request.current {
+        Some(rc) => {
+            context.find(&rc, true)
+                .map(|c| Display(c.build_command_usage(&context.build_command_chain()), Response::Ok))
+                .unwrap_or_else(|| Display(build_full_help(context), Response::Err(1)))
+        }
+        _ => Display(build_full_help(context), Response::Ok)
+    })
 }
 
 pub fn build_full_help(context: &Context) -> String {

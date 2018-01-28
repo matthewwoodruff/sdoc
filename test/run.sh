@@ -13,12 +13,14 @@ echo
 
 echo "${BLUE}Help Command$WHITE"
 should 'show help for specific command' "$exe help print"
+should 'show help message when help is ran' "$exe help"
 should 'show help for specific command using alias' "$exe help p"
 should 'show help for help command' "$exe help help"
 should 'show help for view command' "$exe help view"
 should 'show help for edit command' "$exe help edit"
 should 'show help for edit-config command' "$exe help edit-config"
 should 'show autocomplete for help command' "AUTO_COMPLETE=2 $exe help"
+should 'return non-zero exit code when asking for help on a non-existing command' "$exe help unknown-command" 1
 echo
 
 echo "${BLUE}View Command$WHITE"
@@ -30,6 +32,8 @@ echo
 
 echo "${BLUE}Edit Command$WHITE"
 should 'show autocomplete for edit command' "AUTO_COMPLETE=2 $exe edit"
+should 'return non-zero exit code when editing a non-existing command' "$exe edit unknown-command" 1
+should 'only allow editing of script commands' "$exe edit print" 1
 echo
 
 echo "${BLUE}Script Command$WHITE"

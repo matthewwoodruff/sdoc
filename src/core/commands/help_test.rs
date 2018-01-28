@@ -1,19 +1,20 @@
 use core::model::{Dependency, Command, Section, DependencyType};
-use core::commands::help::build_help;
+use core::commands::help::execute;
 use core::commands::help::auto_complete;
 use core::config::Context;
 use core::dto::{Request, Response};
 use std::path::PathBuf;
 use core::workflow::{Work, Instruction};
+use core::workflow::Instruction::Display;
 use core::test_helper::{a_command, a_context, a_section};
 
 #[test]
 fn should_build_help_text_when_command_not_found() {
     let directory = PathBuf::new();
     let context = a_context(&directory);
-    let args = vec![s!("update")];
+    let args = vec![s!("help"), s!("update")];
     let request = Request::new(&args, None);
-    let help_text = build_help(&request, &context);
+    let actual_help = execute(request, &context);
 
     let expected_help_text =
         r#"
@@ -26,7 +27,29 @@ Built-in Commands:
   view        v     View the implementation of a command
 "#;
 
-    assert_eq!(help_text, expected_help_text);
+    assert_eq!(actual_help, Work::instruction(Display(s!(expected_help_text), Response::Err(1))));
+}
+
+#[test]
+fn should_build_help_text_when_no_args_given() {
+    let directory = PathBuf::new();
+    let context = a_context(&directory);
+    let args = vec![s!("help")];
+    let request = Request::new(&args, None);
+    let actual_help = execute(request, &context);
+
+    let expected_help_text =
+        r#"
+Usage: dm a b c <command> [args]
+
+Built-in Commands:
+  help        h     Show help for all commands or a specific command
+  edit        e     Edit the implementation of a command
+  edit-config ec    Edit the configuration file
+  view        v     View the implementation of a command
+"#;
+
+    assert_eq!(actual_help, Work::instruction(Display(s!(expected_help_text), Response::Ok)));
 }
 
 #[test]
@@ -54,9 +77,9 @@ fn should_build_usage_for_command_with_dependencies() {
         ..a_context(&directory)
     };
     let args = vec![s!("help"), s!("action")];
-    let request = Request::new(&args, None).next();
+    let request = Request::new(&args, None);
 
-    let help_text = build_help(&request, &context);
+    let actual_help = execute(request, &context);
 
     let expected_help_text =
         r#"
@@ -68,7 +91,7 @@ Dependencies:
   ENV_VAR     Set this variable
 "#;
 
-    assert_eq!(help_text, expected_help_text);
+    assert_eq!(actual_help, Work::instruction(Display(s!(expected_help_text), Response::Ok)));
 }
 
 #[test]
@@ -93,9 +116,9 @@ fn should_build_help_text_for_specific_command_with_no_dependencies() {
         ..a_context(&directory)
     };
     let args = vec![s!("help"), s!("action")];
-    let request = Request::new(&args, None).next();
+    let request = Request::new(&args, None);
 
-    let help_text = build_help(&request, &context);
+    let help_text = execute(request, &context);
 
     let expected_help_text =
         r#"
@@ -104,7 +127,7 @@ Usage: dm a b c action -f FILENAME -a SOMETHING VALUE
 a-description
 "#;
 
-    assert_eq!(help_text, expected_help_text);
+    assert_eq!(help_text, Work::instruction(Display(s!(expected_help_text), Response::Ok)));
 }
 
 #[test]

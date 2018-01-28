@@ -1,0 +1,18 @@
+
+Usage: sdoc <command> [args]
+
+Built-in Commands:
+  help        h     Show help for all commands or a specific command
+  edit        e     Edit the implementation of a command
+  edit-config ec    Edit the configuration file
+  view        v     View the implementation of a command
+
+Node Commands:
+  sub               A sub command
+
+Commands:
+  print       p     Prints hello world
+  min-args          I require arguments
+  deps              I have dependency requirements
+  com-dep           I have command requirements
+  script            A simple script
