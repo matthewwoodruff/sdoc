@@ -2,6 +2,9 @@
 name = "sdoc"
 version = "0.2.2"
 authors = ["Matthew Woodruff <mwoodruf@thoughtworks.com>"]
+repository = "https://github.com/matthewwoodruff/sdoc"
+homepage = "https://github.com/matthewwoodruff/sdoc"
+readme = "README.md"
 
 [dependencies]
 serde_derive = "1.0.11"
