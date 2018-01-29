@@ -2,9 +2,22 @@
 name = "sdoc"
 version = "0.2.2"
 authors = ["Matthew Woodruff <mwoodruf@thoughtworks.com>"]
+description = "CLI framework for sharing workflows"
 repository = "https://github.com/matthewwoodruff/sdoc"
 homepage = "https://github.com/matthewwoodruff/sdoc"
 readme = "README.md"
+license = "LGPL-2.1"
+include = [
+    "**/*.rs",
+    "Cargo.toml",
+]
+
+[badges]
+travis-ci = { repository = "matthewwoodruff/sdoc" }
+
+[[bin]]
+name = "sdoc"
+path = "src/main.rs"
 
 [dependencies]
 serde_derive = "1.0.11"
