@@ -1,6 +1,6 @@
 #! /bin/bash
 
-set -eu
+set -evu
 
 version=${1:?First argument is the version you want to tag, like '1.0.0'}
 

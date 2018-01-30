@@ -7,10 +7,10 @@ help:
 	$(info cargo-release  - Create a tag for the new release  )
 
 build:
-	./build.sh
+	./bin/build.sh
 
 dev-build:
-	./build.sh -q
+	./bin/build.sh -q
 
 tag-release: VERSION
 	./bin/tag-release.sh $$(cat VERSION)

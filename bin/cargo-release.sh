@@ -1,5 +1,7 @@
 #! /bin/bash
 
+set -ev
+
 echo Cargo publish 
 
 cargo login "$CRATES_API_TOKEN"
