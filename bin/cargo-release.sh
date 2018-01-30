@@ -1,5 +1,8 @@
 #! /bin/bash
 
-echo The variable is $MY_SECRET_ENV
+echo Cargo publish 
+
+cargo login "$CRATES_API_TOKEN"
+cargo publish
 
 exit 0
