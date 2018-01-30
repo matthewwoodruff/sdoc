@@ -40,3 +40,4 @@ then
   tar czf dist/sdoc-$build-$target.tar.gz -C $build_path sdoc
 fi
 
+exit 0
