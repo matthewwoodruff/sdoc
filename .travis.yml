@@ -27,8 +27,10 @@ deploy:
     condition: "$TRAVIS_RUST_VERSION = stable && $TARGET != ''"
 - provider: script
   script: make cargo-release
+  skip_cleanup: true
   on:
     repo: matthewwoodruff/sdoc
     condition: "$CARGO_RELEASE = true"
-  env:
+env:
+  deploy:
     secure: V3opgKoIej3mngbA+96S2+VRe4bK7g5aIkohMsBAv82mbXUcKtQCz5jHTDvIivFWPJQqdAII7hbYyL8IoDFDjS+5UDVlRBsw0vAAQP/LgyyDQmqN4CKlYCFTQyFmtpM81hpyRMPW7z5XVin58tnBArNLfByE4FdnjNGDgtj7xz40IS/+ONJcNSzrITzLKOYJy9zUXvrmXv0JuMBHGhuNvagbtbKBMht8hbNQ05pN5uXJJCaIV0Khfat0P5HVQCpmkHcIS8pDplezNA1xs8mynepSYUPgVnlc2RYPZN0MW3rg2mM6SP9hKkjffW5hXCHNiuqY8V9IhqL7rb4ZOtu218tdt6SgFfzHMCxA903BNtYkUfs0p3Qx6c/8QeDtjqZZhKw9HfoS3Tikxa2CSOfHNIyvKG9aNfs5grPfVzQc0cC6N2XEBO3xFpGutEdLY35/kXPI+RV1Okjbr+MJ2IvXqd1UcB7vAze+zBsmRjtIjsC6pAin4GN7JpCZOHhlLn9e4ZBJe6XxBYilOGoschjbF+p2uy4aZFg7MkniPm9OyqLYFGwV+jkvmCm2Ks8o/RAX8yRfuULZpgJe/r8KLdBi8UohFHt0SFue0Rz8YybeT0zv3IuXesouGrt9DDEbZk2yj4fFm4bfWvSJBXNCp9ldtzkKfnG8uVu2iOctn5qxIYg=
