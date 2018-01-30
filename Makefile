@@ -5,6 +5,7 @@ help:
 	$(info dev-build      - Faster build for development      )
 	$(info tag-release    - Create a tag for the new release  )
 	$(info cargo-release  - Create a tag for the new release  )
+	$(info ---------------------------------------------------)
 
 build:
 	./bin/build.sh
