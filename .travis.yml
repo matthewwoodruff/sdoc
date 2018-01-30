@@ -1,10 +1,8 @@
 language: rust
 cache: cargo
-
 rust:
 - stable
 - nightly
-
 matrix:
   fast_finish: true
   allow_failures:
@@ -13,29 +11,25 @@ matrix:
   - os: osx
     env: TARGET=x86_64-apple-darwin
   - os: linux
-    env: TARGET=x86_64-unknown-linux-musl
+    env: TARGET=x86_64-unknown-linux-musl CARGO_RELEASE=true
   - os: linux
     env: TARGET=x86_64-unknown-linux-gnu
-
 script: make build
-
-jobs:
-  include:
-  - stage: Cargo Release
-    deploy:
-      provider: script
-      script: make cargo-release
-      on:
-        repo: matthewwoodruff/sdoc
-        tags: true
-
 deploy:
-- provider: releases
-  api_key:
-    secure: k7Qt/VHSrEUeEo3A7+Chu3Oy1Ft5JCUyKDNIEgMA2Uz1cxSNLOBN9VH2cSGaTW01G5sMhESG2X0AaPn23cnJgy/XyXcGMs1mfWUE5/ilyhhB+Uw0w16HfHyfjTsDzwh5BnNqrmc6OjEnilLPsz0EkGe8Y9u1DP4+9iHGu6UV/rs/ZC+BJEqvWfHi+1gxVk/oF9aPVgWCviV1nKLbqtVXwVkVDpsEDNmiyHO7QFUZvwwDLL4FzcHMUaGtGKxFK+KS6JGlcUwg+/+CTpxYGpm5rXMkMCNJgIIWg+BvODvM25dpBbohEfTbOGA0ToAkFZP5XgX2E8nI/ymD/BZib8cvn0wche00+SeDVfPtQLPc6MvYiquX92ofvVz7Y68i6BJK10tZG7LzRKELuKqIdvUkUWP3S3tGyfBZNi7o7G++FcCSs3O6uGXkF/JpA1amMzpqdcHgxp+LZ5IGUtesdmOm7VIYEgpJQBzbbQxBJXIgrBm+zwHA4SpcQxrHb/XznCbQyAiTg8n4DCzyNbwIhzHOQIZqVqDSCC/Q4R25oNO08d+uJUaEFeHMXdBsEWYHQneWfkPZZQuAdx+3WH0CMkVEWnrRwsPTJ7LWOePfSLKnYhx14eg8v1ZYYioctYyxZWgQY3i+/qFlgcA6Y8ewDAVtvorHFMaBS/+Ol+J2d/xjfl8=
-  file: dist/sdoc-${TRAVIS_TAG}-${TARGET}.tar.gz
-  skip_cleanup: true
-  on:
-    repo: matthewwoodruff/sdoc
-    tags: true
-    condition: "$TRAVIS_RUST_VERSION = stable && $TARGET != ''"
+  matrix:
+  - provider: releases
+    api_key:
+      secure: k7Qt/VHSrEUeEo3A7+Chu3Oy1Ft5JCUyKDNIEgMA2Uz1cxSNLOBN9VH2cSGaTW01G5sMhESG2X0AaPn23cnJgy/XyXcGMs1mfWUE5/ilyhhB+Uw0w16HfHyfjTsDzwh5BnNqrmc6OjEnilLPsz0EkGe8Y9u1DP4+9iHGu6UV/rs/ZC+BJEqvWfHi+1gxVk/oF9aPVgWCviV1nKLbqtVXwVkVDpsEDNmiyHO7QFUZvwwDLL4FzcHMUaGtGKxFK+KS6JGlcUwg+/+CTpxYGpm5rXMkMCNJgIIWg+BvODvM25dpBbohEfTbOGA0ToAkFZP5XgX2E8nI/ymD/BZib8cvn0wche00+SeDVfPtQLPc6MvYiquX92ofvVz7Y68i6BJK10tZG7LzRKELuKqIdvUkUWP3S3tGyfBZNi7o7G++FcCSs3O6uGXkF/JpA1amMzpqdcHgxp+LZ5IGUtesdmOm7VIYEgpJQBzbbQxBJXIgrBm+zwHA4SpcQxrHb/XznCbQyAiTg8n4DCzyNbwIhzHOQIZqVqDSCC/Q4R25oNO08d+uJUaEFeHMXdBsEWYHQneWfkPZZQuAdx+3WH0CMkVEWnrRwsPTJ7LWOePfSLKnYhx14eg8v1ZYYioctYyxZWgQY3i+/qFlgcA6Y8ewDAVtvorHFMaBS/+Ol+J2d/xjfl8=
+    file: dist/sdoc-${TRAVIS_TAG}-${TARGET}.tar.gz
+    skip_cleanup: true
+    on:
+      repo: matthewwoodruff/sdoc
+      tags: true
+      condition: "$TRAVIS_RUST_VERSION = stable && $TARGET != ''"
+  - provider: script
+    script: make cargo-release
+    on:
+      repo: matthewwoodruff/sdoc
+      condition: "$CARGO_RELEASE = true"
+      env:
+        secure: V3opgKoIej3mngbA+96S2+VRe4bK7g5aIkohMsBAv82mbXUcKtQCz5jHTDvIivFWPJQqdAII7hbYyL8IoDFDjS+5UDVlRBsw0vAAQP/LgyyDQmqN4CKlYCFTQyFmtpM81hpyRMPW7z5XVin58tnBArNLfByE4FdnjNGDgtj7xz40IS/+ONJcNSzrITzLKOYJy9zUXvrmXv0JuMBHGhuNvagbtbKBMht8hbNQ05pN5uXJJCaIV0Khfat0P5HVQCpmkHcIS8pDplezNA1xs8mynepSYUPgVnlc2RYPZN0MW3rg2mM6SP9hKkjffW5hXCHNiuqY8V9IhqL7rb4ZOtu218tdt6SgFfzHMCxA903BNtYkUfs0p3Qx6c/8QeDtjqZZhKw9HfoS3Tikxa2CSOfHNIyvKG9aNfs5grPfVzQc0cC6N2XEBO3xFpGutEdLY35/kXPI+RV1Okjbr+MJ2IvXqd1UcB7vAze+zBsmRjtIjsC6pAin4GN7JpCZOHhlLn9e4ZBJe6XxBYilOGoschjbF+p2uy4aZFg7MkniPm9OyqLYFGwV+jkvmCm2Ks8o/RAX8yRfuULZpgJe/r8KLdBi8UohFHt0SFue0Rz8YybeT0zv3IuXesouGrt9DDEbZk2yj4fFm4bfWvSJBXNCp9ldtzkKfnG8uVu2iOctn5qxIYg=

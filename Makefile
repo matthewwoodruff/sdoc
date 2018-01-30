@@ -13,7 +13,7 @@ dev-build:
 	./build.sh -q
 
 tag-release: VERSION
-	./release.sh $$(cat VERSION)
+	./bin/tag-release.sh $$(cat VERSION)
 
 cargo-release:
-	echo "Cargo release"
+	./bin/cargo-release.sh
