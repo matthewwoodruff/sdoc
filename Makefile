@@ -1,11 +1,19 @@
 help:
+	$(info                                                    )
 	$(info Available Targets                                  )
+	$(info                                                    )
+	$(info ---------------------------------------------------)
+	$(info Build                                              )
 	$(info ---------------------------------------------------)
 	$(info build          - A full release build              )
 	$(info dev-build      - Faster build for development      )
+	$(info                                                    )
+	$(info ---------------------------------------------------)
+	$(info Release                                            )
+	$(info ---------------------------------------------------)
 	$(info tag-release    - Create a tag for the new release  )
 	$(info cargo-release  - Create a tag for the new release  )
-	$(info ---------------------------------------------------)
+	$(info                                                    )
 
 build:
 	./bin/build.sh
