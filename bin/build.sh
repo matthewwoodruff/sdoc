@@ -1,5 +1,5 @@
 #! /usr/bin/env bash 
-set -ue
+set -e
 
 while getopts ":q" opt; do
   case "$opt" in

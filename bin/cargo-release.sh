@@ -1,6 +1,6 @@
 #! /bin/bash
 
-set -euv
+set -ev
 
 echo Cargo publish 
 
