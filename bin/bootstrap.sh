@@ -37,8 +37,6 @@ main() {
   fi
   echo
 
-  mkdir -p "$setup_directory/bin"
-
   new_bin=$(cat <<HERE
 #! /bin/bash
 set -ue
@@ -62,10 +60,10 @@ HERE
 )
 
   echo "${GREEN}1.${WHITE} Creating executable ./bin/$cli_name"
+  mkdir -p "$setup_directory/bin"
   echo "$new_bin" > bin/"$cli_name"
   chmod +x bin/"$cli_name"
 
-  mkdir -p "$cli_name"
   commands_yaml=$(cat <<HERE
 ---
 - heading: "First Heading"
@@ -78,6 +76,7 @@ HERE
 )
 
   echo "${GREEN}2.${WHITE} Creating config file ./$cli_name/commands.yaml"
+  mkdir -p "$cli_name"
   echo "$commands_yaml" > "$cli_name"/commands.yaml
 
   if [ "$setup_git_repo" = 'yes' ]
