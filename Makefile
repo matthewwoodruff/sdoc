@@ -7,6 +7,7 @@ help:
 	$(info ---------------------------------------------------)
 	$(info build          - A full release build              )
 	$(info dev-build      - Faster build for development      )
+	$(info clean          - Remove temporary build artifacts  )
 	$(info                                                    )
 	$(info ---------------------------------------------------)
 	$(info Release                                            )
@@ -26,3 +27,6 @@ tag-release: VERSION
 
 cargo-release:
 	./bin/cargo-release.sh
+
+clean:
+	cargo clean && rm -rf dist
