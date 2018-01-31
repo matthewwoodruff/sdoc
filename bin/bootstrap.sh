@@ -1,5 +1,5 @@
 #! /bin/bash
-set -e
+set -ue
 
 WHITE="$(tput setaf 7 || echo -n '')"
 YELLOW="$(tput setaf 3 || echo -n '')"
@@ -38,7 +38,7 @@ mkdir -p $setup_directory/bin
 
 new_bin=$(cat <<HERE
 #! /bin/bash
-set -e
+set -ue
 
 cd \$( dirname "\${BASH_SOURCE[0]}" )
 
