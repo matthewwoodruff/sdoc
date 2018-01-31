@@ -20,9 +20,9 @@
 - Create a new directory for your CLI `mkdir my-cli`
 - Create a wrapper script that encapsulates configuration for sdoc
 
-	```
-#! /bin/bash
-COMMANDS_DIRECTORY=/path/to/cli/directory CLI_NAME=my-cli sdoc "$@"
-```
-- Create the top level config file for `my-cli` called `/path/to/cli/directory/my-cli/commands.yaml`
+ ```
+ #! /bin/bash
+ COMMANDS_DIRECTORY=/path/to/cli/directory CLI_NAME=my-cli sdoc "$@"
+ ```
+- Create the top level config file for `my-cli` called `/path/to/cli/directory/my-cli/commands.yaml` 
 - Your CLI will be available by running `./my-cli`
