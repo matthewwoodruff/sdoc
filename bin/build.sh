@@ -28,7 +28,6 @@ echo Building $full_build_type for $target
 declare build_path=target/$target/$full_build_type
 build_arg=$(test -z "$quick_build" && echo '--release' || echo -n '') 
 
-test -z "$quick_build" && cargo clean 
 cargo test --all $build_arg --target $target
 cargo build $build_arg --target $target
 ./snapshot-tests/run.sh $(test -n "$quick_build" && echo '-d' || echo -n '') $build_path/sdoc

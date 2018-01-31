@@ -16,7 +16,7 @@ help:
 	$(info cargo-release  - Create a tag for the new release  )
 	$(info                                                    )
 
-build:
+build: clean
 	./bin/build.sh
 
 dev-build:
