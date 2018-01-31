@@ -8,7 +8,7 @@
 
 - Create a new directory for your CLI `mkdir my-cli && cd my-cli`
 - Execute the bootstrap script and follow the instructions
-	`bash -c "$(curl https://raw.githubusercontent.com/matthewwoodruff/sdoc/master/bin/bootstrap.sh -sSf)"`
+	`sh -c "$(curl https://raw.githubusercontent.com/matthewwoodruff/sdoc/master/bin/bootstrap.sh -sSf)"`
 - Your CLI will be available by running `./bin/my-cli`
 
 

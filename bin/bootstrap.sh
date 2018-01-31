@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /bin/sh
 set -ue
 
 WHITE="$(tput setaf 7 || echo -n '')"
@@ -9,34 +9,37 @@ RED="$(tput setaf 1 || echo -n '')"
 
 VERSION=0.2.2
 
-echo "${BLUE}Welcome to the sdoc initialiser$WHITE"
+main() {
+  echo
+  echo "${BLUE}Welcome to the sdoc initialiser$WHITE"
 
-function required() {
-  name=${1:?Expected name}
-  response_options=$2
-  while [[ -z "$temp_var" ]] || ([[ -n "$response_options" ]] && ! [[ " $response_options " =~ " $temp_var " ]])
-  do
-    echo -n "$name " >&2
-    read temp_var
-  done
-  echo "$temp_var"
-}
+  function required() {
+    name=${1:?Expected name}
+    response_options=${2:-''}
+    declare temp_var
+    while [[ -z "$temp_var" ]] || ([[ -n "$response_options" ]] && ! [[ " $response_options " =~ " $temp_var " ]])
+    do
+      echo "$name " >&2
+      read temp_var
+    done
+    echo "$temp_var"
+  }
 
-setup_directory="$(pwd)"
-cli_name=$(required 'CLI name (required)(no special characters):' | tr ' ' '-')
-setup_git_repo=$(required 'Setup git repo? (yes/no):' "yes no") 
-go_ahead=$(required "Create cli ${GREEN}$cli_name${WHITE} in ${GREEN}$setup_directory${WHITE} with git repo ${GREEN}$setup_git_repo${WHITE}. Ok? (yes/no):" "yes no")
+  declare setup_directory="$(pwd)"
+  declare cli_name=$(required 'CLI name (required)(no special characters):' | tr ' ' '-')
+  declare setup_git_repo=$(required 'Setup git repo? (yes/no):' "yes no") 
+  declare go_ahead=$(required "Create cli ${GREEN}$cli_name${WHITE} in ${GREEN}$setup_directory${WHITE} with git repo ${GREEN}$setup_git_repo${WHITE}. Ok? (yes/no):" "yes no")
 
-if [[ "$go_ahead" = 'no' ]]
-then
-  echo "${RED}Setup aborted$WHITE"
-  exit 0
-fi
-echo
+  if [[ "$go_ahead" = 'no' ]]
+  then
+    echo "${RED}Setup aborted$WHITE"
+    exit 0
+  fi
+  echo
 
-mkdir -p $setup_directory/bin
+  mkdir -p "$setup_directory/bin"
 
-new_bin=$(cat <<HERE
+  new_bin=$(cat <<HERE
 #! /bin/bash
 set -ue
 
@@ -58,11 +61,12 @@ COMMANDS_DIRECTORY=../ CLI_NAME=$cli_name bin/sdoc "\$@"
 HERE
 )
 
-echo "$new_bin" > bin/"$cli_name"
-chmod +x bin/"$cli_name"
+  echo "${GREEN}1.${WHITE} Creating executable ./bin/$cli_name"
+  echo "$new_bin" > bin/"$cli_name"
+  chmod +x bin/"$cli_name"
 
-mkdir -p "$cli_name"
-commands_yaml=$(cat <<HERE
+  mkdir -p "$cli_name"
+  commands_yaml=$(cat <<HERE
 ---
 - heading: "First Heading"
   commands:
@@ -72,18 +76,22 @@ commands_yaml=$(cat <<HERE
         Shell: echo hello world
 HERE
 )
-echo "$commands_yaml" > "$cli_name"/commands.yaml
 
-if [ "$setup_git_repo" = 'yes' ]
-then
-  git init
-  echo 'bin/bin' > .gitignore
-  git add bin "$cli_name" .gitignore
-  git commit -m "Initial commit"
-fi
+  echo "${GREEN}2.${WHITE} Creating config file ./$cli_name/commands.yaml"
+  echo "$commands_yaml" > "$cli_name"/commands.yaml
 
-echo
-echo "${GREEN}Setup complete$WHITE"
-echo "Execute ./bin/$cli_name to begin. Even better add '$setup_directory/bin' to your \$PATH"
+  if [ "$setup_git_repo" = 'yes' ]
+  then
+    echo "${GREEN}3.${WHITE} Creating git repo with initial commit"
+    git init
+    echo 'bin/bin' > .gitignore
+    git add bin "$cli_name" .gitignore
+    git commit -m "Initial commit"
+  fi
 
-exit 0
+  echo
+  echo "${GREEN}Setup complete$WHITE"
+  echo "Execute ./bin/$cli_name to begin. Even better add '$setup_directory/bin' to your \$PATH"
+}
+
+main
