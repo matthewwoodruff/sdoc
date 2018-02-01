@@ -1,11 +1,11 @@
 #! /bin/sh
 set -ue
 
-WHITE="$(tput setaf 7 || echo -n '')"
-YELLOW="$(tput setaf 3 || echo -n '')"
-BLUE="$(tput setaf 4 || echo -n '')"
-GREEN="$(tput setaf 2 || echo -n '')"
-RED="$(tput setaf 1 || echo -n '')"
+WHITE="$(tput setaf 7 2> /dev/null || echo -n '')"
+YELLOW="$(tput setaf 3 2> /dev/null || echo -n '')"
+BLUE="$(tput setaf 4 2> /dev/null || echo -n '')"
+GREEN="$(tput setaf 2 2> /dev/null || echo -n '')"
+RED="$(tput setaf 1 2> /dev/null || echo -n '')"
 
 VERSION=0.2.2
 
@@ -13,29 +13,17 @@ main() {
   echo
   echo "${BLUE}Welcome to the sdoc initialiser$WHITE"
 
-  function required() {
-    name=${1:?Expected name}
-    response_options=${2:-''}
-    declare temp_var
-    while [[ -z "$temp_var" ]] || ([[ -n "$response_options" ]] && ! [[ " $response_options " =~ " $temp_var " ]])
-    do
-      echo "$name " >&2
-      read temp_var
-    done
-    echo "$temp_var"
-  }
+  setup_directory="$(pwd)"
+  cli_name=$(required 'CLI name (required)(no special characters):' | tr ' ' '-')
+  setup_git_repo=$(yes_or_no 'Setup git repo? (yes/no):' "yes no")
+  go_ahead=$(yes_or_no "Create cli ${GREEN}$cli_name${WHITE} in ${GREEN}$setup_directory${WHITE} with git repo ${GREEN}$setup_git_repo${WHITE}. Ok? (yes/no):" "yes no")
 
-  declare setup_directory="$(pwd)"
-  declare cli_name=$(required 'CLI name (required)(no special characters):' | tr ' ' '-')
-  declare setup_git_repo=$(required 'Setup git repo? (yes/no):' "yes no") 
-  declare go_ahead=$(required "Create cli ${GREEN}$cli_name${WHITE} in ${GREEN}$setup_directory${WHITE} with git repo ${GREEN}$setup_git_repo${WHITE}. Ok? (yes/no):" "yes no")
-
-  if [[ "$go_ahead" = 'no' ]]
+  echo
+  if [ "$go_ahead" = 'no' ]
   then
     echo "${RED}Setup aborted$WHITE"
     exit 0
   fi
-  echo
 
   new_bin=$(cat <<HERE
 #! /bin/bash
@@ -91,6 +79,27 @@ HERE
   echo
   echo "${GREEN}Setup complete$WHITE"
   echo "Execute ./bin/$cli_name to begin. Even better add '$setup_directory/bin' to your \$PATH"
+}
+
+required() {
+  name=${1:?Expected name}
+  temp_var=''
+  while [ -z "$temp_var" ]
+  do
+    echo "$name " >&2
+    read temp_var
+  done
+  echo "$temp_var"
+}
+
+yes_or_no() {
+  name=${1:?Expected name}
+  temp_var=''
+  while ! [ "$temp_var" = 'yes' ] && ! [ "$temp_var" = 'no' ]
+  do
+    temp_var=$(required "$name")
+  done
+  echo "$temp_var"
 }
 
 main
