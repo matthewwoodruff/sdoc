@@ -6,24 +6,27 @@ use std::fs::File;
 use serde_yaml;
 use core::model::{Command, Section, Executable, Dependency, DependencyType};
 
-#[derive(Debug)]
+pub trait ConfigSource {
+    fn get_config(&self, path: &PathBuf) -> Vec<Section>;
+}
+
 pub struct Context<'a> {
     pub directory: &'a PathBuf,
     pub exec_directory: PathBuf,
-    pub sections: Vec<Section>,
+    pub config: Vec<Section>,
     pub resolved_commands: Vec<String>,
-    pub section_source: &'a SectionSource
+    pub config_source: &'a ConfigSource,
 }
 
-impl<'a> Context<'a> {
+impl <'a> Context<'a> {
     pub fn get_commands(&self) -> Vec<&Command> {
-        self.sections.iter()
+        self.config.iter()
             .flat_map(|s| &s.commands)
             .collect()
     }
 
     pub fn find(&self, request_command: &String, match_alias: bool) -> Option<&Command> {
-        self.sections.iter()
+        self.config.iter()
             .flat_map(|s| &s.commands)
             .find(|c| {
                 if match_alias { c.matches(request_command) } else { c.matches_command(request_command) }
@@ -51,42 +54,31 @@ impl<'a> Context<'a> {
         let exec_directory = self.exec_directory(&commands);
 
         Context {
-            sections: self.section_source.parse_sections_from_yaml(&exec_directory),
+            config: self.config_source.get_config(&exec_directory),
             directory: self.directory,
             resolved_commands: commands,
-            section_source: self.section_source,
-            exec_directory
+            exec_directory,
+            config_source: self.config_source
         }
     }
 
-    pub fn init(directory: &'a PathBuf, section_source: &'a SectionSource) -> Context<'a> {
+    pub fn init(directory: &'a PathBuf, config_source: &'a ConfigSource) -> Context<'a> {
         Context {
             directory,
             exec_directory: directory.to_owned(),
-            sections: vec![],
+            config: vec![],
             resolved_commands: vec![],
-            section_source
+            config_source
         }
     }
 }
 
-#[derive(Debug, PartialEq)]
-pub enum SectionSource {
-    File,
-    #[cfg(test)]
-    InMemory(&'static str)
-}
-
-impl SectionSource {
-    pub fn parse_sections_from_yaml(&self, path: &PathBuf) -> Vec<Section> {
-        let mut v: Vec<Section> = match *self {
-            SectionSource::File => {
-                let x = path.join(s!("commands.yaml"));
-                serde_yaml::from_reader(File::open(x).expect("Failed to open file"))
-            }
-            #[cfg(test)]
-            SectionSource::InMemory(yaml_string) => serde_yaml::from_str(yaml_string)
-        }.expect("Failed to parse yaml");
+pub struct FileConfigSource;
+impl ConfigSource for FileConfigSource {
+    fn get_config(&self, path: &PathBuf) -> Vec<Section> {
+        let x = path.join(s!("commands.yaml"));
+        let mut v: Vec<Section> = serde_yaml::from_reader(File::open(x)
+            .expect("Failed to open file")).unwrap();
 
         v.insert(0, get_builtin_commands());
         v

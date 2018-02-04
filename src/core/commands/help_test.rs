@@ -73,7 +73,7 @@ fn should_build_usage_for_command_with_dependencies() {
     let directory = PathBuf::new();
 
     let context = Context {
-        sections: vec![section_1],
+        config: vec![section_1],
         ..a_context(&directory)
     };
     let args = vec![s!("help"), s!("action")];
@@ -112,7 +112,7 @@ fn should_build_help_text_for_specific_command_with_no_dependencies() {
     let directory = PathBuf::new();
 
     let context = Context {
-        sections: vec![section_1],
+        config: vec![section_1],
         ..a_context(&directory)
     };
     let args = vec![s!("help"), s!("action")];
@@ -155,7 +155,7 @@ fn should_show_auto_completion_when_command_not_found() {
     let directory = PathBuf::new();
 
     let context = Context {
-        sections: vec![section_1, section_2],
+        config: vec![section_1, section_2],
         ..a_context(&directory)
     };
     let args = vec![s!("help"), s!("a")];
@@ -186,7 +186,7 @@ fn should_show_auto_completion_when_command_found() {
     let directory = PathBuf::new();
 
     let context = Context {
-        sections: vec![section_1],
+        config: vec![section_1],
         ..a_context(&directory)
     };
     let args = vec![s!("help"), s!("first-command")];
@@ -216,7 +216,7 @@ fn should_show_nothing_when_command_found_and_auto_completion_required_for_comma
     let directory = PathBuf::new();
 
     let context = Context {
-        sections: vec![section_1],
+        config: vec![section_1],
         ..a_context(&directory)
     };
     let args = vec![s!("help"), s!("first-command")];

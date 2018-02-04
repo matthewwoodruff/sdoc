@@ -1,16 +1,16 @@
 use core::model::{Executable, Command, Section};
-use core::config::{Context, SectionSource, get_builtin_commands};
+use core::config::{Context, get_builtin_commands, FileConfigSource};
 use std::path::PathBuf;
 
-pub static IN_MEMORY_SECTION_SOURCE: SectionSource = SectionSource::InMemory("");
+pub static CONFIG_SOURCE: FileConfigSource = FileConfigSource;
 
 pub fn a_context<'a>(directory: &'a PathBuf) -> Context<'a> {
     Context {
         directory,
         exec_directory: directory.to_owned(),
-        sections: vec![get_builtin_commands()],
+        config: vec![get_builtin_commands()],
         resolved_commands: vec![s!("dm"), s!("a"), s!("b"), s!("c")],
-        section_source: &IN_MEMORY_SECTION_SOURCE
+        config_source: &CONFIG_SOURCE
     }
 }
 

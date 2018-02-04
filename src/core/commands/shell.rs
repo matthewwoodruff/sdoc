@@ -29,7 +29,7 @@ mod test {
 
     use super::*;
     use std::path::PathBuf;
-    use core::test_helper::IN_MEMORY_SECTION_SOURCE;
+    use core::config::FileConfigSource;
 
     #[test]
     fn should_build_shell_system_command() {
@@ -46,12 +46,13 @@ mod test {
     #[test]
     fn should_build_script_system_command() {
         let directory = PathBuf::from(s!("dm"));
+        let config_source = FileConfigSource;
         let context = Context {
             directory: &directory,
             exec_directory: directory.to_owned(),
-            sections: vec![],
+            config: vec![],
             resolved_commands: vec![],
-            section_source: &IN_MEMORY_SECTION_SOURCE,
+            config_source: &config_source
         };
 
         let args = vec![s!("a"), s!("a b"), s!("c")];

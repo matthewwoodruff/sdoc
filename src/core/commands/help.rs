@@ -38,7 +38,7 @@ pub fn build_help(request: &Request, context: &Context) -> Work {
 }
 
 pub fn build_full_help(context: &Context) -> String {
-    let sections: Vec<String> = context.sections.iter()
+    let sections: Vec<String> = context.config.iter()
         .map(|s| format_section(s))
         .collect();
     format!("\n{}\n\n{}",

@@ -12,7 +12,7 @@ mod core;
 
 use std::env;
 use std::path::PathBuf;
-use core::config::{SectionSource, Context};
+use core::config::{Context, FileConfigSource};
 use core::dto::Request;
 use core::dto::Response;
 use core::commands::node;
@@ -22,8 +22,9 @@ pub fn run() {
     let args: Vec<String> = build_args();
     let request = build_request(&args);
     let directory = get_top_level_directory();
-    let section_source = SectionSource::File;
-    let context = Context::init(&directory, &section_source);
+
+    let config_source = FileConfigSource;
+    let context = Context::init(&directory, &config_source);
 
     let workflow = if request.autocomplete_enabled() {
         node::execute_auto_complete(request, &context)
