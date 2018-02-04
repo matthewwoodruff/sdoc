@@ -4,7 +4,7 @@ use core::workflow::Instruction::SystemCommand;
 use core::config::Context;
 
 pub fn execute_script(shell: &String, request: Request, context: &Context) -> Work {
-    build_system_command(format!("{}/{} {}", context.exec_directory.display(), shell, quote_args(request)))
+    build_system_command(format!("{}/{} {}", context.directory.display(), shell, quote_args(request)))
 }
 
 pub fn execute_shell(shell: &String, request: Request) -> Work {
@@ -48,8 +48,7 @@ mod test {
         let directory = PathBuf::from(s!("dm"));
         let config_source = FileConfigSource;
         let context = Context {
-            directory: &directory,
-            exec_directory: directory.to_owned(),
+            directory,
             config: vec![],
             resolved_commands: vec![],
             config_source: &config_source

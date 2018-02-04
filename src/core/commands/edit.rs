@@ -12,7 +12,7 @@ pub fn execute(request: Request, context: &Context) -> Work {
             .and_then(|rc| context.find(&rc, true))
             .map(|command| {
                 if let Executable::Script(ref b) = command.command_type {
-                    return SystemCommand(format!("$EDITOR {}/{}", context.exec_directory.display(), b), true);
+                    return SystemCommand(format!("$EDITOR {}/{}", context.directory.display(), b), true);
                 }
                 ExitCode(Err(1))
             })

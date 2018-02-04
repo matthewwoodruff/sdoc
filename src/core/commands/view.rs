@@ -12,7 +12,7 @@ pub fn execute(request: Request, context: &Context) -> Work {
             .map(|command| {
                 match command.command_type {
                     Executable::Script(ref b) =>
-                        SystemCommand(format!("less {}/{}", context.exec_directory.display(), b), true),
+                        SystemCommand(format!("less {}/{}", context.directory.display(), b), true),
                     Executable::Shell(ref b) =>
                         Display(format!("{}", b), Response::Ok),
                     _ => ExitCode(Response::Err(1))

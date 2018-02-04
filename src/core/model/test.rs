@@ -1,7 +1,6 @@
 use core::config::Context;
 use core::workflow::{Work, Instruction};
 use core::dto::Request;
-use std::path::PathBuf;
 use serde_yaml;
 use super::*;
 use core::test_helper::{a_command, a_context};
@@ -131,10 +130,9 @@ type:
 }
 
 fn run(command: &Command) -> Vec<Work> {
-    let directory = PathBuf::new();
     let context = Context {
         resolved_commands: vec![s!("dm"), s!("a"), s!("b"), s!("c")],
-        ..a_context(&directory)
+        ..a_context()
     };
     let args: Vec<String> = vec![];
     let request = Request::new(&args, None);

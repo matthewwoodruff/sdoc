@@ -4,10 +4,9 @@ use std::path::PathBuf;
 
 pub static CONFIG_SOURCE: FileConfigSource = FileConfigSource;
 
-pub fn a_context<'a>(directory: &'a PathBuf) -> Context<'a> {
+pub fn a_context<'a>() -> Context<'a> {
     Context {
-        directory,
-        exec_directory: directory.to_owned(),
+        directory: PathBuf::new(),
         config: vec![get_builtin_commands()],
         resolved_commands: vec![s!("dm"), s!("a"), s!("b"), s!("c")],
         config_source: &CONFIG_SOURCE

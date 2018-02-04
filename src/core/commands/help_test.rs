@@ -3,15 +3,13 @@ use core::commands::help::execute;
 use core::commands::help::auto_complete;
 use core::config::Context;
 use core::dto::{Request, Response};
-use std::path::PathBuf;
 use core::workflow::{Work, Instruction};
 use core::workflow::Instruction::Display;
 use core::test_helper::{a_command, a_context, a_section};
 
 #[test]
 fn should_build_help_text_when_command_not_found() {
-    let directory = PathBuf::new();
-    let context = a_context(&directory);
+    let context = a_context();
     let args = vec![s!("help"), s!("update")];
     let request = Request::new(&args, None);
     let actual_help = execute(request, &context);
@@ -32,8 +30,7 @@ Built-in Commands:
 
 #[test]
 fn should_build_help_text_when_no_args_given() {
-    let directory = PathBuf::new();
-    let context = a_context(&directory);
+    let context = a_context();
     let args = vec![s!("help")];
     let request = Request::new(&args, None);
     let actual_help = execute(request, &context);
@@ -70,11 +67,9 @@ fn should_build_usage_for_command_with_dependencies() {
         ..a_section()
     };
 
-    let directory = PathBuf::new();
-
     let context = Context {
         config: vec![section_1],
-        ..a_context(&directory)
+        ..a_context()
     };
     let args = vec![s!("help"), s!("action")];
     let request = Request::new(&args, None);
@@ -109,11 +104,9 @@ fn should_build_help_text_for_specific_command_with_no_dependencies() {
         ..a_section()
     };
 
-    let directory = PathBuf::new();
-
     let context = Context {
         config: vec![section_1],
-        ..a_context(&directory)
+        ..a_context()
     };
     let args = vec![s!("help"), s!("action")];
     let request = Request::new(&args, None);
@@ -152,11 +145,9 @@ fn should_show_auto_completion_when_command_not_found() {
         ..a_section()
     };
 
-    let directory = PathBuf::new();
-
     let context = Context {
         config: vec![section_1, section_2],
-        ..a_context(&directory)
+        ..a_context()
     };
     let args = vec![s!("help"), s!("a")];
     let request = Request::new(&args, Some(1)).next();
@@ -183,11 +174,9 @@ fn should_show_auto_completion_when_command_found() {
         ..a_section()
     };
 
-    let directory = PathBuf::new();
-
     let context = Context {
         config: vec![section_1],
-        ..a_context(&directory)
+        ..a_context()
     };
     let args = vec![s!("help"), s!("first-command")];
     let request = Request::new(&args, Some(1)).next();
@@ -213,11 +202,9 @@ fn should_show_nothing_when_command_found_and_auto_completion_required_for_comma
         ..a_section()
     };
 
-    let directory = PathBuf::new();
-
     let context = Context {
         config: vec![section_1],
-        ..a_context(&directory)
+        ..a_context()
     };
     let args = vec![s!("help"), s!("first-command")];
     let request = Request::new(&args, Some(1));

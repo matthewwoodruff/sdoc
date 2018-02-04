@@ -11,8 +11,7 @@ pub trait ConfigSource {
 }
 
 pub struct Context<'a> {
-    pub directory: &'a PathBuf,
-    pub exec_directory: PathBuf,
+    pub directory: PathBuf,
     pub config: Vec<Section>,
     pub resolved_commands: Vec<String>,
     pub config_source: &'a ConfigSource,
@@ -37,35 +36,27 @@ impl <'a> Context<'a> {
         self.resolved_commands.join(" ")
     }
 
-    pub fn exec_directory(&self, commands: &Vec<String>) -> PathBuf {
-        commands.iter()
-            .map(|c| format!("{}", c))
-            .fold(self.directory.to_owned(), |a, b| a.join(b))
-    }
-
     pub fn next(&self, request_command: &String) -> Context {
-        let resolved_command = self.find(&request_command, true)
+        let resolved_command = self.find(request_command, true)
             .map(|c| &c.name)
-            .unwrap_or(&request_command)
+            .unwrap_or(request_command)
             .to_owned();
 
+        let directory = self.directory.join(&resolved_command);
         let mut commands = self.resolved_commands.to_vec();
         commands.push(resolved_command);
-        let exec_directory = self.exec_directory(&commands);
 
         Context {
-            config: self.config_source.get_config(&exec_directory),
-            directory: self.directory,
+            config: self.config_source.get_config(&directory),
+            directory,
             resolved_commands: commands,
-            exec_directory,
             config_source: self.config_source
         }
     }
 
-    pub fn init(directory: &'a PathBuf, config_source: &'a ConfigSource) -> Context<'a> {
+    pub fn init(directory: PathBuf, config_source: &'a ConfigSource) -> Context<'a> {
         Context {
             directory,
-            exec_directory: directory.to_owned(),
             config: vec![],
             resolved_commands: vec![],
             config_source

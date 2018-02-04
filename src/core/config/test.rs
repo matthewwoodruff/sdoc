@@ -11,11 +11,9 @@ fn should_return_commands_for_all_sections() {
     let section_1 = Section { commands: vec![my_command_1], ..a_section() };
     let section_2 = Section { commands: vec![my_command_2], ..a_section() };
 
-    let directory = PathBuf::new();
-
     let context = Context {
         config: vec![section_1, section_2],
-        ..a_context(&directory)
+        ..a_context()
     };
 
     let actual_commands = context.get_commands();
@@ -28,18 +26,16 @@ fn should_return_commands_for_all_sections() {
 fn should_build_initial_context_from_current_executable() {
     let current_executable = PathBuf::from("/a/b/c/dm");
     let config_source = FileConfigSource;
-    let context = Context::init(&current_executable, &config_source);
+    let context = Context::init(current_executable, &config_source);
 
     assert_eq!(context.resolved_commands.len(), 0);
-    assert_eq!(context.directory, &PathBuf::from("/a/b/c/dm"));
+    assert_eq!(context.directory, PathBuf::from("/a/b/c/dm"));
     assert_eq!(context.config.len(), 0);
 }
 
 #[test]
 fn should_return_command_matching_command_name() {
-    let directory = PathBuf::new();
-
-    let context = a_context(&directory);
+    let context = a_context();
 
     let command = s!("edit");
     let actual_command = context.find(&command, false);
@@ -49,9 +45,7 @@ fn should_return_command_matching_command_name() {
 
 #[test]
 fn should_return_command_matching_command_alias() {
-    let directory = PathBuf::new();
-
-    let context = a_context(&directory);
+    let context = a_context();
 
     let command = s!("e");
     let actual_command = context.find(&command, true);

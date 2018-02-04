@@ -24,7 +24,7 @@ pub fn run() {
     let directory = get_top_level_directory();
 
     let config_source = FileConfigSource;
-    let context = Context::init(&directory, &config_source);
+    let context = Context::init(directory, &config_source);
 
     let workflow = if request.autocomplete_enabled() {
         node::execute_auto_complete(request, &context)
