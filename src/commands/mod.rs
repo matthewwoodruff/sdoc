@@ -7,4 +7,6 @@ pub mod util;
 pub mod view;
 
 #[cfg(test)]
-pub mod help_test;
+mod help_test;
+#[cfg(test)]
+mod shell_test;
