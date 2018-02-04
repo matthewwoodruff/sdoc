@@ -27,9 +27,7 @@ impl <'a> Context<'a> {
     pub fn find(&self, request_command: &String, match_alias: bool) -> Option<&Command> {
         self.config.iter()
             .flat_map(|s| &s.commands)
-            .find(|c| {
-                if match_alias { c.matches(request_command) } else { c.matches_command(request_command) }
-            })
+            .find(|c| c.matches(request_command, match_alias))
     }
 
     pub fn build_command_chain(&self) -> String {
@@ -43,13 +41,13 @@ impl <'a> Context<'a> {
             .to_owned();
 
         let directory = self.directory.join(&resolved_command);
-        let mut commands = self.resolved_commands.to_vec();
-        commands.push(resolved_command);
+        let mut resolved_commands = self.resolved_commands.to_vec();
+        resolved_commands.push(resolved_command);
 
         Context {
             config: self.config_source.get_config(&directory),
             directory,
-            resolved_commands: commands,
+            resolved_commands,
             config_source: self.config_source
         }
     }

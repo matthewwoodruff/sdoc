@@ -27,11 +27,7 @@ use commands::node;
 pub fn run() {
     let args: Vec<String> = build_args();
     let request = build_request(&args);
-    let directory = get_top_level_directory();
-
-    let config_source = FileConfigSource;
-    let context = Context::init(directory, &config_source);
-
+    let context = Context::init(get_commands_directory(), &FileConfigSource);
     let workflow = if request.autocomplete_enabled() {
         node::execute_auto_complete(request, &context)
     } else {
@@ -64,7 +60,7 @@ fn build_request(args: &Vec<String>) -> Request {
     Request::new(args, completed)
 }
 
-fn get_top_level_directory() -> PathBuf {
+fn get_commands_directory() -> PathBuf {
     env::var("COMMANDS_DIRECTORY")
         .map(|a| PathBuf::from(a))
         .expect("COMMANDS_DIRECTORY - Environment variable should be set")

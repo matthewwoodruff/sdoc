@@ -33,12 +33,12 @@ impl Command {
         self.alias.as_ref().map(|a| a.eq(request_command)).unwrap_or(false)
     }
 
-    pub fn matches_command(&self, request_command: &String) -> bool {
+    fn matches_command(&self, request_command: &String) -> bool {
         self.name.eq(request_command)
     }
 
-    pub fn matches(&self, request_command: &String) -> bool {
-        self.matches_command(request_command) || self.matches_alias(request_command)
+    pub fn matches(&self, request_command: &String, match_alias: bool) -> bool {
+        self.matches_command(request_command) || match_alias && self.matches_alias(request_command)
     }
 
     fn dependency_checks(&self, command_chain: &String) -> Vec<Work> {

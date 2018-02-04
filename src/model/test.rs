@@ -16,7 +16,7 @@ mod command {
         let command = a_command();
 
         let expected_command = s!("action");
-        assert_eq!(command.matches(&expected_command), true);
+        assert_eq!(command.matches(&expected_command, true), true);
     }
 
     #[test]
@@ -24,7 +24,7 @@ mod command {
         let command = a_command();
 
         let expected_command = s!("a");
-        assert_eq!(command.matches(&expected_command), true);
+        assert_eq!(command.matches(&expected_command, true), true);
     }
 
     #[test]
@@ -32,7 +32,7 @@ mod command {
         let command = a_command();
 
         let expected_command = s!("abc");
-        assert_eq!(command.matches(&expected_command), false);
+        assert_eq!(command.matches(&expected_command, true), false);
     }
 
     #[test]
