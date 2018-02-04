@@ -1,7 +1,7 @@
-use core::dto::Request;
-use core::workflow::Work;
-use core::workflow::Instruction::SystemCommand;
-use core::config::Context;
+use dto::Request;
+use workflow::Work;
+use workflow::Instruction::SystemCommand;
+use config::Context;
 
 pub fn execute_script(shell: &String, request: Request, context: &Context) -> Work {
     build_system_command(format!("{}/{} {}", context.directory.display(), shell, quote_args(request)))
@@ -29,7 +29,7 @@ mod test {
 
     use super::*;
     use std::path::PathBuf;
-    use core::config::FileConfigSource;
+    use config::FileConfigSource;
 
     #[test]
     fn should_build_shell_system_command() {

@@ -1,4 +1,4 @@
-use core::dto::Request;
+use dto::Request;
 
 #[test]
 fn should_not_build_request_for_no_args() {

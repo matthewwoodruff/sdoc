@@ -1,7 +1,7 @@
-use core::workflow::Work;
-use core::workflow::Instruction::Display;
-use core::config::Context;
-use core::dto::Response;
+use workflow::Work;
+use workflow::Instruction::Display;
+use config::Context;
+use dto::Response;
 
 pub fn execute_auto_complete(context: &Context) -> Work {
     Work::instruction(Display(build_auto_complete(context), Response::Ok))

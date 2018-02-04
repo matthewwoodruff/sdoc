@@ -1,8 +1,8 @@
-use core;
-use core::model::{Command, Section};
-use core::config::{Context, FileConfigSource};
+use model::{Command, Section};
+use config::{Context, FileConfigSource};
+use config;
 use std::path::PathBuf;
-use core::test_helper::{a_context, a_section, a_command};
+use test_helper::{a_context, a_section, a_command};
 
 #[test]
 fn should_return_commands_for_all_sections() {
@@ -40,7 +40,7 @@ fn should_return_command_matching_command_name() {
     let command = s!("edit");
     let actual_command = context.find(&command, false);
 
-    assert_eq!(actual_command.unwrap(), &core::config::edit_command());
+    assert_eq!(actual_command.unwrap(), &config::edit_command());
 }
 
 #[test]
@@ -50,5 +50,5 @@ fn should_return_command_matching_command_alias() {
     let command = s!("e");
     let actual_command = context.find(&command, true);
 
-    assert_eq!(actual_command.unwrap(), &core::config::edit_command());
+    assert_eq!(actual_command.unwrap(), &config::edit_command());
 }

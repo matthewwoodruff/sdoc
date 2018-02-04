@@ -1,7 +1,7 @@
-use core::workflow::Work;
-use core::dto::Request;
-use core::commands::{help, util};
-use core::config::Context;
+use workflow::Work;
+use dto::Request;
+use commands::{help, util};
+use config::Context;
 
 pub fn execute(request: Request, context: &Context) -> Vec<Work> {
     let command = request.current.unwrap();

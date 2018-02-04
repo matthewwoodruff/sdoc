@@ -2,7 +2,7 @@
 mod test;
 
 use std::process::{Stdio, Command};
-use core::dto::Response;
+use dto::Response;
 
 pub fn run_system_command(command: &String, output: bool) -> Response {
     let out = if output {Stdio::inherit()} else {Stdio::null()};

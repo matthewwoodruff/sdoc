@@ -8,15 +8,21 @@ macro_rules! s {
     ($($arg:tt)*) => (String::from($($arg)*));
 }
 
-mod core;
+pub mod commands;
+pub mod model;
+pub mod config;
+pub mod dto;
+pub mod util;
+pub mod workflow;
+#[cfg(test)]
+pub mod test_helper;
 
 use std::env;
 use std::path::PathBuf;
-use core::config::{Context, FileConfigSource};
-use core::dto::Request;
-use core::dto::Response;
-use core::commands::node;
-use core::workflow;
+use config::{Context, FileConfigSource};
+use dto::Request;
+use dto::Response;
+use commands::node;
 
 pub fn run() {
     let args: Vec<String> = build_args();

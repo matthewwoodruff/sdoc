@@ -3,12 +3,12 @@ extern crate core;
 #[cfg(test)]
 mod test;
 
-use core::config::Context;
-use core::dto::{Request, Response};
-use core::workflow::Work;
-use core::workflow::Instruction::{Display, SystemCommand};
-use core::workflow::Instruction;
-use core::commands::{node, shell, help, editconfig, edit, view};
+use config::Context;
+use dto::{Request, Response};
+use workflow::Work;
+use workflow::Instruction::{Display, SystemCommand};
+use workflow::Instruction;
+use commands::{node, shell, help, editconfig, edit, view};
 
 #[derive(Debug, Deserialize, PartialEq)]
 pub struct Section {

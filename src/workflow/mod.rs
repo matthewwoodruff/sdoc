@@ -1,5 +1,5 @@
-use core::dto::Response;
-use core::util;
+use dto::Response;
+use util;
 
 #[derive( Debug, PartialEq)]
 pub struct Work {

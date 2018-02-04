@@ -1,10 +1,10 @@
-use core::config::Context;
-use core::workflow::{Work, Instruction};
-use core::dto::Request;
+use config::Context;
+use workflow::{Work, Instruction};
+use dto::Request;
 use serde_yaml;
 use super::*;
-use core::test_helper::{a_command, a_context};
-use core::model::Executable::Shell;
+use test_helper::{a_command, a_context};
+use model::Executable::Shell;
 
 mod command {
     extern crate core;

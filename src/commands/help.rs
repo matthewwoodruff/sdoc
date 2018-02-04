@@ -1,9 +1,9 @@
-use core::config::Context;
-use core::dto::{Request, Response};
-use core::model::{Command, Section};
-use core::workflow::Work;
-use core::workflow::Instruction::Display;
-use core::commands::util::build_auto_complete;
+use config::Context;
+use dto::{Request, Response};
+use model::{Command, Section};
+use workflow::Work;
+use workflow::Instruction::Display;
+use commands::util::build_auto_complete;
 
 pub fn execute(request: Request, context: &Context) -> Work {
     let request = request.next();

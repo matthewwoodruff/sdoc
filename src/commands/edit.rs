@@ -1,9 +1,9 @@
-use core::workflow::Work;
-use core::workflow::Instruction::{Display, SystemCommand, ExitCode};
-use core::model::Executable;
-use core::dto::Request;
-use core::dto::Response::{Ok, Err};
-use core::config::Context;
+use workflow::Work;
+use workflow::Instruction::{Display, SystemCommand, ExitCode};
+use model::Executable;
+use dto::Request;
+use dto::Response::{Ok, Err};
+use config::Context;
 
 pub fn execute(request: Request, context: &Context) -> Work {
     Work::instruction(

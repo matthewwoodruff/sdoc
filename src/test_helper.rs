@@ -1,5 +1,5 @@
-use core::model::{Executable, Command, Section};
-use core::config::{Context, get_builtin_commands, FileConfigSource};
+use model::{Executable, Command, Section};
+use config::{Context, get_builtin_commands, FileConfigSource};
 use std::path::PathBuf;
 
 pub static CONFIG_SOURCE: FileConfigSource = FileConfigSource;

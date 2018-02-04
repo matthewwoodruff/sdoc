@@ -1,5 +1,5 @@
-use core::util::run_system_command;
-use core::dto::Response;
+use util::run_system_command;
+use dto::Response;
 
 #[test]
 fn should_execute_a_valid_system_command_and_return_success() {

@@ -1,11 +1,11 @@
-use core::model::{Dependency, Command, Section, DependencyType};
-use core::commands::help::execute;
-use core::commands::help::auto_complete;
-use core::config::Context;
-use core::dto::{Request, Response};
-use core::workflow::{Work, Instruction};
-use core::workflow::Instruction::Display;
-use core::test_helper::{a_command, a_context, a_section};
+use model::{Dependency, Command, Section, DependencyType};
+use commands::help::execute;
+use commands::help::auto_complete;
+use config::Context;
+use dto::{Request, Response};
+use workflow::{Work, Instruction};
+use workflow::Instruction::Display;
+use test_helper::{a_command, a_context, a_section};
 
 #[test]
 fn should_build_help_text_when_command_not_found() {
