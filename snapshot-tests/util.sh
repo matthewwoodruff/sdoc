@@ -21,7 +21,7 @@ export CLI_NAME=sdoc
 
 echo
 echo "${BLUE}Testing$WHITE"
-echo $exe 
+echo $exe
 echo "${BLUE}in$WHITE"
 echo $COMMANDS_DIRECTORY
 echo
