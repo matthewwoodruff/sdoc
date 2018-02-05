@@ -18,7 +18,7 @@ should 'show help for specific command using alias' "$exe help p"
 should 'show help for help command' "$exe help help"
 should 'show help for view command' "$exe help view"
 should 'show help for edit command' "$exe help edit"
-should 'show help for edit-config command' "$exe help edit-config"
+should 'show help for config command' "$exe help config"
 should 'show autocomplete for help command' "AUTO_COMPLETE=2 $exe help"
 should 'return non-zero exit code when asking for help on a non-existing command' "$exe help unknown-command" 1
 echo

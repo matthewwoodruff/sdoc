@@ -21,7 +21,7 @@ Usage: dm a b c <command> [args]
 Built-in Commands:
   help        h     Show help for all commands or a specific command
   edit        e     Edit the implementation of a command
-  edit-config ec    Edit the configuration file
+  config      c     Edit the configuration file
   view        v     View the implementation of a command
 "#;
 
@@ -42,7 +42,7 @@ Usage: dm a b c <command> [args]
 Built-in Commands:
   help        h     Show help for all commands or a specific command
   edit        e     Edit the implementation of a command
-  edit-config ec    Edit the configuration file
+  config      c     Edit the configuration file
   view        v     View the implementation of a command
 "#;
 

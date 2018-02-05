@@ -118,9 +118,9 @@ pub fn edit_config_command() -> Command {
     Command {
         command_type: Executable::EditConfig,
         description: s!("Edit the configuration file"),
-        alias: Some(s!("ec")),
+        alias: Some(s!("c")),
         usage: None,
-        name: s!("edit-config"),
+        name: s!("config"),
         min_args: None,
         dependencies: Some(vec![
             Dependency {
