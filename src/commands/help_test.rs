@@ -18,7 +18,7 @@ fn should_build_help_text_when_command_not_found() {
         r#"
 Usage: dm a b c <command> [args]
 
-Built-in Commands:
+Management:
   help        h     Show help for all commands or a specific command
   edit        e     Edit the implementation of a command
   config      c     Edit the configuration file
@@ -39,7 +39,7 @@ fn should_build_help_text_when_no_args_given() {
         r#"
 Usage: dm a b c <command> [args]
 
-Built-in Commands:
+Management:
   help        h     Show help for all commands or a specific command
   edit        e     Edit the implementation of a command
   config      c     Edit the configuration file

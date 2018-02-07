@@ -69,7 +69,7 @@ impl ConfigSource for FileConfigSource {
         let mut v: Vec<Section> = serde_yaml::from_reader(File::open(x)
             .expect("Failed to open file")).unwrap();
 
-        v.insert(0, get_builtin_commands());
+        v.insert(0, get_management_commands());
         v
     }
 }
@@ -130,9 +130,9 @@ pub fn edit_config_command() -> Command {
     }
 }
 
-pub fn get_builtin_commands() -> Section {
+pub fn get_management_commands() -> Section {
     Section {
-        heading: s!("Built-in Commands"),
+        heading: s!("Management"),
         commands: vec![help_command(), edit_command(), edit_config_command(), view_command()]
     }
 }

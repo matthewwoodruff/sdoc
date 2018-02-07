@@ -1,5 +1,5 @@
 use model::{Executable, Command, Section};
-use config::{Context, get_builtin_commands, FileConfigSource};
+use config::{Context, get_management_commands, FileConfigSource};
 use std::path::PathBuf;
 
 pub static CONFIG_SOURCE: FileConfigSource = FileConfigSource;
@@ -7,7 +7,7 @@ pub static CONFIG_SOURCE: FileConfigSource = FileConfigSource;
 pub fn a_context<'a>() -> Context<'a> {
     Context {
         directory: PathBuf::new(),
-        config: vec![get_builtin_commands()],
+        config: vec![get_management_commands()],
         resolved_commands: vec![s!("dm"), s!("a"), s!("b"), s!("c")],
         config_source: &CONFIG_SOURCE
     }

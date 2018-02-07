@@ -49,7 +49,7 @@ function should () {
     echo "${RED}FAIL$WHITE"
     echo
     echo "Expected exit code $expected_exit_code but was $actual_exit_code"
-    exit 1 
+    exit 1
   fi
 
   if [[ ! -f "$filename" ]];
@@ -78,7 +78,7 @@ function should () {
 		  exit 1
   	  fi
 	else
-          echo "${GREEN}OK${WHITE}"	
+          echo "${GREEN}OK${WHITE}"
 	fi
   fi
 
