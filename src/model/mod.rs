@@ -10,7 +10,7 @@ use workflow::Instruction::{Display, SystemCommand};
 use workflow::Instruction;
 use commands::{node, shell, help, editconfig, edit, view};
 
-#[derive(Debug, Deserialize, PartialEq)]
+#[derive(Debug, Deserialize)]
 pub struct Section {
     pub heading: String,
     pub commands: Vec<Command>

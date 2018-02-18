@@ -14,8 +14,7 @@ fn should_build_help_text_when_command_not_found() {
     let request = Request::new(&args, None);
     let actual_help = execute(request, &context);
 
-    let expected_help_text =
-        r#"
+    let expected_help_text = "
 Usage: dm a b c <command> [args]
 
 Management:
@@ -23,7 +22,7 @@ Management:
   edit        e     Edit a command
   view        v     View a command
   config      c     Edit configuration file
-"#;
+";
 
     assert_eq!(actual_help, Work::instruction(Display(s!(expected_help_text), Response::Err(1))));
 }
@@ -35,8 +34,7 @@ fn should_build_help_text_when_no_args_given() {
     let request = Request::new(&args, None);
     let actual_help = execute(request, &context);
 
-    let expected_help_text =
-        r#"
+    let expected_help_text = "
 Usage: dm a b c <command> [args]
 
 Management:
@@ -44,7 +42,7 @@ Management:
   edit        e     Edit a command
   view        v     View a command
   config      c     Edit configuration file
-"#;
+";
 
     assert_eq!(actual_help, Work::instruction(Display(s!(expected_help_text), Response::Ok)));
 }
@@ -76,15 +74,14 @@ fn should_build_usage_for_command_with_dependencies() {
 
     let actual_help = execute(request, &context);
 
-    let expected_help_text =
-        r#"
+    let expected_help_text = "
 Usage: dm a b c action -f FILENAME -a SOMETHING VALUE
 
 a-description
 
 Dependencies:
   ENV_VAR     Set this variable
-"#;
+";
 
     assert_eq!(actual_help, Work::instruction(Display(s!(expected_help_text), Response::Ok)));
 }
@@ -114,11 +111,11 @@ fn should_build_help_text_for_specific_command_with_no_dependencies() {
     let help_text = execute(request, &context);
 
     let expected_help_text =
-        r#"
+        "
 Usage: dm a b c action -f FILENAME -a SOMETHING VALUE
 
 a-description
-"#;
+";
 
     assert_eq!(help_text, Work::instruction(Display(s!(expected_help_text), Response::Ok)));
 }
@@ -155,9 +152,9 @@ fn should_show_auto_completion_when_command_not_found() {
     let work = auto_complete(request, &context);
 
     let expected_help_text =
-        r#"first-command
+        "first-command
 second-command
-"#;
+";
 
     assert_eq!(work, Work::instruction(Instruction::Display(s!(expected_help_text), Response::Ok)));
 }

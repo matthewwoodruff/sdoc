@@ -38,11 +38,10 @@ mod command {
     #[test]
     fn should_deserialize_node_command() {
         let yaml_string =
-            r#"---
-name: stack
-description: a description
-value: node
-"#;
+            "---
+            name: stack
+            description: a description
+            value: node";
         let actual_command: Command = serde_yaml::from_str(yaml_string).expect("Failed to parse yaml");
 
         assert_eq!(actual_command.value, Value::Node);
@@ -51,19 +50,19 @@ value: node
     #[test]
     fn should_deserialize_full_command() {
         let yaml_string =
-            r#"---
-name: update
-description: a description
-min_args: 1
-value:
-    script: update.sh
-usage: <name>
-dependencies:
-    - value:
-        envar: NAME
-      description: this is required
-alias: h
-"#;
+            "---
+            name: update
+            description: a description
+            min_args: 1
+            value:
+                script: update.sh
+            usage: <name>
+            dependencies:
+                - value:
+                    envar: NAME
+                  description: this is required
+            alias: h";
+
         let d = Dependency {
             value: DependencyType::Envar(s!("NAME")),
             description: s!("this is required")
@@ -87,12 +86,11 @@ alias: h
     #[test]
     fn should_deserialize_shell_command() {
         let yaml_string =
-            r#"---
-name: update
-description: a description
-value:
-    shell: update.sh
-"#;
+            "---
+            name: update
+            description: a description
+            value:
+                shell: update.sh";
 
         let actual_command: Command = serde_yaml::from_str(yaml_string).expect("Failed to parse yaml");
 
