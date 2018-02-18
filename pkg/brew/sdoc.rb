@@ -1,5 +1,5 @@
 class Sdoc < Formula
- version '0.3.3'
+version '0.4.0'
   desc "Framework for building custom CLIs around shell, scripts, and executables"
   homepage "https://github.com/matthewwoodruff/sdoc"
 
