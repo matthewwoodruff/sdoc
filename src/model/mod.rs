@@ -134,21 +134,21 @@ pub enum Internal {
 
 impl Internal {
     fn execute(&self, request: Request, context: &Context) -> Vec<Work> {
-        match *self {
-            Internal::Help => vec![help::execute(request, context)],
-            Internal::Edit => vec![edit::execute(request, context)],
-            Internal::EditConfig => vec![editconfig::execute(request, context)],
-            Internal::View => vec![view::execute(request, context)]
-        }
+        vec![match *self {
+            Internal::Help => help::execute(request, context),
+            Internal::Edit => edit::execute(request, context),
+            Internal::EditConfig => editconfig::execute(request, context),
+            Internal::View => view::execute(request, context)
+        }]
     }
 
     fn auto_complete(&self, request: Request, context: &Context) -> Vec<Work> {
-        match *self {
-            Internal::Help => vec![help::auto_complete(request, context)],
-            Internal::Edit => vec![edit::auto_complete(request, context)],
-            Internal::View => vec![view::auto_complete(request, context)],
-            _ => vec![Work::response(Response::Err(15))]
-        }
+        vec![match *self {
+            Internal::Help => help::auto_complete(request, context),
+            Internal::Edit => edit::auto_complete(request, context),
+            Internal::View => view::auto_complete(request, context),
+            _ => Work::response(Response::Err(15))
+        }]
     }
 }
 
@@ -156,10 +156,6 @@ impl Internal {
 pub enum Value {
     #[serde(rename = "node")]
     Node,
-    Help,
-    Edit,
-    EditConfig,
-    View,
     #[serde(rename = "script")]
     Script(String),
     #[serde(rename = "shell")]
@@ -172,23 +168,6 @@ impl Value {
             Value::Node => node::execute(request, context),
             Value::Script(ref script) => vec![shell::execute_shell(script, request, context)],
             Value::Shell(ref shell) => vec![shell::execute_shell(shell, request, context)],
-            Value::Help => vec![help::execute(request, context)],
-            Value::Edit => vec![edit::execute(request, context)],
-            Value::EditConfig => vec![editconfig::execute(request, context)],
-            Value::View => vec![view::execute(request, context)]
-        }
-    }
-
-    fn auto_complete(&self, request: Request, context: &Context) -> Vec<Work> {
-        match *self {
-            Value::Node => node::execute_auto_complete(request, context),
-            Value::Help => vec![help::auto_complete(request, context)],
-            Value::Edit => vec![edit::auto_complete(request, context)],
-            Value::View => vec![view::auto_complete(request, context)],
-            _ => vec![Work::response(Response::Err(15))]
         }
     }
 }
-
-
-

@@ -4,7 +4,7 @@ mod test;
 use std::path::PathBuf;
 use std::fs::File;
 use serde_yaml;
-use model::{Command, Section, Value, Dependency, DependencyType, Internal};
+use model::{Command, Section, Dependency, DependencyType, Internal};
 
 pub trait ConfigSource {
     fn get_config(&self, path: &PathBuf) -> Vec<Section>;
