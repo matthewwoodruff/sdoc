@@ -1,5 +1,6 @@
 use model::{Value, Command, Section};
-use config::{Context, get_management_commands, FileConfigSource};
+use config::{Context, FileConfigSource};
+use commands::{get_management_commands};
 use std::path::PathBuf;
 
 pub static CONFIG_SOURCE: FileConfigSource = FileConfigSource;
@@ -25,7 +26,7 @@ pub fn a_command() -> Command {
         name: s!("action"),
         description: s!("a-description"),
         value: Some(Value::Shell(s!("dm stack"))),
-        internal_exec: None,
+        internal: None,
         usage: None,
         alias: Some(s!("a")),
         dependencies: None,

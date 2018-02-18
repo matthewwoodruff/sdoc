@@ -1,6 +1,4 @@
-use model::{Command, Section};
-use config::{Context, FileConfigSource};
-use std::path::PathBuf;
+use super::*;
 use test_helper::{a_context, a_section, a_command};
 
 #[test]

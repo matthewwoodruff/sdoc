@@ -16,9 +16,9 @@ pub struct Section {
     pub commands: Vec<Command>,
 }
 
-pub struct InternalExec {
+pub struct Internal {
     pub execute: fn(Request, &Context) -> Work,
-    pub auto_complete: fn(Request, &Context) -> Work
+    pub auto_complete: fn(Request, &Context) -> Work,
 }
 
 #[derive(Deserialize)]
@@ -31,7 +31,7 @@ pub struct Command {
     pub dependencies: Option<Vec<Dependency>>,
     pub min_args: Option<usize>,
     #[serde(skip)]
-    pub internal_exec: Option<InternalExec>
+    pub internal: Option<Internal>,
 }
 
 impl Command {
@@ -98,7 +98,7 @@ impl Command {
         } else {
             work.append(&mut match self.value {
                 Some(ref a) => a.execute(request, context),
-                None => vec![(self.internal_exec.as_ref().unwrap().execute)(request, context)]
+                None => vec![(self.internal.as_ref().unwrap().execute)(request, context)]
             })
         }
 
@@ -106,7 +106,7 @@ impl Command {
     }
 
     pub fn execute_auto_complete(&self, request: Request, context: &Context) -> Vec<Work> {
-        vec![match self.internal_exec {
+        vec![match self.internal {
             Some(ref a) => (a.auto_complete)(request, context),
             _ => Work::response(Response::Err(15))
         }]
@@ -115,10 +115,8 @@ impl Command {
 
 #[derive(Deserialize, Debug, PartialEq)]
 pub enum DependencyType {
-    #[serde(rename = "command")]
-    Command(String),
-    #[serde(rename = "envar")]
-    Envar(String),
+    #[serde(rename = "command")] Command(String),
+    #[serde(rename = "envar")]   Envar(String),
 }
 
 #[derive(Deserialize, Debug, PartialEq)]
@@ -129,12 +127,9 @@ pub struct Dependency {
 
 #[derive(Deserialize, Debug, PartialEq)]
 pub enum Value {
-    #[serde(rename = "node")]
-    Node,
-    #[serde(rename = "script")]
-    Script(String),
-    #[serde(rename = "shell")]
-    Shell(String),
+    #[serde(rename = "node")]   Node,
+    #[serde(rename = "script")] Script(String),
+    #[serde(rename = "shell")]  Shell(String),
 }
 
 impl Value {

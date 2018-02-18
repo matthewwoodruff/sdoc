@@ -1,4 +1,4 @@
-use model::{Dependency, Command, Section, DependencyType};
+use super::*;
 use commands::help::execute;
 use commands::help::auto_complete;
 use config::Context;
