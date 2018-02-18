@@ -12,9 +12,10 @@ then
 fi
 
 sed -i "" -E "s/^version = \".*\"/version = \"$version\"/" Cargo.toml
+sed -i "" -E "s/ version \'.*\'/version \'$version\'/" pkg/brew/sdoc.rb
 
 git reset .
-git add Cargo.toml
+git add Cargo.toml pkg/brew/sdoc.rb VERSION
 git commit -S -m "Release $version_tag"
 git tag -s "$version_tag" -m "Release $version_tag"
 
