@@ -1,8 +1,10 @@
 use workflow::Work;
-use workflow::Instruction::{Display, SystemCommand, ExitCode};
+use workflow::Instruction::{Display, ExitCode};
 use model::Value;
 use dto::{Request, Response};
 use config::Context;
+use std::fs::File;
+use std::io::prelude::*;
 
 pub fn execute(request: Request, context: &Context) -> Work {
     Work::instruction(
@@ -11,8 +13,14 @@ pub fn execute(request: Request, context: &Context) -> Work {
             .and_then(|rc| context.find(&rc, true))
             .map(|command| {
                 match command.value {
-                    Value::Script(ref b) =>
-                        SystemCommand(format!("less {}/{}", context.directory.display(), b), true),
+                    Value::Script(ref b) => {
+                        let file_path = context.directory.join(b);
+                        let mut file = File::open(&file_path).unwrap();
+                        let mut content = s!();
+                        file.read_to_string(&mut content).unwrap();
+
+                        Display(format!("{}", content), Response::Ok)
+                    }
                     Value::Shell(ref b) =>
                         Display(format!("{}", b), Response::Ok),
                     _ => ExitCode(Response::Err(1))

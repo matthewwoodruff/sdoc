@@ -25,6 +25,7 @@ echo
 
 echo "${BLUE}View Command$WHITE"
 should 'enable viewing a shell command' "$exe view print"
+should 'enable viewing a script command' "$exe view script"
 should 'show autocomplete for view command' "AUTO_COMPLETE=2 $exe view"
 should 'only allow viewing of script and shell commands' "$exe view edit" 1
 should 'return non-zero exit code when viewing non-existing command' "$exe view unknown-command" 1
