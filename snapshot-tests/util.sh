@@ -40,7 +40,7 @@ function should () {
   expected_exit_code=${3:-0}
 
   echo -n "$name ($command): "
-  actual=$(bash -c "$command")
+  actual=$(bash -c "RUST_BACKTRACE=1 $command")
   actual_exit_code=$?
   filename="$test_dir/snapshots/$(tr ' ' '_' <<< $name).snap"
 

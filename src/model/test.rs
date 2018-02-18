@@ -44,7 +44,7 @@ mod command {
             value: node";
         let actual_command: Command = serde_yaml::from_str(yaml_string).expect("Failed to parse yaml");
 
-        assert_eq!(actual_command.value, Value::Node);
+        assert_eq!(actual_command.value, Some(Value::Node));
     }
 
     #[test]
@@ -71,7 +71,8 @@ mod command {
         let expected_command = Command {
             name: s!("update"),
             description: s!("a description"),
-            value: Value::Script(s!("update.sh")),
+            value: Some(Value::Script(s!("update.sh"))),
+            internal: None,
             usage: Some(s!("<name>")),
             alias: Some(s!("h")),
             min_args: Some(1),
@@ -94,7 +95,7 @@ mod command {
 
         let actual_command: Command = serde_yaml::from_str(yaml_string).expect("Failed to parse yaml");
 
-        assert_eq!(actual_command.value, Value::Shell(s!("update.sh")));
+        assert_eq!(actual_command.value, Some(Value::Shell(s!("update.sh"))));
     }
 
     #[test]
@@ -112,7 +113,7 @@ mod command {
         };
 
         let command = Command {
-            value: Shell(s!("echo hello world")),
+            value: Some(Shell(s!("echo hello world"))),
             dependencies: Some(vec![dependency]),
             ..a_command()
         };

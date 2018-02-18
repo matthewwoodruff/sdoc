@@ -12,19 +12,21 @@ pub fn execute(request: Request, context: &Context) -> Work {
             .current
             .and_then(|rc| context.find(&rc, true))
             .map(|command| {
-                match command.value {
-                    Value::Script(ref b) => {
-                        let file_path = context.directory.join(b);
-                        let mut file = File::open(&file_path).unwrap();
-                        let mut content = s!();
-                        file.read_to_string(&mut content).unwrap();
+                if let Some(ref a) = command.value {
+                    return match *a {
+                        Value::Script(ref b) => {
+                            let file_path = context.directory.join(b);
+                            let mut file = File::open(&file_path).unwrap();
+                            let mut content = s!();
+                            file.read_to_string(&mut content).unwrap();
 
-                        Display(format!("{}", content), Response::Ok)
+                            Display(format!("{}", content), Response::Ok)
+                        }
+                        Value::Shell(ref b) => Display(format!("{}", b), Response::Ok),
+                        _ => ExitCode(Response::Err(1))
                     }
-                    Value::Shell(ref b) =>
-                        Display(format!("{}", b), Response::Ok),
-                    _ => ExitCode(Response::Err(1))
                 }
+                ExitCode(Response::Err(1))
             })
             .unwrap_or_else(|| ExitCode(Response::Err(1))))
 }
@@ -38,11 +40,14 @@ pub fn auto_complete(request: Request, context: &Context) -> Work {
             .unwrap_or_else(|| {
                 let s = format!("{}", context.get_commands().iter()
                     .filter(|c| {
-                        match c.value {
-                            Value::Script(_) => true,
-                            Value::Shell(_) => true,
-                            _ => false
+                        if let Some(ref a) = c.value {
+                            return match *a {
+                                Value::Script(_) => true,
+                                Value::Shell(_) => true,
+                                _ => false
+                            }
                         }
+                        false
                     })
                     .fold(s!(), |a, b| format!("{}{}\n", a, &b.name)));
 

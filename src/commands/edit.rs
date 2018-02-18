@@ -11,8 +11,10 @@ pub fn execute(request: Request, context: &Context) -> Work {
             .current
             .and_then(|rc| context.find(&rc, true))
             .map(|command| {
-                if let Value::Script(ref b) = command.value {
-                    return SystemCommand(format!("$EDITOR {}/{}", context.directory.display(), b), true);
+                if let Some(ref a) = command.value {
+                    if let Value::Script(ref b) = *a {
+                        return SystemCommand(format!("$EDITOR {}/{}", context.directory.display(), b), true);
+                    }
                 }
                 ExitCode(Err(1))
             })
@@ -28,8 +30,10 @@ pub fn auto_complete(request: Request, context: &Context) -> Work {
             .unwrap_or_else(|| {
                 let s = format!("{}", context.get_commands().iter()
                     .filter(|c| {
-                        if let Value::Script(_) = c.value {
-                            return true;
+                        if let Some(ref a) = c.value {
+                            if let Value::Script(_) = *a {
+                                return true;
+                            }
                         }
                         false
                     })

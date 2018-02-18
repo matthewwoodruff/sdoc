@@ -20,7 +20,9 @@ pub struct Section {
 pub struct Command {
     pub name: String,
     pub description: String,
-    pub value: Value,
+    pub value: Option<Value>,
+    #[serde(skip)]
+    pub internal: Option<Internal>,
     pub usage: Option<String>,
     pub alias: Option<String>,
     pub dependencies: Option<Vec<Dependency>>,
@@ -89,14 +91,22 @@ impl Command {
         if self.min_args.map(|v| v > request.next.len()).unwrap_or(false) {
             work.push(Work::instruction(self.build_command_usage_action(command_chain, Response::Err(2))))
         } else {
-            work.append(&mut self.value.execute(request, context))
+            let mut vec = match self.value {
+                Some(ref a) => a.execute(request, context),
+                None => self.internal.as_ref().unwrap().execute(request, context)
+            };
+
+            work.append(&mut vec)
         }
 
         work
     }
 
     pub fn execute_auto_complete(&self, request: Request, context: &Context) -> Vec<Work> {
-        self.value.auto_complete(request, context)
+        match self.internal {
+            Some(ref a) => a.auto_complete(request, context),
+            _ => vec![Work::response(Response::Err(15))]
+        }
     }
 }
 
@@ -112,6 +122,34 @@ pub enum DependencyType {
 pub struct Dependency {
     pub value: DependencyType,
     pub description: String
+}
+
+#[derive(Deserialize, Debug, PartialEq)]
+pub enum Internal {
+    Help,
+    Edit,
+    EditConfig,
+    View,
+}
+
+impl Internal {
+    fn execute(&self, request: Request, context: &Context) -> Vec<Work> {
+        match *self {
+            Internal::Help => vec![help::execute(request, context)],
+            Internal::Edit => vec![edit::execute(request, context)],
+            Internal::EditConfig => vec![editconfig::execute(request, context)],
+            Internal::View => vec![view::execute(request, context)]
+        }
+    }
+
+    fn auto_complete(&self, request: Request, context: &Context) -> Vec<Work> {
+        match *self {
+            Internal::Help => vec![help::auto_complete(request, context)],
+            Internal::Edit => vec![edit::auto_complete(request, context)],
+            Internal::View => vec![view::auto_complete(request, context)],
+            _ => vec![Work::response(Response::Err(15))]
+        }
+    }
 }
 
 #[derive(Deserialize, Debug, PartialEq)]
