@@ -2,7 +2,7 @@
 name = "sdoc"
 version = "0.3.2"
 authors = ["Matthew Woodruff <mwoodruf@thoughtworks.com>"]
-description = "CLI framework for sharing workflows"
+description = "Framework for building custom CLIs around shell, scripts, and executables"
 repository = "https://github.com/matthewwoodruff/sdoc"
 homepage = "https://github.com/matthewwoodruff/sdoc"
 readme = "README.md"
