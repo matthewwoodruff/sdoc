@@ -68,20 +68,16 @@ mod command {
             description: s!("this is required")
         };
 
-        let expected_command = Command {
-            name: s!("update"),
-            description: s!("a description"),
-            value: Some(Value::Script(s!("update.sh"))),
-            internal: None,
-            usage: Some(s!("<name>")),
-            alias: Some(s!("h")),
-            min_args: Some(1),
-            dependencies: Some(vec![d])
-        };
-
         let actual_command: Command = serde_yaml::from_str(yaml_string).expect("Failed to parse yaml");
 
-        assert_eq!(actual_command, expected_command);
+        assert_eq!(actual_command.name, s!("update"));
+        assert_eq!(actual_command.description, s!("a description"));
+        assert_eq!(actual_command.value, Some(Value::Script(s!("update.sh"))));
+        assert_eq!(actual_command.internal_exec.is_none(), true);
+        assert_eq!(actual_command.usage, Some(s!("<name>")));
+        assert_eq!(actual_command.alias, Some(s!("h")));
+        assert_eq!(actual_command.min_args, Some(1));
+        assert_eq!(actual_command.dependencies, Some(vec![d]));
     }
 
     #[test]

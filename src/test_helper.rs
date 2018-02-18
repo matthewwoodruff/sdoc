@@ -25,7 +25,7 @@ pub fn a_command() -> Command {
         name: s!("action"),
         description: s!("a-description"),
         value: Some(Value::Shell(s!("dm stack"))),
-        internal: None,
+        internal_exec: None,
         usage: None,
         alias: Some(s!("a")),
         dependencies: None,

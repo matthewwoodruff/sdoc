@@ -1,6 +1,5 @@
 use model::{Command, Section};
 use config::{Context, FileConfigSource};
-use config;
 use std::path::PathBuf;
 use test_helper::{a_context, a_section, a_command};
 
@@ -35,20 +34,22 @@ fn should_build_initial_context_from_current_executable() {
 
 #[test]
 fn should_return_command_matching_command_name() {
-    let context = a_context();
+    let my_command = Command { name: s!("my-command"), ..a_command() };
+    let section = Section { commands: vec![my_command], ..a_section() };
+    let context = Context { config: vec![section], ..a_context() };
 
-    let command = s!("edit");
-    let actual_command = context.find(&command, false);
+    let actual_command = context.find(&s!("my-command"), false);
 
-    assert_eq!(actual_command.unwrap(), &config::edit_command());
+    assert_eq!(actual_command.unwrap().name, s!("my-command"));
 }
 
 #[test]
 fn should_return_command_matching_command_alias() {
-    let context = a_context();
+    let my_command = Command { name: s!("my-command"), alias: Some(s!("mc")), ..a_command() };
+    let section = Section { commands: vec![my_command], ..a_section() };
+    let context = Context { config: vec![section], ..a_context() };
 
-    let command = s!("e");
-    let actual_command = context.find(&command, true);
+    let actual_command = context.find(&s!("mc"), true);
 
-    assert_eq!(actual_command.unwrap(), &config::edit_command());
+    assert_eq!(actual_command.unwrap().name, s!("my-command"));
 }

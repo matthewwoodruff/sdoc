@@ -8,25 +8,30 @@ use dto::{Request, Response};
 use workflow::Work;
 use workflow::Instruction::{Display, SystemCommand};
 use workflow::Instruction;
-use commands::{node, shell, help, editconfig, edit, view};
+use commands::{node, shell};
 
-#[derive(Debug, Deserialize)]
+#[derive(Deserialize)]
 pub struct Section {
     pub heading: String,
-    pub commands: Vec<Command>
+    pub commands: Vec<Command>,
 }
 
-#[derive(Deserialize, Debug, PartialEq)]
+pub struct InternalExec {
+    pub execute: fn(Request, &Context) -> Work,
+    pub auto_complete: fn(Request, &Context) -> Work
+}
+
+#[derive(Deserialize)]
 pub struct Command {
     pub name: String,
     pub description: String,
     pub value: Option<Value>,
-    #[serde(skip)]
-    pub internal: Option<Internal>,
     pub usage: Option<String>,
     pub alias: Option<String>,
     pub dependencies: Option<Vec<Dependency>>,
-    pub min_args: Option<usize>
+    pub min_args: Option<usize>,
+    #[serde(skip)]
+    pub internal_exec: Option<InternalExec>
 }
 
 impl Command {
@@ -86,27 +91,25 @@ impl Command {
 
     pub fn execute(&self, request: Request, context: &Context) -> Vec<Work> {
         let command_chain = &context.build_command_chain();
-        let mut work : Vec<Work> = self.dependency_checks(command_chain);
+        let mut work: Vec<Work> = self.dependency_checks(command_chain);
 
         if self.min_args.map(|v| v > request.next.len()).unwrap_or(false) {
             work.push(Work::instruction(self.build_command_usage_action(command_chain, Response::Err(2))))
         } else {
-            let mut vec = match self.value {
+            work.append(&mut match self.value {
                 Some(ref a) => a.execute(request, context),
-                None => self.internal.as_ref().unwrap().execute(request, context)
-            };
-
-            work.append(&mut vec)
+                None => vec![(self.internal_exec.as_ref().unwrap().execute)(request, context)]
+            })
         }
 
         work
     }
 
     pub fn execute_auto_complete(&self, request: Request, context: &Context) -> Vec<Work> {
-        match self.internal {
-            Some(ref a) => a.auto_complete(request, context),
-            _ => vec![Work::response(Response::Err(15))]
-        }
+        vec![match self.internal_exec {
+            Some(ref a) => (a.auto_complete)(request, context),
+            _ => Work::response(Response::Err(15))
+        }]
     }
 }
 
@@ -115,41 +118,13 @@ pub enum DependencyType {
     #[serde(rename = "command")]
     Command(String),
     #[serde(rename = "envar")]
-    Envar(String)
+    Envar(String),
 }
 
 #[derive(Deserialize, Debug, PartialEq)]
 pub struct Dependency {
     pub value: DependencyType,
-    pub description: String
-}
-
-#[derive(Deserialize, Debug, PartialEq)]
-pub enum Internal {
-    Help,
-    Edit,
-    EditConfig,
-    View,
-}
-
-impl Internal {
-    fn execute(&self, request: Request, context: &Context) -> Vec<Work> {
-        vec![match *self {
-            Internal::Help => help::execute(request, context),
-            Internal::Edit => edit::execute(request, context),
-            Internal::EditConfig => editconfig::execute(request, context),
-            Internal::View => view::execute(request, context)
-        }]
-    }
-
-    fn auto_complete(&self, request: Request, context: &Context) -> Vec<Work> {
-        vec![match *self {
-            Internal::Help => help::auto_complete(request, context),
-            Internal::Edit => edit::auto_complete(request, context),
-            Internal::View => view::auto_complete(request, context),
-            _ => Work::response(Response::Err(15))
-        }]
-    }
+    pub description: String,
 }
 
 #[derive(Deserialize, Debug, PartialEq)]
@@ -159,7 +134,7 @@ pub enum Value {
     #[serde(rename = "script")]
     Script(String),
     #[serde(rename = "shell")]
-    Shell(String)
+    Shell(String),
 }
 
 impl Value {

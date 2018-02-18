@@ -46,6 +46,9 @@ echo "${BLUE}Shell Command$WHITE"
 should 'execute shell command' "$exe print"
 echo
 
+echo "${BLUE}Edit Config Command$WHITE"
+should 'not return any suggestions for auto complete' "AUTO_COMPLETE=2 $exe config"
+
 echo "${BLUE}General$WHITE"
 should 'show command usage when args are insufficient' "$exe min-args" 2
 should 'execute a command with required args' "$exe min-args 'an argument'"

@@ -4,7 +4,8 @@ mod test;
 use std::path::PathBuf;
 use std::fs::File;
 use serde_yaml;
-use model::{Command, Section, Dependency, DependencyType, Internal};
+use model::{Command, Section, Dependency, DependencyType, InternalExec};
+use commands;
 
 pub trait ConfigSource {
     fn get_config(&self, path: &PathBuf) -> Vec<Section>;
@@ -17,7 +18,7 @@ pub struct Context<'a> {
     pub config_source: &'a ConfigSource,
 }
 
-impl <'a> Context<'a> {
+impl<'a> Context<'a> {
     pub fn get_commands(&self) -> Vec<&Command> {
         self.config.iter()
             .flat_map(|s| &s.commands)
@@ -48,7 +49,7 @@ impl <'a> Context<'a> {
             config: self.config_source.get_config(&directory),
             directory,
             resolved_commands,
-            config_source: self.config_source
+            config_source: self.config_source,
         }
     }
 
@@ -57,12 +58,13 @@ impl <'a> Context<'a> {
             directory,
             config: vec![],
             resolved_commands: vec![],
-            config_source
+            config_source,
         }
     }
 }
 
 pub struct FileConfigSource;
+
 impl ConfigSource for FileConfigSource {
     fn get_config(&self, path: &PathBuf) -> Vec<Section> {
         let x = path.join(s!("commands.yaml"));
@@ -77,7 +79,10 @@ impl ConfigSource for FileConfigSource {
 pub fn edit_command() -> Command {
     Command {
         value: None,
-        internal: Some(Internal::Edit),
+        internal_exec: Some(InternalExec {
+            execute: commands::edit::execute,
+            auto_complete: commands::edit::auto_complete,
+        }),
         description: s!("Edit a command"),
         alias: Some(s!("e")),
         usage: Some(s!("<command>")),
@@ -86,41 +91,50 @@ pub fn edit_command() -> Command {
         dependencies: Some(vec![
             Dependency {
                 value: DependencyType::Envar(s!("EDITOR")),
-                description: s!("Set this environment variable to the editor of your choice")
-            }])
+                description: s!("Set this environment variable to the editor of your choice"),
+            }]),
     }
 }
 
 pub fn help_command() -> Command {
     Command {
         value: None,
-        internal: Some(Internal::Help),
+        internal_exec: Some(InternalExec {
+            execute: commands::help::execute,
+            auto_complete: commands::help::auto_complete,
+        }),
         description: s!("Show help for all commands or a specific command"),
         alias: Some(s!("h")),
         usage: Some(s!("[command]")),
         name: s!("help"),
         dependencies: None,
-        min_args: None
+        min_args: None,
     }
 }
 
 pub fn view_command() -> Command {
     Command {
         value: None,
-        internal: Some(Internal::View),
+        internal_exec: Some(InternalExec {
+            execute: commands::view::execute,
+            auto_complete: commands::view::auto_complete,
+        }),
         description: s!("View a command"),
         alias: Some(s!("v")),
         usage: None,
         name: s!("view"),
         min_args: None,
-        dependencies: None
+        dependencies: None,
     }
 }
 
 pub fn edit_config_command() -> Command {
     Command {
         value: None,
-        internal: Some(Internal::EditConfig),
+        internal_exec: Some(InternalExec {
+            execute: commands::editconfig::execute,
+            auto_complete: commands::util::no_auto_complete,
+        }),
         description: s!("Edit configuration file"),
         alias: Some(s!("c")),
         usage: None,
@@ -129,14 +143,14 @@ pub fn edit_config_command() -> Command {
         dependencies: Some(vec![
             Dependency {
                 value: DependencyType::Envar(s!("$EDITOR")),
-                description: s!("Set this environment variable to the editor of your choice")
-            }])
+                description: s!("Set this environment variable to the editor of your choice"),
+            }]),
     }
 }
 
 pub fn get_management_commands() -> Section {
     Section {
         heading: s!("Management"),
-        commands: vec![help_command(), edit_command(), view_command(), edit_config_command()]
+        commands: vec![help_command(), edit_command(), view_command(), edit_config_command()],
     }
 }
