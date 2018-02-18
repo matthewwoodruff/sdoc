@@ -1,6 +1,6 @@
 [package]
 name = "sdoc"
-version = "0.3.1"
+version = "0.3.2"
 authors = ["Matthew Woodruff <mwoodruf@thoughtworks.com>"]
 description = "CLI framework for sharing workflows"
 repository = "https://github.com/matthewwoodruff/sdoc"
