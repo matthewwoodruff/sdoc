@@ -4,22 +4,10 @@ use workflow::Instruction::SystemCommand;
 use config::Context;
 use std::path::PathBuf;
 use config::FileConfigSource;
-use commands::shell::{execute_shell, execute_script};
+use commands::shell::execute_shell;
 
 #[test]
-fn should_build_shell_system_command() {
-    let args = vec![s!("a"), s!("a b"), s!("c")];
-
-    let request = Request::new(&args, None);
-    let command = s!("command");
-
-    let work = execute_shell(&command, request);
-
-    assert_eq!(work, Work::instruction(SystemCommand(s!("command 'a b' 'c'"), true)))
-}
-
-#[test]
-fn should_build_script_system_command() {
+fn should_build_a_system_command_with_commands_directory_in_path() {
     let directory = PathBuf::from(s!("dm"));
     let config_source = FileConfigSource;
     let context = Context {
@@ -34,7 +22,7 @@ fn should_build_script_system_command() {
     let request = Request::new(&args, None);
     let command = s!("command");
 
-    let work = execute_script(&command, request, &context);
+    let work = execute_shell(&command, request, &context);
 
-    assert_eq!(work, Work::instruction(SystemCommand(s!("dm/command 'a b' 'c'"), true)))
+    assert_eq!(work, Work::instruction(SystemCommand(s!("PATH=\"$PATH:dm\" command 'a b' 'c'"), true)))
 }

@@ -3,12 +3,8 @@ use workflow::Work;
 use workflow::Instruction::SystemCommand;
 use config::Context;
 
-pub fn execute_script(shell: &String, request: Request, context: &Context) -> Work {
-    build_system_command(format!("{}/{} {}", context.directory.display(), shell, quote_args(request)))
-}
-
-pub fn execute_shell(shell: &String, request: Request) -> Work {
-    build_system_command(format!("{} {}", shell, quote_args(request)))
+pub fn execute_shell(shell: &String, request: Request, context: &Context) -> Work {
+    build_system_command(format!("PATH=\"$PATH:{}\" {} {}", context.directory.display(), shell, quote_args(request)))
 }
 
 fn quote_args(request: Request) -> String {

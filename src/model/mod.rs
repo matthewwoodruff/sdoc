@@ -134,8 +134,8 @@ impl Executable {
     fn execute(&self, request: Request, context: &Context) -> Vec<Work> {
         match *self {
             Executable::Node => node::execute(request, context),
-            Executable::Script(ref script) => vec![shell::execute_script(script, request, context)],
-            Executable::Shell(ref alias) => vec![shell::execute_shell(alias, request)],
+            Executable::Script(ref script) => vec![shell::execute_shell(script, request, context)],
+            Executable::Shell(ref alias) => vec![shell::execute_shell(alias, request, context)],
             Executable::Help => vec![help::execute(request, context)],
             Executable::Edit => vec![edit::execute(request, context)],
             Executable::EditConfig => vec![editconfig::execute(request, context)],

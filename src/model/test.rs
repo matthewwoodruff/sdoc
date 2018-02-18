@@ -101,9 +101,9 @@ type:
 
     #[test]
     fn should_execute_command() {
-        let works = run(&a_command());
+        let work = run(&a_command());
 
-        assert_eq!(works, vec![Work::instruction(Instruction::SystemCommand(s!("dm stack "), true))])
+        assert_eq!(work, vec![Work::instruction(Instruction::SystemCommand(s!("PATH=\"$PATH:\" dm stack "), true))])
     }
 
     #[test]
@@ -123,9 +123,9 @@ type:
 
         let dependency_check = Work::instruction(SystemCommand(s!("test -n \"$EDITOR\""), false))
             .on_error(Display(command.build_command_usage(&s!("dm a b c")), Response::Err(3)));
-        let command_work = Work::instruction(SystemCommand(s!("echo hello world "), true));
 
-        assert_eq!(actual_work, vec![dependency_check, command_work])
+        assert_eq!(actual_work.len(), 2);
+        assert_eq!(actual_work[0], dependency_check);
     }
 }
 
