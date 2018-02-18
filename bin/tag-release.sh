@@ -14,8 +14,10 @@ fi
 sed -i "" -E "s/^version = \".*\"/version = \"$version\"/" Cargo.toml
 sed -i "" -E "s/ version \'.*\'/version \'$version\'/" pkg/brew/sdoc.rb
 
+cargo check
+
 git reset .
-git add Cargo.toml pkg/brew/sdoc.rb VERSION
+git add Cargo.toml Cargo.lock pkg/brew/sdoc.rb VERSION
 git commit -S -m "Release $version_tag"
 git tag -s "$version_tag" -m "Release $version_tag"
 
