@@ -10,7 +10,7 @@ pub fn run_system_command(command: &String, output: bool) -> Response {
 }
 
 fn _run_system_command_with_output(command: &String, stdio: Stdio) -> Response {
-    Command::new("bash")
+    Command::new("sh")
         .arg("-c")
         .arg(command)
         .stdout(stdio)
