@@ -1,4 +1,7 @@
-# sdoc [![Build Status](https://travis-ci.org/matthewwoodruff/sdoc.svg?branch=master)](https://travis-ci.org/matthewwoodruff/sdoc)
+# sdoc 
+
+[![Build Status](https://travis-ci.org/matthewwoodruff/sdoc.svg?branch=master)](https://travis-ci.org/matthewwoodruff/sdoc) [![dependency status](https://deps.rs/repo/github/matthewwoodruff/sdoc/status.svg)](https://deps.rs/repo/github/matthewwoodruff/sdoc) [![](https://img.shields.io/crates/v/sdoc.svg)](https://crates.io/crates/sdoc)
+
 
 A framework for building custom CLIs around shell and executables. Commands are defined in yaml and can be sub-commands, shell, or an executable. By convention your root yaml file lives in a directory named the same as your cli name and sub-command configuration in sub directories following the same pattern.
 
