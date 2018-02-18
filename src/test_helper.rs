@@ -1,4 +1,4 @@
-use model::{Executable, Command, Section};
+use model::{Value, Command, Section};
 use config::{Context, get_management_commands, FileConfigSource};
 use std::path::PathBuf;
 
@@ -24,7 +24,7 @@ pub fn a_command() -> Command {
     Command {
         name: s!("action"),
         description: s!("a-description"),
-        command_type: Executable::Shell(s!("dm stack")),
+        value: Value::Shell(s!("dm stack")),
         usage: None,
         alias: Some(s!("a")),
         dependencies: None,

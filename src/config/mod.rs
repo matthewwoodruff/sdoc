@@ -4,7 +4,7 @@ mod test;
 use std::path::PathBuf;
 use std::fs::File;
 use serde_yaml;
-use model::{Command, Section, Executable, Dependency, DependencyType};
+use model::{Command, Section, Value, Dependency, DependencyType};
 
 pub trait ConfigSource {
     fn get_config(&self, path: &PathBuf) -> Vec<Section>;
@@ -76,7 +76,7 @@ impl ConfigSource for FileConfigSource {
 
 pub fn edit_command() -> Command {
     Command {
-        command_type: Executable::Edit,
+        value: Value::Edit,
         description: s!("Edit a command"),
         alias: Some(s!("e")),
         usage: Some(s!("<command>")),
@@ -92,7 +92,7 @@ pub fn edit_command() -> Command {
 
 pub fn help_command() -> Command {
     Command {
-        command_type: Executable::Help,
+        value: Value::Help,
         description: s!("Show help for all commands or a specific command"),
         alias: Some(s!("h")),
         usage: Some(s!("[command]")),
@@ -104,7 +104,7 @@ pub fn help_command() -> Command {
 
 pub fn view_command() -> Command {
     Command {
-        command_type: Executable::View,
+        value: Value::View,
         description: s!("View a command"),
         alias: Some(s!("v")),
         usage: None,
@@ -116,7 +116,7 @@ pub fn view_command() -> Command {
 
 pub fn edit_config_command() -> Command {
     Command {
-        command_type: Executable::EditConfig,
+        value: Value::EditConfig,
         description: s!("Edit configuration file"),
         alias: Some(s!("c")),
         usage: None,

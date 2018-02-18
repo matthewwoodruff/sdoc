@@ -1,6 +1,6 @@
 use workflow::Work;
 use workflow::Instruction::{Display, SystemCommand, ExitCode};
-use model::Executable;
+use model::Value;
 use dto::Request;
 use dto::Response::{Ok, Err};
 use config::Context;
@@ -11,7 +11,7 @@ pub fn execute(request: Request, context: &Context) -> Work {
             .current
             .and_then(|rc| context.find(&rc, true))
             .map(|command| {
-                if let Executable::Script(ref b) = command.command_type {
+                if let Value::Script(ref b) = command.value {
                     return SystemCommand(format!("$EDITOR {}/{}", context.directory.display(), b), true);
                 }
                 ExitCode(Err(1))
@@ -28,7 +28,7 @@ pub fn auto_complete(request: Request, context: &Context) -> Work {
             .unwrap_or_else(|| {
                 let s = format!("{}", context.get_commands().iter()
                     .filter(|c| {
-                        if let Executable::Script(_) = c.command_type {
+                        if let Value::Script(_) = c.value {
                             return true;
                         }
                         false

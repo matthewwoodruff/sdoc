@@ -4,7 +4,8 @@ use workflow::Instruction::SystemCommand;
 use config::Context;
 
 pub fn execute_shell(shell: &String, request: Request, context: &Context) -> Work {
-    build_system_command(format!("PATH=\"$PATH:{}\" {} {}", context.directory.display(), shell, quote_args(request)))
+    let command = format!("PATH=\"$PATH:{}\" {} {}", context.directory.display(), shell, quote_args(request));
+    Work::instruction(SystemCommand(command, true))
 }
 
 fn quote_args(request: Request) -> String {
@@ -14,8 +15,4 @@ fn quote_args(request: Request) -> String {
         .collect();
 
     args.join(" ")
-}
-
-fn build_system_command(command: String) -> Work {
-    Work::instruction(SystemCommand(command, true))
 }

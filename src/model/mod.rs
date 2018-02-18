@@ -20,8 +20,7 @@ pub struct Section {
 pub struct Command {
     pub name: String,
     pub description: String,
-    #[serde(rename = "value")]
-    pub command_type: Executable,
+    pub value: Value,
     pub usage: Option<String>,
     pub alias: Option<String>,
     pub dependencies: Option<Vec<Dependency>>,
@@ -90,14 +89,14 @@ impl Command {
         if self.min_args.map(|v| v > request.next.len()).unwrap_or(false) {
             work.push(Work::instruction(self.build_command_usage_action(command_chain, Response::Err(2))))
         } else {
-            work.append(&mut self.command_type.execute(request, context))
+            work.append(&mut self.value.execute(request, context))
         }
 
         work
     }
 
     pub fn execute_auto_complete(&self, request: Request, context: &Context) -> Vec<Work> {
-        self.command_type.auto_complete(request, context)
+        self.value.auto_complete(request, context)
     }
 }
 
@@ -116,7 +115,7 @@ pub struct Dependency {
 }
 
 #[derive(Deserialize, Debug, PartialEq)]
-pub enum Executable {
+pub enum Value {
     #[serde(rename = "node")]
     Node,
     Help,
@@ -129,25 +128,25 @@ pub enum Executable {
     Shell(String)
 }
 
-impl Executable {
+impl Value {
     fn execute(&self, request: Request, context: &Context) -> Vec<Work> {
         match *self {
-            Executable::Node => node::execute(request, context),
-            Executable::Script(ref script) => vec![shell::execute_shell(script, request, context)],
-            Executable::Shell(ref alias) => vec![shell::execute_shell(alias, request, context)],
-            Executable::Help => vec![help::execute(request, context)],
-            Executable::Edit => vec![edit::execute(request, context)],
-            Executable::EditConfig => vec![editconfig::execute(request, context)],
-            Executable::View => vec![view::execute(request, context)]
+            Value::Node => node::execute(request, context),
+            Value::Script(ref script) => vec![shell::execute_shell(script, request, context)],
+            Value::Shell(ref shell) => vec![shell::execute_shell(shell, request, context)],
+            Value::Help => vec![help::execute(request, context)],
+            Value::Edit => vec![edit::execute(request, context)],
+            Value::EditConfig => vec![editconfig::execute(request, context)],
+            Value::View => vec![view::execute(request, context)]
         }
     }
 
     fn auto_complete(&self, request: Request, context: &Context) -> Vec<Work> {
         match *self {
-            Executable::Node => node::execute_auto_complete(request, context),
-            Executable::Help => vec![help::auto_complete(request, context)],
-            Executable::Edit => vec![edit::auto_complete(request, context)],
-            Executable::View => vec![view::auto_complete(request, context)],
+            Value::Node => node::execute_auto_complete(request, context),
+            Value::Help => vec![help::auto_complete(request, context)],
+            Value::Edit => vec![edit::auto_complete(request, context)],
+            Value::View => vec![view::auto_complete(request, context)],
             _ => vec![Work::response(Response::Err(15))]
         }
     }

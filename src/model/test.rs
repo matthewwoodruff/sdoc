@@ -4,7 +4,7 @@ use dto::Request;
 use serde_yaml;
 use super::*;
 use test_helper::{a_command, a_context};
-use model::Executable::Shell;
+use model::Value::Shell;
 
 mod command {
     extern crate core;
@@ -45,7 +45,7 @@ value: node
 "#;
         let actual_command: Command = serde_yaml::from_str(yaml_string).expect("Failed to parse yaml");
 
-        assert_eq!(actual_command.command_type, Executable::Node);
+        assert_eq!(actual_command.value, Value::Node);
     }
 
     #[test]
@@ -72,7 +72,7 @@ alias: h
         let expected_command = Command {
             name: s!("update"),
             description: s!("a description"),
-            command_type: Executable::Script(s!("update.sh")),
+            value: Value::Script(s!("update.sh")),
             usage: Some(s!("<name>")),
             alias: Some(s!("h")),
             min_args: Some(1),
@@ -96,7 +96,7 @@ value:
 
         let actual_command: Command = serde_yaml::from_str(yaml_string).expect("Failed to parse yaml");
 
-        assert_eq!(actual_command.command_type, Executable::Shell(s!("update.sh")));
+        assert_eq!(actual_command.value, Value::Shell(s!("update.sh")));
     }
 
     #[test]
@@ -114,7 +114,7 @@ value:
         };
 
         let command = Command {
-            command_type: Shell(s!("echo hello world")),
+            value: Shell(s!("echo hello world")),
             dependencies: Some(vec![dependency]),
             ..a_command()
         };
