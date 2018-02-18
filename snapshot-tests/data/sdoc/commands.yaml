@@ -3,38 +3,38 @@
   commands:
   - name: sub
     description: A sub command
-    type: Node
+    value: node
 
 - heading: "Commands"
   commands:
   - name: print
     alias: p
     description: Prints hello world
-    type:
-      Shell: echo hello world
+    value:
+      shell: echo hello world
   - name: min-args
     description: I require arguments
     min_args: 1
     usage: "<an-arg>"
-    type:
-      Shell: "echo The args are: "
+    value:
+      shell: "echo The args are: "
   - name: deps
     description: I have dependency requirements
-    type:
-      Shell: "echo The name is $A_NAME"
+    value:
+      shell: "echo The name is $A_NAME"
     dependencies:
       - description: A name that I need
         value: 
-          Envar: A_NAME
+          envar: A_NAME
   - name: com-dep
     description: I have command requirements
-    type:
-      Shell: "echo The command exists"
+    value:
+      shell: "echo The command exists"
     dependencies:
       - description: A command that I need
         value: 
-          Command: test-com
+          command: test-com
   - name: script
     description: A simple script
-    type:
-      Script: script.sh
+    value:
+      script: script.sh

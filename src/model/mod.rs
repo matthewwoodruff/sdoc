@@ -20,7 +20,7 @@ pub struct Section {
 pub struct Command {
     pub name: String,
     pub description: String,
-    #[serde(rename = "type")]
+    #[serde(rename = "value")]
     pub command_type: Executable,
     pub usage: Option<String>,
     pub alias: Option<String>,
@@ -103,7 +103,9 @@ impl Command {
 
 #[derive(Deserialize, Debug, PartialEq)]
 pub enum DependencyType {
+    #[serde(rename = "command")]
     Command(String),
+    #[serde(rename = "envar")]
     Envar(String)
 }
 
@@ -114,19 +116,16 @@ pub struct Dependency {
 }
 
 #[derive(Deserialize, Debug, PartialEq)]
-pub enum External {
-    Script(String),
-    Alias(String)
-}
-
-#[derive(Deserialize, Debug, PartialEq)]
 pub enum Executable {
+    #[serde(rename = "node")]
     Node,
     Help,
     Edit,
     EditConfig,
     View,
+    #[serde(rename = "script")]
     Script(String),
+    #[serde(rename = "shell")]
     Shell(String)
 }
 

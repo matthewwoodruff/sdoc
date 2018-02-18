@@ -41,7 +41,7 @@ mod command {
             r#"---
 name: stack
 description: a description
-type: Node
+value: node
 "#;
         let actual_command: Command = serde_yaml::from_str(yaml_string).expect("Failed to parse yaml");
 
@@ -55,12 +55,12 @@ type: Node
 name: update
 description: a description
 min_args: 1
-type:
-    Script: update.sh
+value:
+    script: update.sh
 usage: <name>
 dependencies:
     - value:
-        Envar: NAME
+        envar: NAME
       description: this is required
 alias: h
 "#;
@@ -90,8 +90,8 @@ alias: h
             r#"---
 name: update
 description: a description
-type:
-    Shell: update.sh
+value:
+    shell: update.sh
 "#;
 
         let actual_command: Command = serde_yaml::from_str(yaml_string).expect("Failed to parse yaml");

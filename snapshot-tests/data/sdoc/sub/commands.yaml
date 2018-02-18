@@ -4,5 +4,5 @@
   - name: print
     alias: p
     description: Prints hello world
-    type:
-      Shell: echo hello world from sub command
+    value:
+      shell: echo hello world from sub command
