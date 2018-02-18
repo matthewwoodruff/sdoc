@@ -20,9 +20,9 @@ Usage: dm a b c <command> [args]
 
 Management:
   help        h     Show help for all commands or a specific command
-  edit        e     Edit the implementation of a command
-  config      c     Edit the configuration file
-  view        v     View the implementation of a command
+  edit        e     Edit a command
+  view        v     View a command
+  config      c     Edit configuration file
 "#;
 
     assert_eq!(actual_help, Work::instruction(Display(s!(expected_help_text), Response::Err(1))));
@@ -41,9 +41,9 @@ Usage: dm a b c <command> [args]
 
 Management:
   help        h     Show help for all commands or a specific command
-  edit        e     Edit the implementation of a command
-  config      c     Edit the configuration file
-  view        v     View the implementation of a command
+  edit        e     Edit a command
+  view        v     View a command
+  config      c     Edit configuration file
 "#;
 
     assert_eq!(actual_help, Work::instruction(Display(s!(expected_help_text), Response::Ok)));

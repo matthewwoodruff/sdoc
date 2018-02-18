@@ -3,9 +3,9 @@ Usage: sdoc <command> [args]
 
 Management:
   help        h     Show help for all commands or a specific command
-  edit        e     Edit the implementation of a command
-  config      c     Edit the configuration file
-  view        v     View the implementation of a command
+  edit        e     Edit a command
+  view        v     View a command
+  config      c     Edit configuration file
 
 Node Commands:
   sub               A sub command

@@ -77,7 +77,7 @@ impl ConfigSource for FileConfigSource {
 pub fn edit_command() -> Command {
     Command {
         command_type: Executable::Edit,
-        description: s!("Edit the implementation of a command"),
+        description: s!("Edit a command"),
         alias: Some(s!("e")),
         usage: Some(s!("<command>")),
         name: s!("edit"),
@@ -105,7 +105,7 @@ pub fn help_command() -> Command {
 pub fn view_command() -> Command {
     Command {
         command_type: Executable::View,
-        description: s!("View the implementation of a command"),
+        description: s!("View a command"),
         alias: Some(s!("v")),
         usage: None,
         name: s!("view"),
@@ -117,7 +117,7 @@ pub fn view_command() -> Command {
 pub fn edit_config_command() -> Command {
     Command {
         command_type: Executable::EditConfig,
-        description: s!("Edit the configuration file"),
+        description: s!("Edit configuration file"),
         alias: Some(s!("c")),
         usage: None,
         name: s!("config"),
@@ -133,6 +133,6 @@ pub fn edit_config_command() -> Command {
 pub fn get_management_commands() -> Section {
     Section {
         heading: s!("Management"),
-        commands: vec![help_command(), edit_command(), edit_config_command(), view_command()]
+        commands: vec![help_command(), edit_command(), view_command(), edit_config_command()]
     }
 }

@@ -1,7 +1,7 @@
 
 Usage: sdoc config 
 
-Edit the configuration file
+Edit configuration file
 
 Dependencies:
   $EDITOR     Set this environment variable to the editor of your choice
