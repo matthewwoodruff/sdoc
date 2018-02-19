@@ -93,7 +93,7 @@ impl Command {
         let command_chain = &context.build_command_chain();
         let mut work: Vec<Work> = self.dependency_checks(command_chain);
 
-        if self.min_args.map(|v| v > request.next.len()).unwrap_or(false) {
+        if self.min_args.map(|v| v > request.args.len()).unwrap_or(false) {
             work.push(Work::instruction(self.build_command_usage_action(command_chain, Response::Err(2))))
         } else {
             work.append(&mut match self.value {

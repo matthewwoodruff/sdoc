@@ -5,7 +5,7 @@ fn should_not_build_request_for_no_args() {
     let args = vec![];
     let request = Request::new(&args, None);
     assert_eq!(request.current, None);
-    assert_eq!(request.next.is_empty(), true);
+    assert_eq!(request.args.is_empty(), true);
 }
 
 #[test]
@@ -15,7 +15,7 @@ fn should_build_request_from_vector_of_strings() {
     let request = Request::new(&args, None);
 
     assert_eq!(request.current, Some(&args[0]));
-    assert_eq!(request.next, &args[1..3]);
+    assert_eq!(request.args, &args[1..3]);
 }
 
 #[test]
@@ -27,7 +27,7 @@ fn should_advance_request_with_multiple_args() {
     let next_request = request.next();
 
     assert_eq!(next_request.current, Some(&args[1]));
-    assert_eq!(next_request.next, &args[2..3]);
+    assert_eq!(next_request.args, &args[2..3]);
 }
 
 #[test]
@@ -37,7 +37,7 @@ fn should_create_request_with_single_arg() {
     let request = Request::new(&args, None);
 
     assert_eq!(request.current, Some(&args[0]));
-    assert_eq!(request.next.len(), 0);
+    assert_eq!(request.args.len(), 0);
 }
 
 #[test]
@@ -47,7 +47,7 @@ fn should_advance_request_with_single_arg() {
     let request = Request::new(&args, None).next();
 
     assert_eq!(request.current, None);
-    assert_eq!(request.next.len(), 0);
+    assert_eq!(request.args.len(), 0);
 }
 
 #[test]

@@ -9,7 +9,7 @@ pub fn execute_shell(shell: &String, request: Request, context: &Context) -> Wor
 }
 
 fn quote_args(request: Request) -> String {
-    let args : Vec<String> = request.next
+    let args : Vec<String> = request.args
         .iter()
         .map(|a| format!("'{}'", a))
         .collect();

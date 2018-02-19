@@ -3,11 +3,11 @@ mod test;
 
 #[derive(Debug, PartialEq)]
 pub struct Request<'a> {
-    args: &'a Vec<String>,
-    count: usize,
-    completed: Option<usize>,
     pub current: Option<&'a String>,
-    pub next: &'a [String]
+    pub args: &'a [String],
+    all_args: &'a Vec<String>,
+    shift: usize,
+    completed: Option<usize>,
 }
 
 impl <'a> Request<'a> {
@@ -16,32 +16,32 @@ impl <'a> Request<'a> {
     }
 
     pub fn next(self) -> Request<'a> {
-        Request::build(self.count + 1, self.completed, self.args)
+        Request::build(self.shift + 1, self.completed, self.all_args)
     }
 
-    fn build(count: usize, completed: Option<usize>, args: &Vec<String>) -> Request {
-        let u = args.len();
-        if u - count <= 0 {
+    fn build(shift: usize, completed: Option<usize>, all_args: &Vec<String>) -> Request {
+        let u = all_args.len();
+        if u - shift <= 0 {
             Request {
-                count,
-                args,
+                shift,
+                all_args,
                 current: None ,
-                next: &args[0..0],
+                args: &all_args[0..0],
                 completed
             }
         } else {
             Request {
-                count,
-                args,
-                current: Some(&args[count]) ,
-                next: &args[count+1..u],
+                shift,
+                all_args,
+                current: Some(&all_args[shift]) ,
+                args: &all_args[shift+1..u],
                 completed
             }
         }
     }
 
     pub fn autocomplete(&self) -> bool {
-        self.completed.map( |v| v == self.count).unwrap_or(false)
+        self.completed.map( |v| v == self.shift).unwrap_or(false)
     }
     pub fn autocomplete_enabled(&self) -> bool {
         self.completed.map( |v| v > 0).unwrap_or(false)
