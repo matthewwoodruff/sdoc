@@ -1,5 +1,7 @@
 #! /bin/bash
 
+unset EDITOR
+
 test_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source "$test_dir/util.sh"
 
@@ -34,6 +36,7 @@ echo
 echo "${BLUE}Edit Command$WHITE"
 should 'show autocomplete for edit command' "AUTO_COMPLETE=2 $exe edit"
 should 'return non-zero exit code when editing a non-existing command' "EDITOR=vim $exe edit unknown-command" 1
+should 'return non-zero exit code when EDITOR environment variable is not set when editing a command' "$exe edit script" 3
 should 'only allow editing of script commands' "EDITOR=vim $exe edit print" 1
 echo
 
@@ -48,6 +51,7 @@ echo
 
 echo "${BLUE}Edit Config Command$WHITE"
 should 'not return any suggestions for auto complete' "AUTO_COMPLETE=2 $exe config"
+should 'return non-zero exit code when EDITOR environment variable is not set when editing config' "$exe config" 3
 
 echo "${BLUE}General$WHITE"
 should 'show command usage when args are insufficient' "$exe min-args" 2

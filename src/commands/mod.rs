@@ -79,7 +79,7 @@ pub fn edit_config_command() -> Command {
         min_args: None,
         dependencies: Some(vec![
             Dependency {
-                value: DependencyType::Envar(s!("$EDITOR")),
+                value: DependencyType::Envar(s!("EDITOR")),
                 description: s!("Set this environment variable to the editor of your choice"),
             }]),
     }
