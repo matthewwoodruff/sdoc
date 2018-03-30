@@ -38,6 +38,7 @@ should 'show autocomplete for edit command' "AUTO_COMPLETE=2 $exe edit"
 should 'return non-zero exit code when editing a non-existing command' "EDITOR=vim $exe edit unknown-command" 1
 should 'return non-zero exit code when EDITOR environment variable is not set when editing a command' "$exe edit script" 3
 should 'only allow editing of script commands' "EDITOR=vim $exe edit print" 1
+should 'allow editor to be configured when editing a command' "EDITOR=cat $exe edit script"
 echo
 
 echo "${BLUE}Script Command$WHITE"
@@ -51,6 +52,7 @@ echo
 
 echo "${BLUE}Edit Config Command$WHITE"
 should 'not return any suggestions for auto complete' "AUTO_COMPLETE=2 $exe config"
+should 'allow editor to be configured when editing config' "EDITOR=cat $exe config"
 should 'return non-zero exit code when EDITOR environment variable is not set when editing config' "$exe config" 3
 
 echo "${BLUE}General$WHITE"

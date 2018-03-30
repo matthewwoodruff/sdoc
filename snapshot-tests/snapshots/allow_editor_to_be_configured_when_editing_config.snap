@@ -1,0 +1,40 @@
+---
+- heading: "Node Commands"
+  commands:
+  - name: sub
+    description: A sub command
+    value: node
+
+- heading: "Commands"
+  commands:
+  - name: print
+    alias: p
+    description: Prints hello world
+    value:
+      shell: echo hello world
+  - name: min-args
+    description: I require arguments
+    min_args: 1
+    usage: "<an-arg>"
+    value:
+      shell: "echo The args are: "
+  - name: deps
+    description: I have dependency requirements
+    value:
+      shell: "echo The name is $A_NAME"
+    dependencies:
+      - description: A name that I need
+        value: 
+          envar: A_NAME
+  - name: com-dep
+    description: I have command requirements
+    value:
+      shell: "echo The command exists"
+    dependencies:
+      - description: A command that I need
+        value: 
+          command: test-com
+  - name: script
+    description: A simple script
+    value:
+      script: script.sh
