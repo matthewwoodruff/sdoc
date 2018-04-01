@@ -1,8 +1,8 @@
 extern crate assert_cli;
 
-use assert_cli::{Assert, Environment};
+use assert_cli::Environment;
 
-static HELP_TEXT: &'static str = "
+pub static HELP_TEXT: &'static str = "
 Usage: sdoc <command> [args]
 
 Management:
@@ -21,28 +21,19 @@ Commands:
   com-dep           I have command requirements
   script            A simple script";
 
-#[test]
-fn show_help_message_when_no_arguments_are_supplied() {
-    Assert::main_binary()
-        .with_env(&environment())
-        .succeeds()
-        .stdout().is(HELP_TEXT)
-        .execute()
-        .unwrap();
-}
+pub static AUTO_COMPLETE: &'static str = "\
+help
+edit
+view
+config
+sub
+print
+min-args
+deps
+com-dep
+script";
 
-#[test]
-fn show_help_message_when_unknown_command_is_given() {
-    Assert::main_binary()
-        .with_args(&["unknown-command"])
-        .with_env(&environment())
-        .fails_with(1)
-        .stdout().is(HELP_TEXT)
-        .execute()
-        .unwrap();
-}
-
-fn environment() -> Environment {
+pub fn environment() -> Environment {
     Environment::inherit()
         .insert("COMMANDS_DIRECTORY", "tests/data")
         .insert("CLI_NAME", "sdoc")

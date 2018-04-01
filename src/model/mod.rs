@@ -81,11 +81,11 @@ impl Command {
                         })))
             .unwrap_or(s!());
 
-        format!("\nUsage: {} {} {}\n\n{}\n{}",
+        format!("\nUsage: {} {}{}\n\n{}\n{}",
                 command_chain,
-                &self.name,
-                self.usage.as_ref().unwrap_or(&s!()),
-                &self.description,
+                self.name,
+                self.usage.as_ref().map(|u| format!(" {}", u)).unwrap_or(s!()),
+                self.description,
                 dependencies)
     }
 
