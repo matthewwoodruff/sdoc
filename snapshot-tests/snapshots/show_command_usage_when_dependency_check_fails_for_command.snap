@@ -1,7 +1,0 @@
-
-Usage: sdoc com-dep
-
-I have command requirements
-
-Dependencies:
-  test-com    A command that I need
