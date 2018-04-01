@@ -1,13 +1,10 @@
 use commands::node;
 use config::{Context, FileConfigSource};
-use dto::Request;
-use dto::Response;
-use std::env;
-use std::path::PathBuf;
+use dto::{Request, Response};
+use std::{env, process, path};
 use workflow;
-use std;
 
-pub fn run_app(commands_directory: PathBuf) {
+pub fn run_app(commands_directory: path::PathBuf) {
     let args: Vec<String> = build_args();
     let request = build_request(&args);
     let context = Context::init(commands_directory, &FileConfigSource);
@@ -17,7 +14,7 @@ pub fn run_app(commands_directory: PathBuf) {
         node::execute(request, &context)
     };
 
-    std::process::exit(
+    process::exit(
         match workflow::run_workflow(workflow, &workflow::SystemRunner) {
             Response::Ok => 0,
             Response::Err(v) => v
