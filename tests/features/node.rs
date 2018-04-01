@@ -1,35 +1,28 @@
-use assert_cli::Assert;
-use features::common::{HELP_TEXT, AUTO_COMPLETE, environment, expect_output, expect_output_given_env};
+use features::common::{HELP_TEXT, AUTO_COMPLETE, run};
 
 #[test]
 fn show_help_message_when_no_arguments_are_supplied() {
-    expect_output(&[], HELP_TEXT);
+    run(&[]).output(HELP_TEXT).succeeds();
 }
 
 #[test]
 fn show_help_message_when_unknown_command_is_given() {
-    Assert::main_binary()
-        .with_args(&["unknown-command"])
-        .with_env(&environment())
-        .fails_with(1)
-        .stdout().is(HELP_TEXT)
-        .execute()
-        .unwrap();
+    run(&["unknown-command"]).output(HELP_TEXT).exits_with(1);
 }
 
 #[test]
 fn show_autocomplete_for_available_commands() {
-    expect_output_given_env(environment().insert("AUTO_COMPLETE", "1"), &[], AUTO_COMPLETE);
+    run(&[]).env("AUTO_COMPLETE", "1").output(AUTO_COMPLETE).succeeds();
 }
 
 #[test]
 fn execute_a_sub_command() {
-    expect_output(&["sub", "print"], "hello world from sub command");
+    run(&["sub", "print"]).output("hello world from sub command").succeeds();
 }
 
 #[test]
 fn execute_a_command_with_alias() {
-    expect_output(&["p"], "hello world");
+    run(&["p"]).output("hello world").succeeds();
 }
 
 

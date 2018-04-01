@@ -1,4 +1,4 @@
-use assert_cli::{Environment,Assert};
+use assert_cli::{Assert, Environment};
 
 pub static HELP_TEXT: &'static str = "
 Usage: sdoc <command> [args]
@@ -43,29 +43,48 @@ exit 0
 
 ";
 
-pub fn environment() -> Environment {
-    Environment::inherit()
-        .insert("COMMANDS_DIRECTORY", "tests/data")
-        .insert("CLI_NAME", "sdoc")
-        .insert("EDITOR", "")
+pub static EDIT_USAGE: &'static str = "
+Usage: sdoc edit <command>
+
+Edit a command
+
+Dependencies:
+  EDITOR      Set this environment variable to the editor of your choice
+
+";
+
+pub struct Harness {
+    assert: Assert,
+    env: Environment
 }
 
-pub fn expect_output(args: &[&str], output: &str) {
-    Assert::main_binary()
-        .with_args(args)
-        .with_env(&environment())
-        .succeeds()
-        .stdout().is(output)
-        .execute()
-        .unwrap();
+impl Harness {
+    pub fn env(self, key: &str, value: &str) -> Self {
+        Harness {
+            env: self.env.insert(key, value),
+            ..self
+        }
+    }
+    pub fn output(self, output: &str) -> Self {
+        Harness {
+            assert: self.assert.stdout().is(output),
+            ..self
+        }
+    }
+    pub fn exits_with(self, code: i32) {
+        self.assert.with_env(&self.env).fails_with(code).execute().unwrap();
+    }
+    pub fn succeeds(self) {
+        self.assert.with_env(&self.env).succeeds().execute().unwrap();
+    }
 }
 
-pub fn expect_output_given_env(env: Environment, args: &[&str], output: &str) {
-    Assert::main_binary()
-        .with_args(args)
-        .with_env(&env)
-        .succeeds()
-        .stdout().is(output)
-        .execute()
-        .unwrap();
+pub fn run(args: &[&str]) -> Harness {
+    Harness {
+        assert: Assert::main_binary().with_args(args),
+        env: Environment::inherit()
+            .insert("COMMANDS_DIRECTORY", "tests/data")
+            .insert("CLI_NAME", "sdoc")
+            .insert("EDITOR", "")
+    }
 }

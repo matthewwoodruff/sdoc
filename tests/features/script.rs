@@ -1,17 +1,19 @@
-use features::common::{expect_output};
+use features::common::run;
 
 #[test]
 fn execute_a_script_command() {
-    expect_output(&["script"], "I am a simple script
+    run(&["script"])
+        .output("I am a simple script
 The number of args is 0
 arg 1 is ''
-arg 2 is ''");
+arg 2 is ''").succeeds();
 }
 
 #[test]
 fn pass_arguments_to_script_correctly() {
-    expect_output(&["script", "one two", "three"], "I am a simple script
+    run(&["script", "one two", "three"])
+        .output("I am a simple script
 The number of args is 2
 arg 1 is 'one two'
-arg 2 is 'three'");
+arg 2 is 'three'").succeeds();
 }
