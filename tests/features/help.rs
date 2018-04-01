@@ -1,5 +1,5 @@
 use assert_cli::Assert;
-use common::{HELP_TEXT, environment, expect_output, expect_output_given_env};
+use features::common::{HELP_TEXT, environment, expect_output, expect_output_given_env};
 
 static PRINT_HELP: &'static str = "\nUsage: sdoc print\n\nPrints hello world\n\n";
 

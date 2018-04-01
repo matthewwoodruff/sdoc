@@ -5,10 +5,11 @@ mod help;
 mod node;
 mod shell;
 mod config;
+mod common;
 
 use assert_cli::Assert;
 use std::env;
-use common::{environment, expect_output, expect_output_given_env};
+use features::common::{environment, expect_output, expect_output_given_env};
 
 #[test]
 fn show_command_usage_when_args_are_insufficient() {

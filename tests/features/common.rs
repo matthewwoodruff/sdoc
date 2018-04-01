@@ -1,5 +1,3 @@
-extern crate assert_cli;
-
 use assert_cli::{Environment,Assert};
 
 pub static HELP_TEXT: &'static str = "

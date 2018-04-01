@@ -1,5 +1,5 @@
 use assert_cli::Assert;
-use common::{SCRIPT, environment, expect_output, expect_output_given_env};
+use features::common::{SCRIPT, environment, expect_output, expect_output_given_env};
 
 static EDIT_USAGE: &'static str = "
 Usage: sdoc edit <command>

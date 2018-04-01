@@ -1,5 +1,5 @@
 use assert_cli::Assert;
-use common::{HELP_TEXT, AUTO_COMPLETE, environment, expect_output, expect_output_given_env};
+use features::common::{HELP_TEXT, AUTO_COMPLETE, environment, expect_output, expect_output_given_env};
 
 #[test]
 fn show_help_message_when_no_arguments_are_supplied() {

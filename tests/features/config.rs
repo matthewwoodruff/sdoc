@@ -1,5 +1,5 @@
 use assert_cli::Assert;
-use common::{environment, expect_output_given_env};
+use features::common::{environment, expect_output_given_env};
 
 #[test]
 fn show_nothing_for_auto_complete() {
