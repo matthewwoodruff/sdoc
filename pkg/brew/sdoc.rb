@@ -5,7 +5,7 @@ class Sdoc < Formula
 
   if OS.mac?
       url "https://github.com/matthewwoodruff/sdoc/releases/download/v#{version}/sdoc-v#{version}-x86_64-apple-darwin.tar.gz"
-      sha256 "0019dfc4b32d63c1392aa264aed2253c1e0c2fb09216f8e2cc269bbfb8bb49b5"
+      sha256 "8b161cf1403fe6aa04370476a4fcbd87d7d6bd40561f06d752f2f3e1eb035470"
   end
 
   def install
