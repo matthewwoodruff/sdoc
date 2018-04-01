@@ -1,6 +1,6 @@
 extern crate assert_cli;
 
-use assert_cli::Environment;
+use assert_cli::{Environment,Assert};
 
 pub static HELP_TEXT: &'static str = "
 Usage: sdoc <command> [args]
@@ -37,4 +37,14 @@ pub fn environment() -> Environment {
     Environment::inherit()
         .insert("COMMANDS_DIRECTORY", "tests/data")
         .insert("CLI_NAME", "sdoc")
+}
+
+pub fn expect_output_given_args(args: &[&str], output: &str) {
+    Assert::main_binary()
+        .with_args(args)
+        .with_env(&environment())
+        .succeeds()
+        .stdout().is(output)
+        .execute()
+        .unwrap();
 }

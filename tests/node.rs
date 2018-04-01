@@ -3,16 +3,11 @@ extern crate assert_cli;
 mod common;
 
 use assert_cli::Assert;
-use common::{HELP_TEXT, AUTO_COMPLETE, environment};
+use common::{HELP_TEXT, AUTO_COMPLETE, environment, expect_output_given_args};
 
 #[test]
 fn show_help_message_when_no_arguments_are_supplied() {
-    Assert::main_binary()
-        .with_env(&environment())
-        .succeeds()
-        .stdout().is(HELP_TEXT)
-        .execute()
-        .unwrap();
+    expect_output_given_args(&[], HELP_TEXT);
 }
 
 #[test]
@@ -39,24 +34,12 @@ fn show_autocomplete_for_available_commands() {
 
 #[test]
 fn execute_a_sub_command() {
-    Assert::main_binary()
-        .with_args(&["sub", "print"])
-        .with_env(&environment())
-        .succeeds()
-        .stdout().is("hello world from sub command")
-        .execute()
-        .unwrap();
+    expect_output_given_args(&["sub", "print"], "hello world from sub command");
 }
 
 #[test]
 fn execute_a_command_with_alias() {
-    Assert::main_binary()
-        .with_args(&["p"])
-        .with_env(&environment())
-        .succeeds()
-        .stdout().is("hello world")
-        .execute()
-        .unwrap();
+    expect_output_given_args(&["p"], "hello world");
 }
 
 
