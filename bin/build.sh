@@ -30,7 +30,7 @@ declare build_arg=$(test -z "$quick_build" && echo '--release' || echo -n '')
 
 cargo test --all ${build_arg} --target ${target}
 cargo build ${build_arg} --target ${target}
-./snapshot-tests/run.sh $(test -n "$quick_build" && echo '-d' || echo -n '') ${build_path}/sdoc
+#./snapshot-tests/run.sh $(test -n "$quick_build" && echo '-d' || echo -n '') ${build_path}/sdoc
 
 if [[ -z "$quick_build" ]];
 then

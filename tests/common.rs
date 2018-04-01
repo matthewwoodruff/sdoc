@@ -33,16 +33,39 @@ deps
 com-dep
 script";
 
+pub static SCRIPT: &'static str = "\
+#! /bin/bash
+
+echo I am a simple script
+echo The number of args is $#
+echo \"arg 1 is '$1'\"
+echo \"arg 2 is '$2'\"
+
+exit 0
+
+";
+
 pub fn environment() -> Environment {
     Environment::inherit()
         .insert("COMMANDS_DIRECTORY", "tests/data")
         .insert("CLI_NAME", "sdoc")
+        .insert("EDITOR", "")
 }
 
-pub fn expect_output_given_args(args: &[&str], output: &str) {
+pub fn expect_output(args: &[&str], output: &str) {
     Assert::main_binary()
         .with_args(args)
         .with_env(&environment())
+        .succeeds()
+        .stdout().is(output)
+        .execute()
+        .unwrap();
+}
+
+pub fn expect_output_given_env(env: Environment, args: &[&str], output: &str) {
+    Assert::main_binary()
+        .with_args(args)
+        .with_env(&env)
         .succeeds()
         .stdout().is(output)
         .execute()
