@@ -6,8 +6,8 @@ test_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source "$test_dir/util.sh"
 
 echo "${BLUE}Node Command$WHITE"
-should 'show help message when no arguments are supplied' "$exe"
-should 'show help message when unknown command is given' "$exe unknown-command" 1
+#should 'show help message when no arguments are supplied' "$exe"
+#should 'show help message when unknown command is given' "$exe unknown-command" 1
 should 'show autocomplete for available commands' "AUTO_COMPLETE=1 $exe"
 should 'execute sub command' "$exe sub print"
 should 'execute command with alias' "$exe p"
@@ -61,6 +61,6 @@ should 'execute a command with required args' "$exe min-args 'an argument'"
 should 'show command usage when dependency check fails for envar' "$exe deps" 3
 should 'execute command when dependencies are satisfied with envar' "A_NAME=Steve $exe deps"
 should 'show command usage when dependency check fails for command' "$exe com-dep" 3
-should 'execute command when dependencies are satisfied with command' "PATH=\"$PATH:$test_dir/data/test-bin\" $exe com-dep"
+should 'execute command when dependencies are satisfied with command' "PATH=\"$PATH:$test_dir/../tests/data/test-bin\" $exe com-dep"
 
 exit 0

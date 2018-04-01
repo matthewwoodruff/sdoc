@@ -16,7 +16,7 @@ shift $((OPTIND-1))
 exe=${1:?Executable expected}
 
 test_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-export COMMANDS_DIRECTORY="$test_dir/data"
+export COMMANDS_DIRECTORY="$test_dir/../tests/data"
 export CLI_NAME=sdoc
 
 echo
