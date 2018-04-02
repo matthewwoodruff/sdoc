@@ -8,48 +8,90 @@ A framework for building custom CLIs around shell and executables. Commands are 
 
 **Directory Structure**
 
-Structure for command `my-cli` with sub commands `build` and `stack`
+Structure for command `my-cli` with sub command `stack`
 
 ```
 .
 └── my-cli
-    ├── build
-    │   ├── all.sh
-    │   └── commands.yaml
     ├── commands.yaml
-    ├── update.sh
+    ├── print-name.sh
+    ├── search.sh
     └── stack
         ├── commands.yaml
         └── up.sh
 ```
 
-**YAML Examples**
+**YAML Example**
+
+Based upon the previous directory structure
 
 ```
 
+---
+- heading: "Sub Comands"
+  commands:
+  
+    - name: stack
+      description: Commands for controling your development stack
+      type: node
+
+- heading: "My Commands"
+  commands:
+    
+    - name: hello
+      description: Prints hello world using shell
+      alias: h
+      type:
+        shell: echo hello world
+    
+    - name: print-name
+      description: Prints a name implemented by a script requiring at least 1 argument.
+      usage: <name>
+      min_args: 1
+      type:
+        script: print-name.sh
+        
+    - name: search
+      description: Opens browser to search. Requires an argument and the open command.
+      usage: <query>
+      min_args: 1
+      dependencies:
+        - description: The open command
+          value:
+            command: open
+      type:
+        script: search.sh
+        
 ```
 
-## Installation
+## Install
 
-### Bootstrap
+##### Homebrew
 
-- Follow the bootstrap instructions [here](https://github.com/matthewwoodruff/sdoc-bootstrap)
+```
+brew tap matthewwoodruff/sdoc https://github.com/matthewwoodruff/sdoc
+brew install sdoc
+```
+
+##### Cargo
+
+```
+cargo install sdoc
+```
+
+##### Manual
+
+You can download the binary from [GitHub](https://github.com/matthewwoodruff/sdoc/releases) and add to your `$PATH`
 
 
-### Manual
+## Create CLI
 
-- Install the sdoc binary
- - If you use cargo then run `cargo install sdoc`
- - Alternatively you can download the binary from [GitHub](https://github.com/matthewwoodruff/sdoc/releases) and add to your `$PATH`
-- Create a new directory for your CLI `mkdir my-cli`
-- Create a wrapper script that encapsulates configuration for sdoc
 
- ```
- #! /bin/bash
- COMMANDS_DIRECTORY=/path/to/cli/directory CLI_NAME=my-cli sdoc "$@"
- ```
-- Create the top level config file for `my-cli` called `/path/to/cli/directory/my-cli/commands.yaml` 
-- Your CLI will be available by running `./my-cli`
+- Create a new directory for your CLI `mkdir <cli-name>`
+- Execute `sdoc` and follow the prompts
+- Your CLI will be available by executing `./bin/<cli-name>`
+- Modify `./<my-cli>/commands.yaml` to add custom commands
+
 
 ## Yaml Configuration
 
@@ -59,33 +101,32 @@ Structure for command `my-cli` with sub commands `build` and `stack`
 |:-------------|:-------------------|:-----------|:-----------
 | name         | string             | yes        | Command name
 | description  | string             | yes        | Description that will be show in help 
+| type         | type               | yes        | Type of command. See below for options.
 | alias        | string             | no         | A shorter version of the command name
 | usage        | string             | no         | Usage text to be shown in help
-| type         | type               | yes        | Type of command. See below for options.
 | dependencies | list\<dependency\> | no         | List of dependencies. See below for options.
 | min_args     | int                | no         | Minimum amount of arguments to be supplied
-
 
 ##### Type
 
 | Option       | Value   | Description
 |:-------------|:--------|:-----------
-| Shell        | string  | Shell code to execute
-| Script       | string  | A script file relative to the commands file
-
+| node         | -       | Sub-command 
+| shell        | string  | Shell code to execute
+| script       | string  | A script file relative to the commands file
 
 ##### Dependencies
 
 | Field        | Type               | Required | Description
 |:-------------|:-------------------|:---------|:-----------
-| value        | dependency-type    | yes      |Dependency type. See below for options.
+| value        | dependency-type    | yes      | Dependency type. See below for options.
 | description  | string             | yes      | Shown against dependency in command usage
 
 ##### Dependency Type
 
 | Option       | Value    | Description
 |:-------------|:---------|:-----------
-| Command      | string   | An executable in your $PATH that must exist
-| Envar        | string   | An environment variable that must be set
+| command      | string   | An executable in your $PATH that must exist
+| envar        | string   | An environment variable that must be set
 
 
