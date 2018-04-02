@@ -1,20 +1,31 @@
 use ansi_term::Color::{Blue, Green, Red};
-use std::fs::{create_dir, File};
-use std::fs::Permissions;
-use std::{io, process};
+use std::fs::{create_dir, File, Permissions};
+use std::{io, process, io::ErrorKind};
 use std::io::prelude::Write;
 use std::os::unix::fs::PermissionsExt;
 use std::result::Result;
 use std::str::FromStr;
 use std::path::Path;
+use model::{Section, Command, Value};
+use serde_yaml;
 
-static YAML: &'static str = "---
- - heading: Commands
-   commands:
-   - name: hello
-     description: Prints hello world
-     type:
-       shell: echo hello world";
+fn default_config() -> Vec<Section> {
+    let hello_world = Command {
+        name: s!("hello"),
+        description: s!("Prints hello world"),
+        alias: Some(s!("h")),
+        value: Some(Value::Shell(s!("echo hello world"))),
+        internal: None,
+        usage: None,
+        min_args: None,
+        dependencies: None
+    };
+
+    vec![Section {
+        heading: s!("Commands"),
+        commands: vec![hello_world],
+    }]
+}
 
 #[derive(Debug)]
 enum Answer {
@@ -73,9 +84,11 @@ pub fn run_setup() {
     }
 
     let cli_name = ask(&s!("Enter your CLI name:"));
-    let content = format!("#! /bin/bash -ue
+    let content = format!("\
+#! /bin/bash -ue
 dir=$(cd $( dirname \"{}\" ) && cd .. && pwd )
-COMMANDS_DIRECTORY=\"$dir\" CLI_NAME='{}' sdoc \"$@\"", "${BASH_SOURCE[0]}", cli_name);
+COMMANDS_DIRECTORY=\"$dir\" CLI_NAME='{}' sdoc \"$@\"", "${BASH_SOURCE[0]}\
+", cli_name);
 
     match create_dir_if_not_exists("bin")
         .and_then(|_| File::create(format!("bin/{}", cli_name)))
@@ -85,7 +98,11 @@ COMMANDS_DIRECTORY=\"$dir\" CLI_NAME='{}' sdoc \"$@\"", "${BASH_SOURCE[0]}", cli
         })
         .and_then(|_| create_dir_if_not_exists(&cli_name))
         .and_then(|_| File::create(format!("{}/commands.yaml", cli_name)))
-        .and_then(|mut y| y.write_all(YAML.as_bytes())) {
+        .and_then(|mut y|
+            serde_yaml::to_string(&default_config())
+                .map_err(|e| io::Error::new(ErrorKind::Other, e))
+                .and_then(|yaml| y.write_all(yaml.as_bytes()))
+        ) {
         Ok(_) => {
             println!("{}", Green.paint("Setup Complete"));
             println!("Execute ./bin/{} to begin. Even better, add '$(pwd)/bin' to your $PATH", cli_name);

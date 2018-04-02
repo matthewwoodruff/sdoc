@@ -72,10 +72,10 @@ impl Harness {
         }
     }
     pub fn exits_with(self, code: i32) {
-        self.assert.with_env(&self.env).fails_with(code).execute().unwrap();
+        self.assert.with_env(&self.env).fails_with(code).unwrap();
     }
     pub fn succeeds(self) {
-        self.assert.with_env(&self.env).succeeds().execute().unwrap();
+        self.assert.with_env(&self.env).succeeds().unwrap();
     }
 }
 

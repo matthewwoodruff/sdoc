@@ -10,7 +10,7 @@ use workflow::Instruction::{Display, SystemCommand};
 use workflow::Instruction;
 use commands::{node, shell};
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize)]
 pub struct Section {
     pub heading: String,
     pub commands: Vec<Command>,
@@ -21,7 +21,7 @@ pub struct Internal {
     pub auto_complete: fn(Request, &Context) -> Work,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize)]
 pub struct Command {
     pub name: String,
     pub description: String,
@@ -113,19 +113,19 @@ impl Command {
     }
 }
 
-#[derive(Deserialize, Debug, PartialEq)]
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
 pub enum DependencyType {
     #[serde(rename = "command")] Command(String),
     #[serde(rename = "envar")]   Envar(String),
 }
 
-#[derive(Deserialize, Debug, PartialEq)]
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
 pub struct Dependency {
     pub value: DependencyType,
     pub description: String,
 }
 
-#[derive(Deserialize, Debug, PartialEq)]
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
 pub enum Value {
     #[serde(rename = "node")]   Node,
     #[serde(rename = "script")] Script(String),
