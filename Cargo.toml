@@ -6,7 +6,7 @@ description = "Framework for building custom CLIs around shell, scripts, and exe
 repository = "https://github.com/matthewwoodruff/sdoc"
 homepage = "https://github.com/matthewwoodruff/sdoc"
 readme = "README.md"
-license = "LGPL-2.1"
+license = "GPL-3.0"
 include = [
     "**/*.rs",
     "Cargo.toml",
