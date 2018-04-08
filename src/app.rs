@@ -1,13 +1,13 @@
 use commands::node;
-use config::{Context, FileConfigSource};
+use config::Context;
 use dto::{Request, Response};
-use std::{env, process, path};
+use model::Section;
+use std::{env, path::PathBuf, process};
 use workflow;
 
-pub fn run_app(commands_directory: path::PathBuf) {
-    let args: Vec<String> = build_args();
+pub fn run_app<'a>(commands_directory: PathBuf, args: Vec<String>, config_source: fn(path: &PathBuf) -> Vec<Section>) {
     let request = build_request(&args);
-    let context = Context::init(commands_directory, &FileConfigSource);
+    let context = Context::init(commands_directory, config_source);
     let workflow = if request.autocomplete_enabled() {
         node::execute_auto_complete(request, &context)
     } else {
@@ -19,17 +19,6 @@ pub fn run_app(commands_directory: path::PathBuf) {
             Response::Ok => 0,
             Response::Err(v) => v
         })
-}
-
-fn build_args() -> Vec<String> {
-    let mut args: Vec<String> = env::args().collect();
-
-    if let Ok(a) = env::var("CLI_NAME") {
-        args.remove(0);
-        args.insert(0, a)
-    }
-
-    args
 }
 
 fn build_request(args: &Vec<String>) -> Request {

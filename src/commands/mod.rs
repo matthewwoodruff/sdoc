@@ -1,3 +1,5 @@
+use model::{Command, Dependency, DependencyType, Internal, Section};
+
 pub mod edit;
 pub mod editconfig;
 pub mod help;
@@ -10,8 +12,6 @@ pub mod view;
 mod help_test;
 #[cfg(test)]
 mod shell_test;
-
-use model::{Command, Section, Dependency, DependencyType, Internal};
 
 pub fn edit_command() -> Command {
     Command {

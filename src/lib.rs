@@ -1,11 +1,11 @@
 extern crate ansi_term;
 extern crate serde;
-extern crate serde_yaml;
-
 #[macro_use]
 extern crate serde_derive;
+extern crate serde_yaml;
 
 use app::run_app;
+use config::file_config_source;
 use init::run_setup;
 use std::env;
 use std::env::VarError;
@@ -30,11 +30,22 @@ mod test_helper;
 
 pub fn run() {
     get_commands_directory()
-        .map(run_app)
+        .map(|dir| run_app(dir, build_args(), file_config_source))
         .unwrap_or_else(|_| run_setup());
 }
 
 fn get_commands_directory() -> Result<PathBuf, VarError> {
     env::var("COMMANDS_DIRECTORY")
         .map(|a| PathBuf::from(a))
+}
+
+fn build_args() -> Vec<String> {
+    let mut args: Vec<String> = env::args().collect();
+
+    if let Ok(a) = env::var("CLI_NAME") {
+        args.remove(0);
+        args.insert(0, a)
+    }
+
+    args
 }

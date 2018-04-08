@@ -1,16 +1,14 @@
 use model::{Value, Command, Section};
-use config::{Context, FileConfigSource};
+use config::{Context, file_config_source};
 use commands::{get_management_commands};
 use std::path::PathBuf;
 
-pub static CONFIG_SOURCE: FileConfigSource = FileConfigSource;
-
-pub fn a_context<'a>() -> Context<'a> {
+pub fn a_context() -> Context {
     Context {
         directory: PathBuf::new(),
         config: vec![get_management_commands()],
         resolved_commands: vec![s!("dm"), s!("a"), s!("b"), s!("c")],
-        config_source: &CONFIG_SOURCE
+        config_source: file_config_source
     }
 }
 

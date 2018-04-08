@@ -11,14 +11,14 @@ pub trait ConfigSource {
     fn get_config(&self, path: &PathBuf) -> Vec<Section>;
 }
 
-pub struct Context<'a> {
+pub struct Context {
     pub directory: PathBuf,
     pub config: Vec<Section>,
     pub resolved_commands: Vec<String>,
-    pub config_source: &'a ConfigSource,
+    pub config_source: fn(path: &PathBuf) -> Vec<Section>
 }
 
-impl<'a> Context<'a> {
+impl Context {
     pub fn get_commands(&self) -> Vec<&Command> {
         self.config.iter()
             .flat_map(|s| &s.commands)
@@ -46,34 +46,30 @@ impl<'a> Context<'a> {
         resolved_commands.push(resolved_command);
 
         Context {
-            config: self.config_source.get_config(&directory),
+            config: (self.config_source)(&directory),
             directory,
             resolved_commands,
-            config_source: self.config_source,
+            config_source: self.config_source
         }
     }
 
-    pub fn init(directory: PathBuf, config_source: &'a ConfigSource) -> Context<'a> {
+    pub fn init(directory: PathBuf, config_source2: fn(path: &PathBuf) -> Vec<Section>) -> Context {
         Context {
             directory,
             config: vec![],
             resolved_commands: vec![],
-            config_source,
+            config_source: config_source2
         }
     }
 }
 
-pub struct FileConfigSource;
+pub fn file_config_source(path: &PathBuf) -> Vec<Section> {
+    let x = path.join(s!("commands.yaml"));
+    let mut v: Vec<Section> = serde_yaml::from_reader(File::open(x)
+        .expect("Failed to open file")).unwrap();
 
-impl ConfigSource for FileConfigSource {
-    fn get_config(&self, path: &PathBuf) -> Vec<Section> {
-        let x = path.join(s!("commands.yaml"));
-        let mut v: Vec<Section> = serde_yaml::from_reader(File::open(x)
-            .expect("Failed to open file")).unwrap();
-
-        v.insert(0, commands::get_management_commands());
-        v
-    }
+    v.insert(0, commands::get_management_commands());
+    v
 }
 
 

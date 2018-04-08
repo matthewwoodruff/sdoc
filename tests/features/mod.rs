@@ -5,6 +5,7 @@ mod help;
 mod node;
 mod config;
 mod common;
+mod init;
 
 use std::env;
 use features::common::run;

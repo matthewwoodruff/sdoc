@@ -22,8 +22,7 @@ fn should_return_commands_for_all_sections() {
 #[test]
 fn should_build_initial_context_from_current_executable() {
     let current_executable = PathBuf::from("/a/b/c/dm");
-    let config_source = FileConfigSource;
-    let context = Context::init(current_executable, &config_source);
+    let context = Context::init(current_executable, file_config_source);
 
     assert_eq!(context.resolved_commands.len(), 0);
     assert_eq!(context.directory, PathBuf::from("/a/b/c/dm"));

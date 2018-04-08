@@ -1,4 +1,5 @@
 use assert_cli::{Assert, Environment};
+use std::path::PathBuf;
 
 pub static HELP_TEXT: &'static str = "
 Usage: sdoc <command> [args]
@@ -60,16 +61,16 @@ pub struct Harness {
 
 impl Harness {
     pub fn env(self, key: &str, value: &str) -> Self {
-        Harness {
-            env: self.env.insert(key, value),
-            ..self
-        }
+        Harness { env: self.env.insert(key, value), ..self }
+    }
+    pub fn input(self, input: &str) -> Self {
+        Harness { assert: self.assert.stdin(input), ..self }
     }
     pub fn output(self, output: &str) -> Self {
-        Harness {
-            assert: self.assert.stdout().is(output),
-            ..self
-        }
+        Harness { assert: self.assert.stdout().is(output), ..self }
+    }
+    pub fn inside<P: Into<PathBuf>>(self, path: P) -> Self {
+        Harness { assert: self.assert.current_dir(path), ..self }
     }
     pub fn exits_with(self, code: i32) {
         self.assert.with_env(&self.env).fails_with(code).unwrap();

@@ -1,13 +1,15 @@
 use ansi_term::Color::{Blue, Green, Red};
-use std::fs::{create_dir, File, Permissions};
-use std::{io, process, io::ErrorKind};
-use std::io::prelude::Write;
-use std::os::unix::fs::PermissionsExt;
-use std::result::Result;
-use std::str::FromStr;
-use std::path::Path;
-use model::{Section, Command, Value};
+use model::{Command, Section, Value};
 use serde_yaml;
+use std::{
+    fs::{create_dir, File, Permissions},
+    io::{Error, ErrorKind, prelude::Write, stdin},
+    os::unix::fs::PermissionsExt,
+    path::{Path},
+    process,
+    result::Result,
+    str::FromStr,
+};
 
 fn default_config() -> Vec<Section> {
     let hello_world = Command {
@@ -18,7 +20,7 @@ fn default_config() -> Vec<Section> {
         internal: None,
         usage: None,
         min_args: None,
-        dependencies: None
+        dependencies: None,
     };
 
     vec![Section {
@@ -49,7 +51,7 @@ fn ask(question: &String) -> String {
     let mut input = String::new();
     loop {
         println!("{}", question);
-        if let Ok(v) = io::stdin().read_line(&mut input).map(|_| input.trim()) {
+        if let Ok(v) = stdin().read_line(&mut input).map(|_| input.trim()) {
             if v.len() > 0 {
                 return v.to_owned();
             }
@@ -67,7 +69,7 @@ fn confirm(question: &str) -> Answer {
     }
 }
 
-fn create_dir_if_not_exists(path: &str) -> Result<(), io::Error> {
+fn create_dir_if_not_exists(path: &str) -> Result<(), Error> {
     if Path::new(path).is_dir() {
         Ok(())
     } else {
@@ -100,13 +102,13 @@ COMMANDS_DIRECTORY=\"$dir\" CLI_NAME='{}' sdoc \"$@\"", "${BASH_SOURCE[0]}\
         .and_then(|_| File::create(format!("{}/commands.yaml", cli_name)))
         .and_then(|mut y|
             serde_yaml::to_string(&default_config())
-                .map_err(|e| io::Error::new(ErrorKind::Other, e))
+                .map_err(|e| Error::new(ErrorKind::Other, e))
                 .and_then(|yaml| y.write_all(yaml.as_bytes()))
         ) {
         Ok(_) => {
             println!("{}", Green.paint("Setup Complete"));
             println!("Execute ./bin/{} to begin. Even better, add '$(pwd)/bin' to your $PATH", cli_name);
-        },
+        }
         Err(e) => {
             println!("{}: {:?}", Red.paint("Setup Failed"), e);
             process::exit(1);
