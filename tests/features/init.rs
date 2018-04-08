@@ -84,7 +84,7 @@ Setup a new CLI in \"{}\"? (y/n)
 ", temp_dir_string, temp_dir_string, temp_dir_string);
 
     run_uninitialised(&["init", temp_dir_string])
-        .input("bad-input\nyes\ny\n")
+        .input("bad-input\nyes\nn\n")
         .output_contains(expected_output)
         .succeeds();
 }
@@ -118,6 +118,23 @@ Setup a new CLI in \"{}\"? (y/n)
 
     run_uninitialised(&["init"])
         .input("n\n")
+        .output_contains(expected_output)
+        .succeeds();
+}
+
+#[test]
+fn should_require_a_cli_name() {
+    let temp_dir = tempfile::tempdir().unwrap();
+    let temp_dir_string = temp_dir.path().to_str().unwrap();
+
+    let expected_output = format!("\
+Enter your CLI name:
+Enter your CLI name:
+Enter your CLI name:
+");
+
+    run_uninitialised(&["init", temp_dir_string])
+        .input("y\n\n  \ntest-cli")
         .output_contains(expected_output)
         .succeeds();
 }
