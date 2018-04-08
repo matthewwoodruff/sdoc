@@ -12,7 +12,7 @@ then
 fi
 
 sed -i "" -E "s/^version = \".*\"/version = \"$version\"/" Cargo.toml
-sed -i "" -E "s/ version \'.*\'/version \'$version\'/" pkg/brew/sdoc.rb
+#sed -i "" -E "s/ version \'.*\'/version \'$version\'/" pkg/brew/sdoc.rb
 
 cargo check
 
