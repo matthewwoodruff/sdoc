@@ -3,6 +3,7 @@ use tempfile;
 use ansi_term::Color::{Blue, Green};
 use std::{fs, path::PathBuf};
 use std::io::prelude::*;
+use std::env;
 
 pub static HELP_TEXT: &'static str = "
 Usage: target/debug/sdoc <command> [args]
@@ -70,6 +71,55 @@ COMMANDS_DIRECTORY=\"$dir\" CLI_NAME='test-cli' sdoc \"$@\"", "${BASH_SOURCE[0]}
       dependencies: ~
       min_args: ~";
     assert_eq!(yaml_string, asd);
+}
+
+#[test]
+fn should_only_accept_y_or_n_when_prompting_to_setup_cli() {
+    let temp_dir = tempfile::tempdir().unwrap();
+    let temp_dir_string = temp_dir.path().to_str().unwrap();
+    let expected_output = format!("\
+Setup a new CLI in \"{}\"? (y/n)
+Setup a new CLI in \"{}\"? (y/n)
+Setup a new CLI in \"{}\"? (y/n)
+", temp_dir_string, temp_dir_string, temp_dir_string);
+
+    run_uninitialised(&["init", temp_dir_string])
+        .input("bad-input\nyes\ny\n")
+        .output_contains(expected_output)
+        .succeeds();
+}
+
+#[test]
+fn should_allow_the_user_to_cancel_setting_up_a_cli() {
+    let temp_dir = tempfile::tempdir().unwrap();
+    let temp_path = temp_dir.path();
+    let temp_dir_string = temp_path.to_str().unwrap();
+    let expected_output = format!("\
+Setup a new CLI in \"{}\"? (y/n)
+Goodbye
+", temp_dir_string);
+
+    run_uninitialised(&["init", temp_dir_string])
+        .input("n\n")
+        .output_contains(expected_output)
+        .succeeds();
+
+    assert_eq!(temp_path.join("bin").is_dir(), false);
+    assert_eq!(temp_path.join("test-cli").is_dir(), false);
+}
+
+#[test]
+fn should_use_current_directory_when_one_is_not_specified() {
+    let current_directory = env::current_dir().unwrap();
+
+    let expected_output = format!("\
+Setup a new CLI in \"{}\"? (y/n)
+", current_directory.to_str().unwrap());
+
+    run_uninitialised(&["init"])
+        .input("n\n")
+        .output_contains(expected_output)
+        .succeeds();
 }
 
 #[test]

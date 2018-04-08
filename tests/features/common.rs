@@ -74,6 +74,9 @@ impl Harness {
     pub fn output<O: Into<String>>(self, output: O) -> Self {
         Harness { assert: self.assert.stdout().is(output), ..self }
     }
+    pub fn output_contains<O: Into<String>>(self, output: O) -> Self {
+        Harness { assert: self.assert.stdout().contains(output), ..self }
+    }
     pub fn exits_with(self, code: i32) {
         self.assert.with_env(&self.env).fails_with(code).unwrap();
     }
