@@ -3,6 +3,7 @@ use model::{Command, Dependency, DependencyType, Internal, Section};
 pub mod edit;
 pub mod editconfig;
 pub mod help;
+pub mod init;
 pub mod node;
 pub mod shell;
 pub mod util;

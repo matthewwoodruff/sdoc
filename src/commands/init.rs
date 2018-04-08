@@ -1,15 +1,20 @@
 use ansi_term::Color::{Blue, Green, Red};
+use config::Context;
+use dto::Request;
+use dto::Response;
 use model::{Command, Section, Value};
 use serde_yaml;
 use std::{
     fs::{create_dir, File, Permissions},
     io::{Error, ErrorKind, prelude::Write, stdin},
     os::unix::fs::PermissionsExt,
-    path::{Path},
+    path::Path,
     process,
     result::Result,
     str::FromStr,
 };
+use workflow::Instruction;
+use workflow::Work;
 
 fn default_config() -> Vec<Section> {
     let hello_world = Command {
@@ -77,12 +82,14 @@ fn create_dir_if_not_exists(path: &str) -> Result<(), Error> {
     }
 }
 
-pub fn run_setup() {
+pub fn run_setup(_: Request, _: &Context) -> Work {
+    let no_output = Work::instruction(Instruction::ExitCode(Response::Ok));
+
     println!("{}", Blue.paint("sdoc init"));
 
     if let Answer::No = confirm("Setup a new CLI?") {
         println!("Goodbye");
-        return;
+        return no_output;
     }
 
     let cli_name = ask(&s!("Enter your CLI name:"));
@@ -114,4 +121,6 @@ COMMANDS_DIRECTORY=\"$dir\" CLI_NAME='{}' sdoc \"$@\"", "${BASH_SOURCE[0]}\
             process::exit(1);
         }
     };
+
+    no_output
 }

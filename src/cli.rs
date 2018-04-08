@@ -5,7 +5,7 @@ use model::Section;
 use std::{env, path::PathBuf, process};
 use workflow;
 
-pub fn run_app<'a>(commands_directory: PathBuf, args: Vec<String>, config_source: fn(path: &PathBuf) -> Vec<Section>) {
+pub fn run_cli(commands_directory: PathBuf, args: Vec<String>, config_source: fn(path: &PathBuf) -> Vec<Section>) {
     let request = build_request(&args);
     let context = Context::init(commands_directory, config_source);
     let workflow = if request.autocomplete_enabled() {
