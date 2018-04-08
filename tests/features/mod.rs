@@ -14,7 +14,7 @@ use features::common::run;
 fn show_command_usage_when_args_are_insufficient() {
     run(&["min-args"])
         .output("
-Usage: sdoc min-args <an-arg>
+Usage: example-cli min-args <an-arg>
 
 I require arguments
 
@@ -30,7 +30,7 @@ fn execute_a_command_with_required_args() {
 fn show_command_usage_when_dependency_check_fails_for_envar() {
     run(&["deps"])
         .output("
-Usage: sdoc deps
+Usage: example-cli deps
 
 I have dependency requirements
 
@@ -49,7 +49,7 @@ fn execute_a_command_when_dependencies_are_satisfied() {
 fn show_command_usage_when_dependency_check_fails_for_command() {
     run(&["com-dep"])
         .output("
-Usage: sdoc com-dep
+Usage: example-cli com-dep
 
 I have command requirements
 
@@ -61,6 +61,6 @@ Dependencies:
 
 #[test]
 fn execute_a_command_when_dependencies_are_satisfied_with_command() {
-    let path = format!("{}{}", env::var("PATH").map(|v| format!("{}:", v)).unwrap_or("".to_owned()), "tests/data/test-bin");
+    let path = format!("{}{}", env::var("PATH").map(|v| format!("{}:", v)).unwrap_or("".to_owned()), "tests/data/bin");
     run(&["com-dep"]).env("PATH", path.as_str()).output("The command exists").succeeds();
 }

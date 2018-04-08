@@ -1,6 +1,6 @@
 use features::common::{HELP_TEXT, run, EDIT_USAGE};
 
-static PRINT_HELP: &'static str = "\nUsage: sdoc print\n\nPrints hello world\n\n";
+static PRINT_HELP: &'static str = "\nUsage: example-cli print\n\nPrints hello world\n\n";
 
 #[test]
 fn show_help_for_a_specific_command() {
@@ -19,12 +19,12 @@ fn show_help_message_when_help_is_ran() {
 
 #[test]
 fn show_help_for_help_command() {
-    run(&["help", "help"]).output("\nUsage: sdoc help [command]\n\nShow help for all commands or a specific command\n\n").succeeds();
+    run(&["help", "help"]).output("\nUsage: example-cli help [command]\n\nShow help for all commands or a specific command\n\n").succeeds();
 }
 
 #[test]
 fn show_help_for_view_command() {
-    run(&["help", "view"]).output("\nUsage: sdoc view\n\nView a command\n\n").succeeds();
+    run(&["help", "view"]).output("\nUsage: example-cli view\n\nView a command\n\n").succeeds();
 }
 
 #[test]
@@ -35,7 +35,7 @@ fn show_help_for_edit_command() {
 #[test]
 fn show_help_for_config_command() {
     run(&["help", "config"]).output("
-Usage: sdoc config
+Usage: example-cli config
 
 Edit configuration file
 

@@ -5,65 +5,6 @@
 
 A framework for building custom CLIs around shell and executables. Commands are defined in yaml and can be sub-commands, shell, or an executable. By convention your root yaml file lives in a directory named the same as your cli name and sub-command configuration in sub directories following the same pattern.
 
-
-**Directory Structure**
-
-Structure for command `my-cli` with sub command `stack`
-
-```
-.
-└── my-cli
-    ├── commands.yaml
-    ├── print-name.sh
-    ├── search.sh
-    └── stack
-        ├── commands.yaml
-        └── up.sh
-```
-
-**YAML Example**
-
-Based upon the previous directory structure
-
-```
-
----
-- heading: "Sub Comands"
-  commands:
-  
-    - name: stack
-      description: Commands for controling your development stack
-      type: node
-
-- heading: "My Commands"
-  commands:
-    
-    - name: hello
-      description: Prints hello world using shell
-      alias: h
-      type:
-        shell: echo hello world
-    
-    - name: print-name
-      description: Prints a name implemented by a script requiring at least 1 argument.
-      usage: <name>
-      min_args: 1
-      type:
-        script: print-name.sh
-        
-    - name: search
-      description: Opens browser to search. Requires an argument and the open command.
-      usage: <query>
-      min_args: 1
-      dependencies:
-        - description: The open command
-          value:
-            command: open
-      type:
-        script: search.sh
-        
-```
-
 ## Install
 
 ##### Homebrew
@@ -81,7 +22,7 @@ cargo install sdoc
 
 ##### Manual
 
-You can download the binary from [GitHub](https://github.com/matthewwoodruff/sdoc/releases) and add to your `$PATH`
+You can download the binary from [GitHub Releases](https://github.com/matthewwoodruff/sdoc/releases) and add to your `$PATH`
 
 
 ## Create CLI
@@ -90,7 +31,12 @@ You can download the binary from [GitHub](https://github.com/matthewwoodruff/sdo
 - Create a new directory for your CLI `mkdir <cli-name>`
 - Execute `sdoc init` and follow the prompts
 - Your CLI will be available by executing `./bin/<cli-name>`
-- Modify `./<my-cli>/commands.yaml` to add custom commands
+- Modify `./<my-cli>/commands.yaml` to add custom commands and sub-commands
+
+
+##### Example
+
+see https://github.com/matthewwoodruff/sdoc/tree/master/tests/data/example-cli for an example cli configuration.
 
 
 ## Yaml Configuration

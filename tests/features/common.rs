@@ -1,7 +1,7 @@
 use assert_cli::{Assert, Environment};
 
 pub static HELP_TEXT: &'static str = "
-Usage: sdoc <command> [args]
+Usage: example-cli <command> [args]
 
 Management:
   help        h     Show help for all commands or a specific command
@@ -44,7 +44,7 @@ exit 0
 ";
 
 pub static EDIT_USAGE: &'static str = "
-Usage: sdoc edit <command>
+Usage: example-cli edit <command>
 
 Edit a command
 
@@ -88,7 +88,7 @@ impl Harness {
 pub fn run(args: &[&str]) -> Harness {
     Harness::new(args)
         .env("COMMANDS_DIRECTORY", "tests/data")
-        .env("CLI_NAME", "sdoc")
+        .env("CLI_NAME", "example-cli")
         .env("EDITOR", "")
 }
 
