@@ -88,7 +88,7 @@ You can download the binary from [GitHub](https://github.com/matthewwoodruff/sdo
 
 
 - Create a new directory for your CLI `mkdir <cli-name>`
-- Execute `sdoc` and follow the prompts
+- Execute `sdoc init` and follow the prompts
 - Your CLI will be available by executing `./bin/<cli-name>`
 - Modify `./<my-cli>/commands.yaml` to add custom commands
 
