@@ -1,5 +1,4 @@
 use assert_cli::{Assert, Environment};
-use std::path::PathBuf;
 
 pub static HELP_TEXT: &'static str = "
 Usage: sdoc <command> [args]
@@ -56,21 +55,24 @@ Dependencies:
 
 pub struct Harness {
     assert: Assert,
-    env: Environment
+    env: Environment,
 }
 
 impl Harness {
+    pub fn new(args: &[&str]) -> Harness {
+        Harness {
+            assert: Assert::main_binary().with_args(args),
+            env: Environment::inherit(),
+        }
+    }
     pub fn env(self, key: &str, value: &str) -> Self {
         Harness { env: self.env.insert(key, value), ..self }
     }
     pub fn input(self, input: &str) -> Self {
         Harness { assert: self.assert.stdin(input), ..self }
     }
-    pub fn output(self, output: &str) -> Self {
+    pub fn output<O: Into<String>>(self, output: O) -> Self {
         Harness { assert: self.assert.stdout().is(output), ..self }
-    }
-    pub fn inside<P: Into<PathBuf>>(self, path: P) -> Self {
-        Harness { assert: self.assert.current_dir(path), ..self }
     }
     pub fn exits_with(self, code: i32) {
         self.assert.with_env(&self.env).fails_with(code).unwrap();
@@ -81,11 +83,12 @@ impl Harness {
 }
 
 pub fn run(args: &[&str]) -> Harness {
-    Harness {
-        assert: Assert::main_binary().with_args(args),
-        env: Environment::inherit()
-            .insert("COMMANDS_DIRECTORY", "tests/data")
-            .insert("CLI_NAME", "sdoc")
-            .insert("EDITOR", "")
-    }
+    Harness::new(args)
+        .env("COMMANDS_DIRECTORY", "tests/data")
+        .env("CLI_NAME", "sdoc")
+        .env("EDITOR", "")
+}
+
+pub fn run_uninitialised(args: &[&str]) -> Harness {
+    Harness::new(args)
 }

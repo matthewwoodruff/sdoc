@@ -5,10 +5,11 @@ use dto::Response;
 use model::{Command, Section, Value};
 use serde_yaml;
 use std::{
-    fs::{create_dir, File, Permissions},
+    env,
+    fs::{create_dir_all, File, Permissions},
     io::{Error, ErrorKind, prelude::Write, stdin},
     os::unix::fs::PermissionsExt,
-    path::Path,
+    path::PathBuf,
     process,
     result::Result,
     str::FromStr,
@@ -74,20 +75,24 @@ fn confirm(question: &str) -> Answer {
     }
 }
 
-fn create_dir_if_not_exists(path: &str) -> Result<(), Error> {
-    if Path::new(path).is_dir() {
+fn create_dir_if_not_exists(path: &PathBuf) -> Result<(), Error> {
+    if path.is_dir() {
         Ok(())
     } else {
-        create_dir(path)
+        create_dir_all(path)
     }
 }
 
-pub fn run_setup(_: Request, _: &Context) -> Work {
+pub fn run_setup(request: Request, _: &Context) -> Work {
     let no_output = Work::instruction(Instruction::ExitCode(Response::Ok));
+
+    let directory = request.next().current
+        .map(PathBuf::from)
+        .unwrap_or(env::current_dir().unwrap());
 
     println!("{}", Blue.paint("sdoc init"));
 
-    if let Answer::No = confirm("Setup a new CLI?") {
+    if let Answer::No = confirm(&format!("Setup a new CLI in {:?}?", directory)) {
         println!("Goodbye");
         return no_output;
     }
@@ -96,17 +101,21 @@ pub fn run_setup(_: Request, _: &Context) -> Work {
     let content = format!("\
 #! /bin/bash -ue
 dir=$(cd $( dirname \"{}\" ) && cd .. && pwd )
-COMMANDS_DIRECTORY=\"$dir\" CLI_NAME='{}' sdoc \"$@\"", "${BASH_SOURCE[0]}\
-", cli_name);
+COMMANDS_DIRECTORY=\"$dir\" CLI_NAME='{}' sdoc \"$@\"", "${BASH_SOURCE[0]}", cli_name);
 
-    match create_dir_if_not_exists("bin")
-        .and_then(|_| File::create(format!("bin/{}", cli_name)))
+    let bin_directory = directory.join("bin");
+    let bin = &bin_directory.join(&cli_name);
+    let commands_directory = &directory.join(&cli_name);
+    let commands_yaml = &commands_directory.join("commands.yaml");
+
+    match create_dir_if_not_exists(&bin_directory)
+        .and_then(|_| File::create(&bin))
         .and_then(|mut bin| {
             bin.write_all(content.as_bytes())
                 .and_then(|_| bin.set_permissions(Permissions::from_mode(0o755)))
         })
-        .and_then(|_| create_dir_if_not_exists(&cli_name))
-        .and_then(|_| File::create(format!("{}/commands.yaml", cli_name)))
+        .and_then(|_| create_dir_if_not_exists(&commands_directory))
+        .and_then(|_| File::create(&commands_yaml))
         .and_then(|mut y|
             serde_yaml::to_string(&default_config())
                 .map_err(|e| Error::new(ErrorKind::Other, e))
