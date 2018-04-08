@@ -20,6 +20,9 @@ help:
 build: clean
 	./bin/build.sh
 
+docker-build:
+	docker run -w /work -v $$(pwd):/work rust:1.25 make build
+
 dev-build:
 	./bin/build.sh -q
 
