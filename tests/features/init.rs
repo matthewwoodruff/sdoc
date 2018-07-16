@@ -58,7 +58,7 @@ dir=$(cd $( dirname \"{}\" ) && cd .. && pwd )
 COMMANDS_DIRECTORY=\"$dir\" CLI_NAME='test-cli' sdoc \"$@\"", "${BASH_SOURCE[0]}");
     assert_eq!(bin_string, expected_bin);
 
-    let asd = "\
+    let expected_yaml = "\
 ---
 - heading: Commands
   commands:
@@ -67,10 +67,10 @@ COMMANDS_DIRECTORY=\"$dir\" CLI_NAME='test-cli' sdoc \"$@\"", "${BASH_SOURCE[0]}
       value:
         shell: echo hello world
       usage: ~
-      alias: h
+      alias: hw
       dependencies: ~
       min_args: ~";
-    assert_eq!(yaml_string, asd);
+    assert_eq!(yaml_string, expected_yaml);
 }
 
 #[test]

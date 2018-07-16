@@ -21,7 +21,7 @@ fn default_config() -> Vec<Section> {
     let hello_world = Command {
         name: s!("hello"),
         description: s!("Prints hello world"),
-        alias: Some(s!("h")),
+        alias: Some(s!("hw")),
         value: Some(Value::Shell(s!("echo hello world"))),
         internal: None,
         usage: None,
