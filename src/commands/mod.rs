@@ -17,10 +17,10 @@ mod shell_test;
 pub fn edit_command() -> Command {
     Command {
         value: None,
-        internal: Some(Internal {
+        internal: Internal {
             execute: edit::execute,
             auto_complete: edit::auto_complete,
-        }),
+        },
         description: s!("Edit a command"),
         alias: Some(s!("e")),
         usage: Some(s!("<command>")),
@@ -37,10 +37,10 @@ pub fn edit_command() -> Command {
 pub fn help_command() -> Command {
     Command {
         value: None,
-        internal: Some(Internal {
+        internal: Internal {
             execute: help::execute,
             auto_complete: help::auto_complete,
-        }),
+        },
         description: s!("Show help for all commands or a specific command"),
         alias: Some(s!("h")),
         usage: Some(s!("[command]")),
@@ -53,10 +53,10 @@ pub fn help_command() -> Command {
 pub fn view_command() -> Command {
     Command {
         value: None,
-        internal: Some(Internal {
+        internal: Internal {
             execute: view::execute,
             auto_complete: view::auto_complete,
-        }),
+        },
         description: s!("View a command"),
         alias: Some(s!("v")),
         usage: None,
@@ -69,10 +69,10 @@ pub fn view_command() -> Command {
 pub fn edit_config_command() -> Command {
     Command {
         value: None,
-        internal: Some(Internal {
+        internal: Internal {
             execute: editconfig::execute,
             auto_complete: util::no_auto_complete,
-        }),
+        },
         description: s!("Edit configuration file"),
         alias: Some(s!("c")),
         usage: None,

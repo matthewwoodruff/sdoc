@@ -70,7 +70,6 @@ mod command {
         assert_eq!(actual_command.name, s!("update"));
         assert_eq!(actual_command.description, s!("a description"));
         assert_eq!(actual_command.value, Some(Value::Script(s!("update.sh"))));
-        assert_eq!(actual_command.internal.is_none(), true);
         assert_eq!(actual_command.usage, Some(s!("<name>")));
         assert_eq!(actual_command.alias, Some(s!("h")));
         assert_eq!(actual_command.min_args, Some(1));

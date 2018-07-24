@@ -53,10 +53,10 @@ fn build_args() -> Vec<String> {
 fn init_config_source(_: &PathBuf) -> Vec<Section> {
     let init_command = Command {
         value: None,
-        internal: Some(Internal {
+        internal: Internal {
             execute: init::run_setup,
             auto_complete: no_auto_complete,
-        }),
+        },
         description: s!("Initialise a new cli"),
         alias: Some(s!("i")),
         usage: Some(s!("[directory]")),

@@ -1,18 +1,17 @@
-use dto::Request;
 use workflow::Work;
 use workflow::Instruction::SystemCommand;
-use config::Context;
+use std::path::PathBuf;
 
-pub fn execute_shell(shell: &String, request: Request, context: &Context) -> Work {
-    let command = format!("PATH=\"$PATH:{}\" {} {}", context.directory.display(), shell, quote_args(request));
+pub fn execute_shell(shell: &String, args: &[String], directory: &PathBuf) -> Work {
+    let command = format!("PATH=\"$PATH:{}\" {} {}", directory.display(), shell, quote_args(args));
     Work::instruction(SystemCommand(command, true))
 }
 
-fn quote_args(request: Request) -> String {
-    let args : Vec<String> = request.args
+fn quote_args(args: &[String]) -> String {
+    let out_args : Vec<String> = args
         .iter()
         .map(|a| format!("'{}'", a))
         .collect();
 
-    args.join(" ")
+    out_args.join(" ")
 }

@@ -16,6 +16,7 @@ use std::{
 };
 use workflow::Instruction;
 use workflow::Work;
+use model::default_behaviour;
 
 fn default_config() -> Vec<Section> {
     let hello_world = Command {
@@ -23,7 +24,7 @@ fn default_config() -> Vec<Section> {
         description: s!("Prints hello world"),
         alias: Some(s!("hw")),
         value: Some(Value::Shell(s!("echo hello world"))),
-        internal: None,
+        internal: default_behaviour(),
         usage: None,
         min_args: None,
         dependencies: None,

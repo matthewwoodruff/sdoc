@@ -18,6 +18,7 @@ pub struct Section {
     pub core: bool,
 }
 
+#[derive(Debug)]
 pub struct Internal {
     pub execute: fn(Request, &Context) -> Work,
     pub auto_complete: fn(Request, &Context) -> Work,
@@ -32,8 +33,15 @@ pub struct Command {
     pub alias: Option<String>,
     pub dependencies: Option<Vec<Dependency>>,
     pub min_args: Option<usize>,
-    #[serde(skip)]
-    pub internal: Option<Internal>,
+    #[serde(skip, default = "default_behaviour")]
+    pub internal: Internal,
+}
+
+pub fn default_behaviour() -> Internal {
+    Internal {
+        execute: |_,_| Work::instruction(Instruction::Display(s!("Not yet implemented"), Response::Err(3))),
+        auto_complete: |_,_| Work::response(Response::Err(3))
+    }
 }
 
 impl Command {
@@ -100,7 +108,7 @@ impl Command {
         } else {
             work.append(&mut match self.value {
                 Some(ref a) => a.execute(request, context),
-                None => vec![(self.internal.as_ref().unwrap().execute)(request, context)]
+                None => vec![(self.internal.execute)(request, context)]
             })
         }
 
@@ -108,10 +116,7 @@ impl Command {
     }
 
     pub fn execute_auto_complete(&self, request: Request, context: &Context) -> Vec<Work> {
-        vec![match self.internal {
-            Some(ref a) => (a.auto_complete)(request, context),
-            _ => Work::response(Response::Err(15))
-        }]
+        vec![(self.internal.auto_complete)(request, context)]
     }
 }
 
@@ -138,8 +143,8 @@ impl Value {
     fn execute(&self, request: Request, context: &Context) -> Vec<Work> {
         match *self {
             Value::Node => node::execute(request, context),
-            Value::Script(ref script) => vec![shell::execute_shell(script, request, context)],
-            Value::Shell(ref shell) => vec![shell::execute_shell(shell, request, context)],
+            Value::Script(ref script) => vec![shell::execute_shell(script, request.args, &context.directory)],
+            Value::Shell(ref shell) => vec![shell::execute_shell(shell, request.args, &context.directory)],
         }
     }
 }
