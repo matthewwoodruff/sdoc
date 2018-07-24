@@ -19,6 +19,22 @@ Commands:
   com-dep           I have command requirements
   script            A simple script";
 
+pub static HELP_TEXT_WITHOUT_BUILTINS: &'static str = "
+Usage: example-cli <command> [args]
+
+Node Commands:
+  sub               A sub command
+
+Commands:
+  print       p     Prints hello world
+  min-args          I require arguments
+  deps              I have dependency requirements
+  com-dep           I have command requirements
+  script            A simple script
+
+Run 'example-cli help' for more information
+";
+
 pub static AUTO_COMPLETE: &'static str = "\
 help
 edit

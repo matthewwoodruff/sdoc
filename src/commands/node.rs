@@ -11,7 +11,7 @@ pub fn execute(request: Request, context: &Context) -> Vec<Work> {
 fn execute_next_command(request: Request, context: &Context) -> Vec<Work> {
     match request.current.and_then(|c| context.find(c, true)) {
         Some(c) => c.execute(request, context),
-        None => vec![help::execute_help(request, context)]
+        None => vec![help::execute_help(&request, context)]
     }
 }
 

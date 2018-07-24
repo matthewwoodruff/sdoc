@@ -14,6 +14,8 @@ use commands::{node, shell};
 pub struct Section {
     pub heading: String,
     pub commands: Vec<Command>,
+    #[serde(skip, default)]
+    pub core: bool,
 }
 
 pub struct Internal {

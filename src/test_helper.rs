@@ -15,7 +15,8 @@ pub fn a_context() -> Context {
 pub fn a_section() -> Section {
     Section {
         heading: s!("Heading"),
-        commands: vec![a_command()]
+        commands: vec![a_command()],
+        core: false
     }
 }
 

@@ -90,5 +90,6 @@ pub fn get_management_commands() -> Section {
     Section {
         heading: s!("Management"),
         commands: vec![help_command(), edit_command(), view_command(), edit_config_command()],
+        core: true
     }
 }

@@ -11,6 +11,8 @@ Usage: target/debug/sdoc <command> [args]
 Commands:
   init        i     Initialise a new cli
   help        h     Show help for all commands or a specific command
+
+Run 'target/debug/sdoc help' for more information
 ";
 
 #[test]

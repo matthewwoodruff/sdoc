@@ -1,13 +1,13 @@
-use features::common::{HELP_TEXT, AUTO_COMPLETE, run};
+use features::common::{HELP_TEXT_WITHOUT_BUILTINS, AUTO_COMPLETE, run};
 
 #[test]
-fn show_help_message_when_no_arguments_are_supplied() {
-    run(&[]).output(HELP_TEXT).succeeds();
+fn show_help_message_without_builtin_commands_when_no_arguments_are_supplied() {
+    run(&[]).output(HELP_TEXT_WITHOUT_BUILTINS).succeeds();
 }
 
 #[test]
-fn show_help_message_when_unknown_command_is_given() {
-    run(&["unknown-command"]).output(HELP_TEXT).exits_with(1);
+fn show_help_message_without_builtin_commands_when_unknown_command_is_given() {
+    run(&["unknown-command"]).output(HELP_TEXT_WITHOUT_BUILTINS).exits_with(1);
 }
 
 #[test]

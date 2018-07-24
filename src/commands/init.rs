@@ -32,6 +32,7 @@ fn default_config() -> Vec<Section> {
     vec![Section {
         heading: s!("Commands"),
         commands: vec![hello_world],
+        core: false
     }]
 }
 

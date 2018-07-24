@@ -68,6 +68,7 @@ fn init_config_source(_: &PathBuf) -> Vec<Section> {
     let commands = Section {
         heading: s!("Commands"),
         commands: vec![init_command, help_command()],
+        core: false
     };
 
     vec![commands]

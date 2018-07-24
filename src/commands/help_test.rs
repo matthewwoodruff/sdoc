@@ -1,6 +1,5 @@
 use super::*;
-use commands::help::execute;
-use commands::help::auto_complete;
+use commands::help::{execute, auto_complete, build_help_without_builtins};
 use config::Context;
 use dto::{Request, Response};
 use workflow::{Work, Instruction};
@@ -209,4 +208,38 @@ fn should_show_nothing_when_command_found_and_auto_completion_required_for_comma
     let work = auto_complete(request, &context);
 
     assert_eq!(work, Work::instruction(Instruction::Display(s!(), Response::Ok)));
+}
+
+#[test]
+fn should_build_help_text_without_builtin_commands() {
+    let command = Command {
+        name: s!("action"),
+        description: s!("a-description"),
+        usage: Some(s!("-f FILENAME -a SOMETHING VALUE")),
+        dependencies: None,
+        ..a_command()
+    };
+
+    let section_1 = Section {
+        commands: vec![command],
+        ..a_section()
+    };
+
+    let context = Context {
+        config: vec![section_1],
+        ..a_context()
+    };
+
+    let string = build_help_without_builtins(&context);
+
+    let expected_help_text = "
+Usage: dm a b c <command> [args]
+
+Heading:
+  action      a     a-description
+
+Run 'dm a b c help' for more information
+";
+
+    assert_eq!(string , expected_help_text);
 }

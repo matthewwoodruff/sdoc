@@ -15,10 +15,6 @@ pub fn auto_complete(request: Request, context: &Context) -> Work {
     Work::instruction(Display(auto_complete_build(request, context), Response::Ok))
 }
 
-pub fn execute_help(request: Request, context: &Context) -> Work {
-    build_help(&request, context)
-}
-
 fn auto_complete_build(request: Request, context: &Context) -> String {
     request.current
         .and_then(|rc| context.find(&rc, false))
@@ -37,13 +33,33 @@ pub fn build_help(request: &Request, context: &Context) -> Work {
     })
 }
 
+pub fn execute_help(request: &Request, context: &Context) -> Work {
+    let response = match request.current {
+        Some(_) => Response::Err(1),
+        _ => Response::Ok
+    };
+
+    Work::instruction(Display(build_help_without_builtins(context), response))
+}
+
 pub fn build_full_help(context: &Context) -> String {
-    let sections: Vec<String> = context.config.iter()
+    format_help(&context.resolved_commands, &context.config.iter().collect())
+}
+
+pub fn build_help_without_builtins(context: &Context) -> String {
+    let sections: Vec<&Section> = context.config.iter()
+        .filter(|s| !s.core)
+        .collect();
+    return format!("{}\nRun \'{} help\' for more information\n", format_help(&context.resolved_commands, &sections), context.resolved_commands.join(" "))
+}
+
+fn format_help(resolved_commands: &Vec<String>, sections: &Vec<&Section>) -> String {
+    let formatted_sections: Vec<String> = sections.iter()
         .map(|s| format_section(s))
         .collect();
     format!("\n{}\n\n{}",
-            format!("Usage: {} <command> [args]", context.resolved_commands.join(" ")),
-            sections.join("\n"))
+            format!("Usage: {} <command> [args]", resolved_commands.join(" ")),
+            formatted_sections.join("\n"))
 }
 
 fn format_section(section: &Section) -> String {
