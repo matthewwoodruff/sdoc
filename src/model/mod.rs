@@ -18,7 +18,6 @@ pub struct Section {
     pub core: bool,
 }
 
-#[derive(Debug)]
 pub struct Internal {
     pub execute: fn(Request, &Context) -> Work,
     pub auto_complete: fn(Request, &Context) -> Work,
