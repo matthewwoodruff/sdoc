@@ -115,7 +115,10 @@ impl Command {
     }
 
     pub fn execute_auto_complete(&self, request: Request, context: &Context) -> Vec<Work> {
-        vec![(self.internal.auto_complete)(request, context)]
+        match self.value {
+            Some(ref a) => a.execute_auto_complete(request, context),
+            None => vec![(self.internal.auto_complete)(request, context)]
+        }
     }
 }
 
@@ -144,6 +147,13 @@ impl Value {
             Value::Node => node::execute(request, context),
             Value::Script(ref script) => vec![shell::execute_shell(script, request.args, &context.directory)],
             Value::Shell(ref shell) => vec![shell::execute_shell(shell, request.args, &context.directory)],
+        }
+    }
+
+    fn execute_auto_complete(&self, request: Request, context: &Context) -> Vec<Work> {
+        match *self {
+            Value::Node => node::execute_auto_complete(request, context),
+            _ => vec![Work::response(Response::Err(34))],
         }
     }
 }

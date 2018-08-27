@@ -1,4 +1,4 @@
-use features::common::{HELP_TEXT_WITHOUT_BUILTINS, AUTO_COMPLETE, run};
+use features::common::{AUTO_COMPLETE, HELP_TEXT_WITHOUT_BUILTINS, run};
 
 #[test]
 fn show_help_message_without_builtin_commands_when_no_arguments_are_supplied() {
@@ -13,6 +13,19 @@ fn show_help_message_without_builtin_commands_when_unknown_command_is_given() {
 #[test]
 fn show_autocomplete_for_available_commands() {
     run(&[]).env("AUTO_COMPLETE", "1").output(AUTO_COMPLETE).succeeds();
+}
+
+#[test]
+fn show_autocomplete_for_a_sub_command() {
+    run(&["sub"])
+        .env("AUTO_COMPLETE", "2")
+        .output("\
+help
+edit
+view
+config
+print
+").succeeds();
 }
 
 #[test]
