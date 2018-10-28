@@ -4,6 +4,7 @@ use ansi_term::Color::{Blue, Green};
 use std::{fs, path::PathBuf};
 use std::io::prelude::*;
 use std::env;
+use predicates::prelude::*;
 
 pub static HELP_TEXT: &'static str = "
 Usage: target/debug/sdoc <command> [args]
@@ -26,12 +27,12 @@ Setup a new CLI in \"{}\"? (y/n)
 Enter your CLI name:
 {}
 Execute ./bin/test-cli to begin. Even better, add '$(pwd)/bin' to your $PATH
-", Blue.paint("sdoc init"), temp_dir_string, Green.paint("Setup Complete"));
+", Blue.paint("sdoc init"), temp_dir_string, Green.paint("Setup Complete")).as_str();
 
     run_uninitialised(&["init", temp_dir_string])
-        .input("y\ntest-cli\n")
-        .output(expected_output)
-        .succeeds();
+        .stdin("y\ntest-cli\n")
+        .success()
+        .stdout(expected_output);
 }
 
 fn read_file(path: PathBuf) -> String {
@@ -48,8 +49,8 @@ fn should_create_bin_and_commands_yaml() {
     let temp_dir_string = temp_path.to_str().unwrap();
 
     run_uninitialised(&["init", temp_dir_string])
-        .input("y\ntest-cli\n")
-        .succeeds();
+        .stdin("y\ntest-cli\n")
+        .success();
 
     let bin_string = read_file(temp_path.join("bin/test-cli"));
     let yaml_string = read_file(temp_path.join("test-cli/commands.yaml"));
@@ -86,9 +87,9 @@ Setup a new CLI in \"{}\"? (y/n)
 ", temp_dir_string, temp_dir_string, temp_dir_string);
 
     run_uninitialised(&["init", temp_dir_string])
-        .input("bad-input\nyes\nn\n")
-        .output_contains(expected_output)
-        .succeeds();
+        .stdin("bad-input\nyes\nn\n")
+        .success()
+        .stdout(predicate::eq(expected_output));
 }
 
 #[test]
@@ -99,12 +100,12 @@ fn should_allow_the_user_to_cancel_setting_up_a_cli() {
     let expected_output = format!("\
 Setup a new CLI in \"{}\"? (y/n)
 Goodbye
-", temp_dir_string);
+", temp_dir_string).as_str();
 
     run_uninitialised(&["init", temp_dir_string])
-        .input("n\n")
-        .output_contains(expected_output)
-        .succeeds();
+        .stdin("n\n")
+        .success()
+        .stdout(expected_output);
 
     assert_eq!(temp_path.join("bin").is_dir(), false);
     assert_eq!(temp_path.join("test-cli").is_dir(), false);
@@ -118,10 +119,12 @@ fn should_use_current_directory_when_one_is_not_specified() {
 Setup a new CLI in \"{}\"? (y/n)
 ", current_directory.to_str().unwrap());
 
+    let expected_output_str = expected_output.as_str();
+
     run_uninitialised(&["init"])
-        .input("n\n")
-        .output_contains(expected_output)
-        .succeeds();
+        .stdin("n\n")
+        .success()
+        .stdout(expected_output_str);
 }
 
 #[test]
@@ -129,19 +132,17 @@ fn should_require_a_cli_name() {
     let temp_dir = tempfile::tempdir().unwrap();
     let temp_dir_string = temp_dir.path().to_str().unwrap();
 
-    let expected_output = format!("\
+    run_uninitialised(&["init", temp_dir_string])
+        .stdin("y\n\n  \ntest-cli")
+        .success()
+        .stdout("\
 Enter your CLI name:
 Enter your CLI name:
 Enter your CLI name:
 ");
-
-    run_uninitialised(&["init", temp_dir_string])
-        .input("y\n\n  \ntest-cli")
-        .output_contains(expected_output)
-        .succeeds();
 }
 
 #[test]
 fn show_help_message_when_no_arguments_are_supplied() {
-    run_uninitialised(&[]).output(HELP_TEXT).succeeds();
+    run_uninitialised(&[]).success().stdout(HELP_TEXT);
 }

@@ -1,4 +1,6 @@
-use assert_cli::{Assert, Environment};
+use assert_cmd::prelude::*;
+use std::process::Command;
+use assert_cmd;
 
 pub static HELP_TEXT: &'static str = "
 Usage: example-cli <command> [args]
@@ -17,7 +19,9 @@ Commands:
   min-args          I require arguments
   deps              I have dependency requirements
   com-dep           I have command requirements
-  script            A simple script";
+  script            A simple script
+
+";
 
 pub static HELP_TEXT_WITHOUT_BUILTINS: &'static str = "
 Usage: example-cli <command> [args]
@@ -33,6 +37,7 @@ Commands:
   script            A simple script
 
 Run 'example-cli help' for more information
+
 ";
 
 pub static AUTO_COMPLETE: &'static str = "\
@@ -45,9 +50,22 @@ print
 min-args
 deps
 com-dep
-script";
+script
+
+";
 
 pub static SCRIPT: &'static str = "\
+#! /bin/bash
+
+echo I am a simple script
+echo The number of args is $#
+echo \"arg 1 is '$1'\"
+echo \"arg 2 is '$2'\"
+
+exit 0
+";
+
+pub static SCRIPT_WITH_EXTRA_NEW_LINE: &'static str = "\
 #! /bin/bash
 
 echo I am a simple script
@@ -70,44 +88,44 @@ Dependencies:
 ";
 
 pub struct Harness {
-    assert: Assert,
-    env: Environment,
+    command: Command
 }
 
 impl Harness {
-    pub fn new(args: &[&str]) -> Harness {
-        Harness {
-            assert: Assert::main_binary().with_args(args),
-            env: Environment::inherit(),
-        }
+    pub fn env(&mut self, key: &str, val: &str)  -> &mut Harness {
+        self.command.env(key, val);
+        self
     }
-    pub fn env(self, key: &str, value: &str) -> Self {
-        Harness { env: self.env.insert(key, value), ..self }
+
+    pub fn stdin(&mut self, input: &str)  -> &mut Harness {
+        self.command.with_stdin().buffer(input);
+        self
     }
-    pub fn input(self, input: &str) -> Self {
-        Harness { assert: self.assert.stdin(input), ..self }
+
+    pub fn success(&mut self) -> assert_cmd::assert::Assert {
+        self.command.assert().success()
     }
-    pub fn output<O: Into<String>>(self, output: O) -> Self {
-        Harness { assert: self.assert.stdout().is(output), ..self }
-    }
-    pub fn output_contains<O: Into<String>>(self, output: O) -> Self {
-        Harness { assert: self.assert.stdout().contains(output), ..self }
-    }
-    pub fn exits_with(self, code: i32) {
-        self.assert.with_env(&self.env).fails_with(code).unwrap();
-    }
-    pub fn succeeds(self) {
-        self.assert.with_env(&self.env).succeeds().unwrap();
+
+    pub fn code(&mut self, code: i32) -> assert_cmd::assert::Assert {
+        self.command.assert().code(code)
     }
 }
 
-pub fn run(args: &[&str]) -> Harness {
-    Harness::new(args)
+pub fn run<'a>(args: &[&str]) -> Harness {
+    let mut command = Command::new("target/debug/sdoc");
+    command
         .env("COMMANDS_DIRECTORY", "tests/data")
         .env("CLI_NAME", "example-cli")
         .env("EDITOR", "")
+        .args(args);
+
+    Harness{ command }
 }
 
 pub fn run_uninitialised(args: &[&str]) -> Harness {
-    Harness::new(args)
+    let mut command = Command::main_binary().unwrap();
+    command
+        .args(args);
+
+    Harness{ command }
 }
