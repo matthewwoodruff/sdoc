@@ -1,5 +1,5 @@
 use assert_cmd::prelude::*;
-use std::process::Command;
+use std::process::{Command, Stdio};
 use assert_cmd;
 
 pub static HELP_TEXT: &'static str = "
@@ -88,7 +88,7 @@ Dependencies:
 ";
 
 pub struct Harness {
-    command: Command
+    command: assert_cmd::Command
 }
 
 impl Harness {
@@ -98,7 +98,7 @@ impl Harness {
     }
 
     pub fn stdin(&mut self, input: &str)  -> &mut Harness {
-        self.command.with_stdin().buffer(input);
+        self.command.write_stdin(input);
         self
     }
 
@@ -112,7 +112,7 @@ impl Harness {
 }
 
 pub fn run<'a>(args: &[&str]) -> Harness {
-    let mut command = Command::new("target/debug/sdoc");
+    let mut command = assert_cmd::Command::cargo_bin("sdoc").unwrap();
     command
         .env("COMMANDS_DIRECTORY", "tests/data")
         .env("CLI_NAME", "example-cli")
@@ -123,7 +123,7 @@ pub fn run<'a>(args: &[&str]) -> Harness {
 }
 
 pub fn run_uninitialised(args: &[&str]) -> Harness {
-    let mut command = Command::main_binary().unwrap();
+    let mut command = assert_cmd::Command::cargo_bin("sdoc").unwrap();
     command
         .args(args);
 
