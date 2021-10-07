@@ -25,4 +25,7 @@ git add Cargo.toml Cargo.lock pkg/brew/sdoc.rb VERSION
 git commit -S -m "Release $version_tag"
 git tag -s "$version_tag" -m "Release $version_tag"
 
+git push
+git push --tags
+
 exit 0
