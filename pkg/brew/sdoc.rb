@@ -1,11 +1,11 @@
 class Sdoc < Formula
- version '0.8.3'
+ version '0.8.9'
   desc "Framework for building custom CLIs around shell, scripts, and executables"
   homepage "https://github.com/matthewwoodruff/sdoc"
 
   if OS.mac?
       url "https://github.com/matthewwoodruff/sdoc/releases/download/v#{version}/sdoc-v#{version}-x86_64-apple-darwin.tar.gz"
-      sha256 "d3be31688b4645e28e68ec413d760098fd2aedf0ddf5d26a3f1f3bcdd69eea80"
+      sha256 "164664fc157303a9de6ba4edf8f74c21bace20d751ec081241930978a550eef8"
   end
 
   def install
