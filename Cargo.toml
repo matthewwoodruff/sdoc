@@ -1,6 +1,6 @@
 [package]
 name = "sdoc"
-version = "0.8.5"
+version = "0.8.6"
 authors = ["Matthew Woodruff <mwoodruf@thoughtworks.com>"]
 description = "Framework for building custom CLIs around shell, scripts, and executables"
 repository = "https://github.com/matthewwoodruff/sdoc"
