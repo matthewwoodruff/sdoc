@@ -20,11 +20,11 @@ name = "sdoc"
 path = "src/main.rs"
 
 [dependencies]
-serde_derive = "1.0.123"
-serde = "1.0.123"
-serde_yaml = "0.8.17"
+serde_derive = "1.0.130"
+serde = "1.0.130"
+serde_yaml = "0.8.21"
 ansi_term = "0.12.1"
 
 [dev-dependencies]
-assert_cmd = "1.0.3"
-tempfile = "3"
+assert_cmd = "1.0.8"
+tempfile = "3.2"
