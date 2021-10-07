@@ -2,7 +2,9 @@
 
 set -eu
 
-version=${1:?First argument is the version you want to tag, like '1.0.0'}
+echo Enter version. Current is $(cat VERSION)
+read version
+
 version_tag="v$version"
 
 if git rev-parse "$version_tag" >/dev/null 2>&1
@@ -10,6 +12,8 @@ then
   echo "Version $version_tag already exists"
   exit 1
 fi
+
+echo $version > VERSION
 
 sed -i "" -E "s/^version = \".*\"/version = \"$version\"/" Cargo.toml
 #sed -i "" -E "s/ version \'.*\'/version \'$version\'/" pkg/brew/sdoc.rb
