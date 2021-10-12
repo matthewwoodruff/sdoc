@@ -102,7 +102,7 @@ pub fn run_setup(request: Request, _: &Context) -> Work {
     let cli_name = ask(&s!("Enter your CLI name:"));
     let content = format!("\
 #! /bin/bash -ue
-dir=$(cd $( dirname \"{}\" ) && cd .. && pwd )
+dir=$(cd $( dirname $( realpath \"{}\" ) ) && cd .. && pwd )
 COMMANDS_DIRECTORY=\"$dir\" CLI_NAME='{}' sdoc \"$@\"", "${BASH_SOURCE[0]}", cli_name);
 
     let bin_directory = directory.join("bin");

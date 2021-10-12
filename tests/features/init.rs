@@ -5,6 +5,7 @@ use std::{fs, path::PathBuf};
 use std::io::prelude::*;
 use std::env;
 use assert_cmd;
+use std::os::unix;
 
 #[test]
 fn should_show_correct_output_to_the_user() {
@@ -47,7 +48,7 @@ fn should_create_bin_and_commands_yaml() {
 
     let expected_bin = format!("\
 #! /bin/bash -ue
-dir=$(cd $( dirname \"{}\" ) && cd .. && pwd )
+dir=$(cd $( dirname $( realpath \"{}\" ) ) && cd .. && pwd )
 COMMANDS_DIRECTORY=\"$dir\" CLI_NAME='test-cli' sdoc \"$@\"", "${BASH_SOURCE[0]}");
     assert_eq!(bin_string, expected_bin);
 
@@ -84,7 +85,41 @@ fn should_allow_bootstrap_script_to_be_executed_successfully() {
     path.pop();
 
     test_command
-        .env("PATH", format!("/usr/bin:{}", path.into_os_string().into_string().unwrap()))
+        .env("PATH", format!("{}:/usr/bin:/usr/local/bin", path.into_os_string().into_string().unwrap()))
+        .assert()
+        .success()
+        .stdout("
+Usage: test-cli <command> [args]
+
+Commands:
+  hello       hw    Prints hello world
+
+Run 'test-cli help' for more information
+
+");
+}
+
+#[test]
+fn should_allow_bootstrap_script_to_be_symlinked() {
+    let temp_dir = tempfile::tempdir().unwrap();
+    let temp_path = temp_dir.path();
+    let temp_dir_string = temp_path.to_str().unwrap();
+
+    let symlink_temp_dir = tempfile::tempdir().unwrap();
+    let symlink_temp_path = symlink_temp_dir.path();
+
+    run_uninitialised(&["init", temp_dir_string])
+        .stdin("y\ntest-cli\n")
+        .success();
+
+    fs::create_dir_all(symlink_temp_path.join("bin")).expect("All directories failed to be created");
+    unix::fs::symlink(temp_path.join("bin/test-cli"), symlink_temp_path.join("bin/test-cli-symlink")).expect("Symlink failed to be created");
+
+    let mut path = get_bin_path();
+    path.pop();
+
+    assert_cmd::Command::new(symlink_temp_path.join("bin/test-cli-symlink"))
+        .env("PATH", format!("{}:/usr/bin:/usr/local/bin", path.into_os_string().into_string().unwrap()))
         .assert()
         .success()
         .stdout("
