@@ -65,8 +65,9 @@ impl Context {
 
 pub fn file_config_source(path: &PathBuf) -> Vec<Section> {
     let x = path.join(s!("commands.yaml"));
+    let message = format!("Failed to open file: {:?}", x);
     let mut v: Vec<Section> = serde_yaml::from_reader(File::open(x)
-        .expect("Failed to open file")).unwrap();
+        .expect(&message)).unwrap();
 
     v.insert(0, commands::get_management_commands());
     v
