@@ -4,8 +4,8 @@ use ansi_term::Color::{Blue, Green};
 use std::{fs, path::PathBuf};
 use std::io::prelude::*;
 use std::env;
-
-
+use std::process::Command;
+use assert_cmd;
 
 #[test]
 fn should_show_correct_output_to_the_user() {
@@ -68,24 +68,29 @@ COMMANDS_DIRECTORY=\"$dir\" CLI_NAME='test-cli' sdoc \"$@\"", "${BASH_SOURCE[0]}
     assert_eq!(yaml_string, expected_yaml);
 }
 
-// #[test]
-// fn should_allow_bootstrap_script_to_be_executed_successfully() {
-//     let temp_dir = tempfile::tempdir().unwrap();
-//     let temp_path = temp_dir.path();
-//     let temp_dir_string = temp_path.to_str().unwrap();
+#[test]
+fn should_allow_bootstrap_script_to_be_executed_successfully() {
+    let temp_dir = tempfile::tempdir().unwrap();
+    let temp_path = temp_dir.path();
+    let temp_dir_string = temp_path.to_str().unwrap();
 
-//     run_uninitialised(&["init", temp_dir_string])
-//         .stdin("y\ntest-cli\n")
-//         .success();
+    run_uninitialised(&["init", temp_dir_string])
+        .stdin("y\ntest-cli\n")
+        .success();
 
-//     let bin_string = read_file(temp_path.join("bin/test-cli"));
+    assert_cmd::Command::new(temp_path.join("bin/test-cli"))
+        .assert()
+        .success()
+        .stdout("
+Usage: test-cli <command> [args]
 
-//     Command::new("sh")
-//         .arg("-c")
-//         .arg(temp_path.join("bin/test-cli")
-//         // .stdout(stdio)
-//         .unwrap()
-// }
+Commands:
+  hello       hw    Prints hello world
+
+Run 'test-cli help' for more information
+
+");
+}
 
 #[test]
 fn should_only_accept_y_or_n_when_prompting_to_setup_cli() {
@@ -134,8 +139,6 @@ fn should_use_current_directory_when_one_is_not_specified() {
 Setup a new CLI in \"{}\"? (y/n)
 Goodbye
 ", Blue.paint("sdoc init"), current_directory.to_str().unwrap());
-
-    // let expected_output_str = expected_output.as_str();
 
     run_uninitialised(&["init"])
         .stdin("n\n")
