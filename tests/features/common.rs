@@ -109,6 +109,12 @@ impl Harness {
     pub fn code(&mut self, code: i32) -> assert_cmd::assert::Assert {
         self.command.assert().code(code)
     }
+
+
+}
+
+pub fn get_bin_path() -> std::path::PathBuf {
+  assert_cmd::cargo::cargo_bin( "sdoc")
 }
 
 pub fn run<'a>(args: &[&str]) -> Harness {
@@ -122,7 +128,7 @@ pub fn run<'a>(args: &[&str]) -> Harness {
     Harness{ command }
 }
 
-pub fn run_uninitialised(args: &[&str]) -> Harness {
+pub fn run_uninitialised<'a>(args: &[&str]) -> Harness {
     let mut command = assert_cmd::Command::cargo_bin("sdoc").unwrap();
     command
         .args(args);
