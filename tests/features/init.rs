@@ -4,7 +4,6 @@ use ansi_term::Color::{Blue, Green};
 use std::{fs, path::PathBuf};
 use std::io::prelude::*;
 use std::env;
-use std::process::Command;
 use assert_cmd;
 
 #[test]
@@ -78,7 +77,14 @@ fn should_allow_bootstrap_script_to_be_executed_successfully() {
         .stdin("y\ntest-cli\n")
         .success();
 
-    assert_cmd::Command::new(temp_path.join("bin/test-cli"))
+    let bootstrap = temp_path.join("bin/test-cli");
+    let mut test_command = assert_cmd::Command::new(bootstrap);
+
+    let mut path = get_bin_path();
+    path.pop();
+
+    test_command
+        .env("PATH", format!("/usr/bin:{}", path.into_os_string().into_string().unwrap()))
         .assert()
         .success()
         .stdout("

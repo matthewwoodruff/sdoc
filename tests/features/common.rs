@@ -1,6 +1,5 @@
-use assert_cmd::prelude::*;
-use std::process::{Command, Stdio};
 use assert_cmd;
+use std::path;
 
 pub static HELP_TEXT: &'static str = "
 Usage: example-cli <command> [args]
@@ -110,10 +109,9 @@ impl Harness {
         self.command.assert().code(code)
     }
 
-
 }
 
-pub fn get_bin_path() -> std::path::PathBuf {
+pub fn get_bin_path() -> path::PathBuf {
   assert_cmd::cargo::cargo_bin( "sdoc")
 }
 
